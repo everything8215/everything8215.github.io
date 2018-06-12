@@ -1,0 +1,1120 @@
+{
+    "type": "rom",
+    "key": "ff5u-sfc",
+    "name": "Final Fantasy IV 1.0 (J)",
+    "length": "0x100000",
+    "crc32": "0x21027C5D",
+    "system": "sfc",
+    "mode": "loROM",
+    "assembly": {
+        "snesHeader": {
+            "type": "data",
+            "name": "SNES Header",
+            "range": "0x00FFC0-0x00FFE0",
+            "assembly": {
+                "gameTitle": {
+                    "type": "text",
+                    "name": "Game Title",
+                    "begin": 0,
+                    "length": 21
+                },
+                "checksumInverse": {
+                    "type": "property",
+                    "name": "Checksum Inverse",
+                    "begin": 28,
+                    "mask": "0xFFFF"
+                },
+                "checksum": {
+                    "type": "property",
+                    "name": "Checksum",
+                    "begin": 30,
+                    "mask": "0xFFFF"
+                }
+            }
+        },
+        "mapProperties": {
+            "type": "array",
+            "name": "Map Properties",
+            "range": "0x159C84-0x15B000",
+            "array": {
+                "length": 383
+            },
+            "assembly": {
+                "type": "data",
+                "assembly": {
+                    "layout1": {
+                        "type": "property",
+                        "name": "Layer 1 Layout",
+                        "begin": 1
+                    },
+                    "graphics": {
+                        "type": "property",
+                        "name": "Graphics",
+                        "begin": 2,
+                        "mask": "0x0F"
+                    },
+                    "npc": {
+                        "type": "property",
+                        "name": "NPC Properties",
+                        "begin": 3
+                    },
+                    "fill": {
+                        "type": "property",
+                        "name": "Fill Tile",
+                        "begin": 4,
+                        "mask": "0x7F"
+                    },
+                    "palette": {
+                        "type": "property",
+                        "name": "Palette",
+                        "begin": 5
+                    },
+                    "layout2": {
+                        "type": "property",
+                        "name": "Layer 2 Layout",
+                        "begin": 8
+                    },
+                    "addition": {
+                        "type": "property",
+                        "name": "Enable Color Addition",
+                        "begin": 9,
+                        "mask": "0x01",
+                        "bool": true
+                    },
+                    "npcMSB": {
+                        "type": "property",
+                        "name": "NPC Properties MSB",
+                        "begin": 10,
+                        "mask": "0x80",
+                        "bool": true
+                    },
+                    "layoutMSB": {
+                        "type": "property",
+                        "name": "Map Layout MSB",
+                        "begin": 10,
+                        "mask": "0x01",
+                        "bool": true
+                    },
+                    "title": {
+                        "type": "property",
+                        "name": "Title",
+                        "begin": 11,
+                        "mask": "0x7F"
+                    },
+                    "hideTitle": {
+                        "type": "property",
+                        "name": "Don't Show Title",
+                        "begin": 11,
+                        "mask": "0x80",
+                        "bool": true
+                    },
+                    "treasure": {
+                        "type": "property",
+                        "name": "Treasure Index",
+                        "begin": 12
+                    }
+                },
+                "length": 13
+            },
+            "stringTable": {
+                "default": "Map %i",
+                "length": 383,
+                "string": {
+					"0x0000": "Town of Baron",
+                    "0x0001": "Village Mist",
+                    "0x0002": "Kaipo",
+                    "0x0003": "Mysidia",
+                    "0x0004": "Silvera",
+                    "0x0005": "Town of Toroia",
+                    "0x0006": "Agart",
+                    "0x0007": "Town of Toroia: Inn",
+                    "0x0008": "Town of Toroia: Weapon Shop",
+                    "0x0009": "Town of Toroia: Armor Shop",
+                    "0x000A": "Town of Toroia: Item Shop",
+                    "0x000B": "Town of Baron: Inn",
+                    "0x000C": "Town of Baron: Weapon/Armor Shop",
+                    "0x000D": "Town of Baron: Cid's House",
+                    "0x000E": "Town of Baron: Rosa's House",
+                    "0x000F": "Village Mist: House",
+                    "0x0010": "Kaipo: Inn",
+                    "0x0011": "Kaipo: Cafe",
+                    "0x0012": "Kaipo: House",
+                    "0x0013": "Mysidia: Cafe",
+                    "0x0014": "Mysidia: Inn",
+                    "0x0015": "Mt. Ordeals: Mirror Room",
+                    "0x0016": "Mysidia: House of Wishes",
+                    "0x0017": "Mysidia: Room of Wishes",
+                    "0x0018": "Town of Toroia: Cafe 1F",
+                    "0x0019": "Town of Toroia: Cafe 2F",
+                    "0x001A": "Town of Toroia: Saloon KING",
+                    "0x001C": "Black Chocobo Farm: 1F",
+                    "0x001D": "Black Chocobo Farm: 2F",
+                    "0x001E": "Agart: Astro Tower",
+                    "0x001F": "Agart: Observatory",
+                    "0x0020": "Agart: Inn/Item Shop",
+                    "0x0021": "Chocobo's Village",
+                    "0x0024": "Baron",
+                    "0x0025": "Damcyan",
+                    "0x0026": "Fabul",
+                    "0x0027": "Toroian Castle",
+                    "0x0028": "Eblan",
+                    "0x002A": "Baron: 1F",
+                    "0x002B": "Baron: 2F",
+                    "0x002C": "Baron: Throne Room",
+                    "0x002D": "Baron: Left Hall",
+                    "0x002E": "Baron: Right Hall",
+                    "0x002F": "Baron: Dungeon 1F",
+                    "0x0030": "Baron: Dungeon B1F",
+                    "0x0031": "Baron: Infirmary",
+                    "0x0032": "Baron: Left Tower 1F",
+                    "0x0033": "Baron: Left Tower 2F",
+                    "0x0034": "Baron: Left Tower 3F",
+                    "0x0035": "Baron: Right Tower 1F",
+                    "0x0036": "Baron: Right Tower 2F",
+                    "0x0037": "Baron: Right Tower 3F",
+                    "0x0038": "Baron: Right Tower B1F",
+                    "0x0039": "Baron: Right Tower B2F",
+                    "0x003A": "Old Water-way: 1F",
+                    "0x003B": "Old Water-way: B3F",
+                    "0x003C": "Old Water-way: B1F",
+                    "0x003D": "Old Water-way: Save Point",
+                    "0x003E": "Old Water-way: B2F",
+                    "0x003F": "Damcyan: 1F",
+                    "0x0040": "Damcyan: 2F",
+                    "0x0041": "Damcyan: 3F",
+                    "0x0042": "Damcyan: Basement",
+                    "0x0043": "Damcyan: B1F",
+                    "0x0044": "Baron: Old Water-way Entrance",
+                    "0x0045": "Agart: Weapon Shop",
+                    "0x0046": "Agart: Armor Shop",
+                    "0x0047": "Fabul: 1F",
+                    "0x0048": "Fabul: 2F",
+                    "0x0049": "Fabul: Throne Room",
+                    "0x004A": "Fabul: Crystal Room",
+                    "0x004B": "Fabul: Weapon/Armor Shop",
+                    "0x004C": "Fabul: Inn/Item Shop",
+                    "0x004D": "Fabul: Right Tower 1F",
+                    "0x004E": "Fabul: Right Tower 2F",
+                    "0x004F": "Fabul: Right Tower 3F",
+                    "0x0050": "Fabul: Left Tower 1F",
+                    "0x0051": "Fabul: Left Tower 2F",
+                    "0x0052": "Fabul: Left Tower 3F",
+                    "0x0053": "Village Mist: Grove",
+                    "0x0054": "Watery Pass: Save Point",
+                    "0x0055": "Toroian Castle: 1F",
+                    "0x0056": "Toroian Castle: 2F",
+                    "0x0057": "Toroian Castle: Crystal Room",
+                    "0x0058": "Toroian Castle: Left Room",
+                    "0x0059": "Toroian Castle: Stair Room",
+                    "0x005A": "Toroian Castle: Dungeon",
+                    "0x005B": "Toroian Castle: Room",
+                    "0x005C": "Toroian Castle: Treasure Room",
+                    "0x005D": "Toroian Castle: Big Treasure Room",
+                    "0x005E": "Eblan: 1F",
+                    "0x005F": "Eblan: 2F",
+                    "0x0060": "Eblan: Throne Room",
+                    "0x0061": "Eblan: Left Tower 1F",
+                    "0x0062": "Eblan: Left Tower 2F",
+                    "0x0063": "Eblan: Right Tower 1F",
+                    "0x0064": "Eblan: Right Tower 2F",
+                    "0x0065": "Eblan: Basement",
+                    "0x0066": "Castle Baron: Black Magic Class",
+                    "0x0067": "Castle Baron: White Magic Class",
+                    "0x0069": "Training Room",
+                    "0x006A": "Waterfall",
+                    "0x006C": "Misty Cave",
+                    "0x006F": "Watery Pass: South",
+                    "0x0070": "Watery Pass: B2F",
+                    "0x0071": "Watery Pass: B3F",
+                    "0x0072": "Watery Pass: B2F",
+                    "0x0073": "Watery Pass: North",
+                    "0x0074": "Watery Pass: Waterfalls",
+                    "0x0075": "Watery Pass: B2F",
+                    "0x0076": "Watery Pass: Lake",
+                    "0x0077": "Antlion's Cave: B1F",
+                    "0x0078": "Antlion's Cave: B2F",
+                    "0x0079": "Antlion's Nest",
+                    "0x007A": "Antlion's Cave: Save Point",
+                    "0x007B": "Antlion's Cave: Treasure Room",
+                    "0x007E": "Mt. Hobs: West",
+                    "0x007F": "Mt. Hobs: Summit",
+                    "0x0080": "Mt. Hobs: East",
+                    "0x0081": "Mt. Hobs: Save Point",
+                    "0x0083": "Watery Pass: Treasure Room",
+                    "0x0084": "Mt. Ordeals 1",
+                    "0x0085": "Mt. Ordeals 2",
+                    "0x0086": "Mt. Ordeals 3",
+                    "0x0087": "Mt. Ordeals 4",
+                    "0x0088": "Mysidia: Crystal Room",
+                    "0x0089": "Mysidia: Serpent Road",
+                    "0x008A": "Baron: Crushing Corridor",
+                    "0x008B": "Agart: Well",
+                    "0x008C": "Cave Magnes 1",
+                    "0x008D": "Cave Magnes 2",
+                    "0x008E": "Cave Magnes: Treasure Room",
+                    "0x008F": "Cave Magnes 3",
+                    "0x0090": "Cave Magnes: Treasure Room",
+                    "0x0091": "Cave Magnes 4",
+                    "0x0092": "Cave Magnes: Save Point",
+                    "0x0093": "Cave Magnes 5",
+                    "0x0094": "Cave Magnes: Crystal Room",
+                    "0x0097": "Town of Baron: Serpent Road",
+                    "0x0098": "Tower of Zot: 1F",
+                    "0x0099": "Tower of Zot: 2F",
+                    "0x009A": "Tower of Zot: 3F",
+                    "0x009C": "Tower of Zot: 4F",
+                    "0x009D": "Tower of Zot: 5F",
+                    "0x009E": "Tower of Zot: 6F",
+                    "0x009F": "Tower of Zot: 7F",
+                    "0x00A0": "Grotto Adamant",
+                    "0x00A1": "Save Point",
+                    "0x00A2": "Save Point",
+                    "0x00A7": "Tower of Bab-il: 1F",
+                    "0x00A8": "Tower of Bab-il: B2F",
+                    "0x00A9": "Tower of Bab-il: B3F",
+                    "0x00AA": "Tower of Bab-il: B4F",
+                    "0x00AB": "Tower of Bab-il: Crystal Room",
+                    "0x00AC": "Tower of Bab-il: B5F",
+                    "0x00AD": "Falling",
+                    "0x00B1": "Training Room 1F",
+                    "0x00B2": "Training Room 2F",
+                    "0x00B5": "Giant of Bab-il: Mouth",
+                    "0x00B6": "Giant of Bab-il: Neck",
+                    "0x00B7": "Giant of Bab-il: Chest",
+                    "0x00B9": "Giant of Bab-il: Stomach",
+                    "0x00BA": "Giant of Bab-il: Passage",
+                    "0x00BC": "Giant of Bab-il: Lung",
+                    "0x00BD": "Giant of Bab-il: CPU",
+                    "0x00C7": "Cave Eblana",
+                    "0x00C8": "Cave Eblana: B2F",
+                    "0x00C9": "Cave Eblana: Pass to Bab-il 1",
+                    "0x00CA": "Cave Eblana: Pass to Bab-il 2",
+                    "0x00CB": "Cave Eblana: Inn/Item Shop",
+                    "0x00CC": "Cave Eblana: Weapon/Armor Shop",
+                    "0x00CD": "Cave Eblana: Save Point",
+                    "0x00CE": "Cave Eblana: Infirmary",
+                    "0x00CF": "Chocobo's Forest",
+                    "0x00D1": "Chocobo's Forest",
+                    "0x00D2": "Chocobo's Forest",
+                    "0x00D3": "Chocobo's Forest",
+                    "0x00D4": "Chocobo's Forest",
+                    "0x00E0": "Village Mist: Inn",
+                    "0x00E1": "Village Mist: Weapon Shop",
+                    "0x00E2": "Village Mist: Armor Shop",
+                    "0x00E3": "Kaipo: Weapon Shop",
+                    "0x00E4": "Kaipo: Armor Shop",
+                    "0x00E5": "Mysidia: Weapon Shop",
+                    "0x00E6": "Mysidia: Armor Shop",
+                    "0x00E7": "Mysidia: Item Shop",
+                    "0x00E8": "Silvera: Inn",
+                    "0x00E9": "Silvera: Weapon Shop",
+                    "0x00EA": "Silvera: Armor Shop",
+                    "0x00EB": "Silvera: Item Shop",
+                    "0x00EC": "Town of Baron: Item Shop",
+					"0x00FB": "World Map",
+					"0x00FC": "Underground",
+					"0x00FD": "Moon",
+					"0x0100": "Kokkol, the Smith's",
+					"0x0101": "Tomra",
+					"0x0102": "Kokkol, the Smith's: 1F",
+					"0x0103": "Kokkol, the Smith's: 2F",
+					"0x0104": "Tomra: Inn",
+					"0x0105": "Tomra: Weapon/Armor Shop",
+					"0x0106": "Tomra: Storage House",
+					"0x0107": "Castle of Dwarves",
+					"0x0108": "Castle of Dwarves: 1F",
+					"0x0109": "Castle of Dwarves: Throne Room",
+					"0x010A": "Castle of Dwarves: B1F",
+					"0x010B": "Castle of Dwarves: B2F",
+					"0x010D": "Castle of Dwarves: Crystal Room",
+					"0x010E": "Castle of Dwarves: Weapon/Armor Shop",
+					"0x010F": "Castle of Dwarves: Dwarf Base",
+					"0x0110": "Castle of Dwarves: Right Tower 1F",
+					"0x0111": "Castle of Dwarves: Inn/Item Shop",
+					"0x0112": "Castle of Dwarves: Infirmary",
+					"0x0113": "Castle of Dwarves: Left Tower 1F",
+					"0x0114": "Tower of Bab-il: Save Point",
+					"0x0115": "Tower of Bab-il: Treasure Room",
+					"0x0116": "Tower of Bab-il: Treasure Room",
+					"0x0117": "Tower of Bab-il: Treasure Room",
+					"0x0118": "Tower of Bab-il: Treasure Room",
+					"0x0119": "Castle of Dwarves: Right Tower 3F",
+					"0x011A": "Castle of Dwarves: Left Tower 3F",
+					"0x011B": "Castle of Dwarves: Right/Left Tower 2F",
+					"0x011D": "Tower of Bab-il: 8F",
+					"0x011E": "Tower of Bab-il: 7F",
+					"0x011F": "Tower of Bab-il: 6F",
+					"0x0120": "Castle of Dwarves: Cafe HOWDY",
+					"0x0121": "Tower of Bab-il: 1F",
+					"0x0122": "Tower of Bab-il: 2F",
+					"0x0123": "Tower of Bab-il: 3F",
+					"0x0124": "Tower of Bab-il: 4F",
+					"0x0125": "Tower of Bab-il: 5F",
+					"0x0126": "Tower of Bab-il: 6F",
+					"0x0127": "Tower of Bab-il: 7F",
+					"0x0128": "Tower of Bab-il: 8F",
+					"0x012C": "The Big Whale",
+					"0x012D": "Super Cannon",
+					"0x012E": "Dwarven Tank",
+					"0x012F": "The Big Whale",
+					"0x0132": "Tomra: Item Shop",
+					"0x0136": "Land of Monsters: B1F",
+					"0x0137": "Land of Monsters: B2F",
+					"0x0138": "Land of Monsters: B3F",
+					"0x013A": "Land of Monsters: B4F",
+					"0x013C": "Town of Monsters",
+					"0x0145": "Sylvan Cave",
+					"0x0146": "Sylvan Cave: B2F",
+					"0x0147": "Sylvan Cave: B3F",
+					"0x0148": "Sylvan Cave: Treasure Room",
+					"0x0149": "Sylvan Cave: Sylphs' House",
+					"0x014A": "Sealed Cave: B1F",
+					"0x015A": "Cave Bahamut: B1F",
+					"0x015B": "Cave Bahamut: B2F",
+					"0x015C": "Cave Bahamut: B3F",
+					"0x0160": "Lunar's Lair",
+					"0x0163": "Lunar Path 1",
+					"0x0164": "Lunar Path 2",
+					"0x0165": "Namingway's Cave",
+					"0x0167": "Lunar Subterrane: B1",
+					"0x0168": "Lunar Subterrane: B2",
+					"0x0169": "Lunar Subterrane: B3",
+					"0x016A": "Lunar Subterrane: B4",
+					"0x016B": "Lunar Subterrane: B5",
+					"0x016C": "Lunar Subterrane: B6",
+					"0x016D": "Lunar Subterrane: B7",
+					"0x016E": "Lunar Core 1",
+					"0x016F": "Lunar Core 2",
+					"0x0170": "Lunar Core 3",
+					"0x0171": "Lunar Core 4",
+					"0x0172": "Lunar Core 5",
+					"0x0173": "Lunar Subterrane: Treasure Room",
+					"0x0174": "Lunar Subterrane: Treasure Room",
+					"0x0175": "Lunar Subterrane: Treasure Room",
+					"0x0176": "Lunar Subterrane: Treasure Room",
+					"0x0177": "Lunar Subterrane: Treasure Room",
+					"0x0178": "Lunar Subterrane: Save Point",
+					"0x0179": "Lunar Subterrane: Treasure Room",
+					"0x017A": "Lunar Subterrane: Treasure Room",
+					"0x017B": "Lunar Subterrane: Save Point",
+					"0x017C": "Lunar Subterrane: Treasure Room",
+					"0x01FB": "World Map",
+					"0x01FC": "Underground",
+					"0x01FD": "Moon"
+                }
+            }
+        },
+        "mapGraphics0": {
+            "type": "data",
+            "name": "Map Graphics (Ship/Airship)",
+            "range": "0x15DC00-0x168000",
+            "format": "snes4bpp"
+        },
+        "mapGraphics1": {
+            "type": "data",
+            "name": "Map Graphics (Lunar Core/Moon Cave)",
+            "range": "0x1EDFA8-0x1EFC20",
+            "format": "snes3bpp"
+        },
+        "mapGraphics2": {
+            "type": "data",
+            "name": "Map Graphics (Sealed Cave/Cave Magnes)",
+            "range": "0x1E8020-0x1E9568",
+            "format": "snes3bpp"
+        },
+        "mapGraphics3": {
+            "type": "data",
+            "name": "Map Graphics (Castle Exterior)",
+            "range": "0x1DED40-0x1E8000",
+            "format": "snes3bpp"
+        },
+        "mapGraphics4": {
+            "type": "data",
+            "name": "Map Graphics (Town Exterior)",
+            "range": "0x1E9568-0x1EACC0",
+            "format": "snes3bpp"
+        },
+        "mapGraphics5": {
+            "type": "data",
+            "name": "Map Graphics (Town Interior)",
+            "range": "0x1EACC0-0x1ECFE8",
+            "format": "snes3bpp"
+        },
+        "mapGraphics6": {
+            "type": "data",
+            "name": "Map Graphics (Castle Interior)",
+            "range": "0x1EB8C0-0x1ECFE8",
+            "format": "snes3bpp"
+        },
+        "mapGraphics7": {
+            "type": "data",
+            "name": "Map Graphics (Crystal Room)",
+            "range": "0x1ECFE8-0x1EDFA8",
+            "format": "snes3bpp"
+        },
+        "mapGraphics8": {
+            "type": "data",
+            "name": "Map Graphics (Tower of Zot/Bab-il)",
+            "range": "0x1F9500-0x1FB9C0",
+            "format": "snes3bpp"
+        },
+        "mapGraphics9": {
+            "type": "data",
+            "name": "Map Graphics (Underground Cave)",
+            "range": "0x1F8000-0x1F9500",
+            "format": "snes3bpp"
+        },
+        "mapGraphics10": {
+            "type": "data",
+            "name": "Map Graphics (Tower of Zot/Bab-il)",
+            "range": "0x1F9500-0x1FB9C0",
+            "format": "snes3bpp"
+        },
+        "mapGraphics11": {
+            "type": "data",
+            "name": "Map Graphics (Tower of Zot/Bab-il)",
+            "range": "0x1F9500-0x1FB9C0",
+            "format": "snes3bpp"
+        },
+        "mapGraphics12": {
+            "type": "data",
+            "name": "Map Graphics (Lunar Core/Moon Cave)",
+            "range": "0x1EDFA8-0x1EFC20",
+            "format": "snes3bpp"
+        },
+        "mapGraphics13": {
+            "type": "data",
+            "name": "Map Graphics (Mountains)",
+            "range": "0x1FD208-0x1FE888",
+            "format": "snes3bpp"
+        },
+        "mapGraphics14": {
+            "type": "data",
+            "name": "Map Graphics (Overworld Cave)",
+            "range": "0x1FE888-0x208000",
+            "format": "snes3bpp"
+        },
+        "mapGraphics15": {
+            "type": "data",
+            "name": "Map Graphics (Ship/Airship)",
+            "range": "0x15DC00-0x168000",
+            "format": "snes4bpp"
+        },
+        "mapAnimationGraphics": {
+            "type": "assembly",
+            "name": "Map Animation Graphics",
+            "range": "0x1FB9C0-0x1FD208",
+            "format": "snes3bpp"
+        },
+        "mapPalettes": {
+            "type": "array",
+            "name": "Map Palettes",
+            "range": "0x14DE10-0x14EE10",
+            "array": {
+                "length": 32
+            },
+            "assembly": {
+                "length": 128,
+                "format": "bgr555"
+            }
+        },
+        "mapTilesets": {
+            "type": "array",
+            "name": "Map Tilesets",
+            "range": "0x149E00-0x14DE00",
+            "array": {
+                "length": 16
+            },
+            "assembly": {
+                "type": "assembly",
+                "length": 1024
+            }
+        },
+        "mapLayouts": {
+            "type": "array",
+            "name": "Map Layouts",
+            "range": "0x178300-0x19FD28",
+            "autoBank": true,
+            "array": {
+                "length": 383
+            },
+            "assembly": {
+                "format": "ff4-map"
+            },
+            "pointerTable": {
+                "range": "0x178000-0x178300",
+                "offset": "0x178000"
+            }
+        },
+        "mapTriggers": {
+            "type": "array",
+            "name": "Map Triggers",
+            "range": "0x158500-0x15981A",
+            "isSequential": true,
+            "array": {
+                "length": 384
+            },
+            "assembly": {
+                "type": "array",
+                "assembly": {
+                    "type": "data",
+                    "assembly": {
+                        "x": {
+                            "type": "property",
+                            "name": "X Position",
+                            "begin": 0,
+                            "hidden": true
+                        },
+                        "y": {
+                            "type": "property",
+                            "name": "Y Position",
+                            "begin": 1,
+                            "hidden": true
+                        },
+                        "map": {
+                            "type": "property",
+                            "name": "Map",
+                            "begin": 2,
+                            "stringTable": "mapProperties",
+                            "invalid": "(this.parent.map.value === 0xFE) || (this.parent.map.value === 0xFF)"
+                        },
+                        "xDest": {
+                            "type": "property",
+                            "name": "X Destination",
+                            "begin": 3,
+                            "invalid": "this.parent.map.invalid"
+                        },
+                        "yDest": {
+                            "type": "property",
+                            "name": "Y Destination",
+                            "begin": 4,
+                            "invalid": "this.parent.map.invalid"
+                        },
+                        "direction": {
+                            "type": "property",
+                            "name": "Facing Direction",
+                            "begin": 3,
+                            "mask": "0xC0",
+                            "invalid": "this.parent.map.invalid || (this.parent.map.value === 0xFB) || (this.parent.map.value === 0xFC) || (this.parent.map.value === 0x1FB) || (this.parent.map.value === 0x1FC)",
+                            "stringTable": {
+                                "string": {
+                                    "0": "Up",
+                                    "1": "Right",
+                                    "2": "Down",
+                                    "3": "Left"
+                                }
+                            }
+                        },
+                        "event": {
+                            "type": "property",
+                            "name": "Event",
+                            "begin": 3,
+                            "invalid": "this.parent.map.value !== 0xFF"
+                        },
+                        "item": {
+                            "type": "property",
+                            "name": "Item",
+                            "begin": 4,
+                            "stringTable": "itemNames",
+                            "invalid": "this.parent.map.value !== 0xFE"
+                        }
+                    },
+                    "length": 5
+                }
+            },
+            "pointerTable": {
+                "range": "0x158200-0x158500",
+                "offset": "0x158500"
+            }
+        },
+        "npcProperties": {
+            "type": "array",
+            "name": "NPC Properties",
+            "range": "0x138300-0x13971E",
+            "array": {
+                "length": 384
+            },
+            "assembly": {
+                "type": "data"
+            },
+            "pointerTable": {
+                "range": "0x138000-0x138300",
+                "offset": "0x138300"
+            }
+        },
+        "worldPalettes": {
+            "type": "array",
+            "name": "World Palettes",
+            "range": "0x148900-0x148A80",
+            "array": {
+                "length": 3
+            },
+            "assembly": {
+                "length": "0x80",
+                "format": "bgr555"
+            }
+        },
+        "worldPaletteAssignments": {
+            "type": "array",
+            "name": "World Palette Assignments",
+            "range": "0x148600-0x148900",
+            "array": {
+                "length": 3
+            },
+            "assembly": {
+                "length": "0x0100"
+            }
+        },
+        "worldGraphics": {
+            "type": "array",
+            "name": "World Graphics",
+            "range": "0x1D8000-0x1DE000",
+            "array": {
+                "length": 3
+            },
+            "assembly": {
+                "length": "0x2000",
+                "format": "linear4bpp"
+            }
+        },
+        "worldTilesets": {
+            "type": "array",
+            "name": "World Tilesets",
+            "range": "0x148000-0x148600",
+            "array": {
+                "length": 3
+            },
+            "assembly": {
+                "length": "0x0200"
+            }
+        },
+        "worldLayout0": {
+            "type": "array",
+            "name": "World Layout",
+            "range": "0x168480-0x16C354",
+            "array": {
+                "length": "0x0100"
+            },
+            "assembly": {
+                "format": "ff4-world"
+            },
+            "pointerTable": {
+                "range": "0x168000-0x168200",
+                "offset": "0x168480"
+            }
+        },
+        "worldLayout1": {
+            "type": "array",
+            "name": "Underground Layout",
+            "range": "0x16C480-0x16E041",
+            "array": {
+                "length": "0x0100"
+            },
+            "assembly": {
+                "format": "ff4-map"
+            },
+            "pointerTable": {
+                "range": "0x168200-0x168400",
+                "offset": "0x16C480"
+            }
+        },
+        "worldLayout2": {
+            "type": "array",
+            "name": "Moon Layout",
+            "range": "0x16E180-0x16EB53",
+            "array": {
+                "length": "0x40"
+            },
+            "assembly": {
+                "format": "ff4-map"
+            },
+            "pointerTable": {
+                "range": "0x168400-0x168480",
+                "offset": "0x16E180"
+            }
+        },
+        "worldTriggers": {
+            "type": "array",
+            "name": "World Triggers",
+            "range": "0x158006-0x1581A0",
+            "isSequential": true,
+            "array": {
+                "length": 3
+            },
+            "assembly": {
+                "type": "array",
+                "assembly": {
+                    "type": "data",
+                    "assembly": {
+                        "x": {
+                            "type": "property",
+                            "name": "X Position",
+                            "begin": 0,
+                            "hidden": true
+                        },
+                        "y": {
+                            "type": "property",
+                            "name": "Y Position",
+                            "begin": 1,
+                            "hidden": true
+                        },
+                        "map": {
+                            "type": "property",
+                            "name": "Map",
+                            "begin": 2,
+                            "stringTable": "mapProperties",
+                            "invalid": "(this.parent.map.value === 0xFE) || (this.parent.map.value === 0xFF)"
+                        },
+                        "xDest": {
+                            "type": "property",
+                            "name": "X Destination",
+                            "begin": 3,
+                            "invalid": "this.parent.map.invalid"
+                        },
+                        "yDest": {
+                            "type": "property",
+                            "name": "Y Destination",
+                            "begin": 4,
+                            "invalid": "this.parent.map.invalid"
+                        },
+                        "direction": {
+                            "type": "property",
+                            "name": "Facing Direction",
+                            "begin": 3,
+                            "mask": "0xC0",
+                            "invalid": "this.parent.map.invalid || (this.parent.map.value === 0xFB) || (this.parent.map.value === 0xFC) || (this.parent.map.value === 0x1FB) || (this.parent.map.value === 0x1FC)",
+                            "stringTable": {
+                                "string": {
+                                    "0": "Up",
+                                    "1": "Right",
+                                    "2": "Down",
+                                    "3": "Left"
+                                }
+                            }
+                        },
+                        "event": {
+                            "type": "property",
+                            "name": "Event",
+                            "begin": 3,
+                            "invalid": "(this.parent.map.value !== 0xFF) && (this.parent.map.value !== 0x1FF)"
+                        }
+                    },
+                    "length": 5
+                }
+            },
+            "pointerTable": {
+                "range": "0x158000-0x158006",
+                "offset": "0x158006"
+            }
+        },
+        "itemNames": {
+            "type": "array",
+            "name": "Item Names",
+            "range": "0x0F8000-0x0F8900",
+            "array": {
+                "length": 256,
+                "max": 256
+            },
+            "assembly": {
+                "type": "text",
+                "length": 9,
+                "encoding": "text"
+            },
+            "stringTable": {
+                "name": "Item Names",
+                "length": 256,
+                "default": "<itemNames[%i].text>"
+            }
+        }
+    },
+    "charTable": {
+        "kana": {
+            "name": "Text",
+            "char": {
+                "0x00": "\\0",
+                "0x01": "\\n",
+                "0x0F": "ヴ",
+                "0x10": "が",
+                "0x11": "ぎ",
+                "0x12": "ぐ",
+                "0x13": "げ",
+                "0x14": "ご",
+                "0x15": "ざ",
+                "0x16": "じ",
+                "0x17": "ず",
+                "0x18": "ぜ",
+                "0x19": "ぞ",
+                "0x1A": "だ",
+                "0x1B": "ぢ",
+                "0x1C": "づ",
+                "0x1D": "で",
+                "0x1E": "ど",
+                "0x1F": "ば",
+                "0x20": "び",
+                "0x21": "ぶ",
+                "0x22": "べ",
+                "0x23": "ぼ",
+                "0x24": "ぱ",
+                "0x25": "ぴ",
+                "0x26": "ぷ",
+                "0x27": "ぺ",
+                "0x28": "ぽ",
+                "0x29": "ガ",
+                "0x2A": "ギ",
+                "0x2B": "グ",
+                "0x2C": "ゲ",
+                "0x2D": "ゴ",
+                "0x2E": "ザ",
+                "0x2F": "ジ",
+                "0x30": "ズ",
+                "0x31": "ゼ",
+                "0x32": "ゾ",
+                "0x33": "ダ",
+                "0x34": "ヂ",
+                "0x35": "ヅ",
+                "0x36": "デ",
+                "0x37": "ド",
+                "0x38": "バ",
+                "0x39": "ビ",
+                "0x3A": "ブ",
+                "0x3B": "ベ",
+                "0x3C": "ボ",
+                "0x3D": "パ",
+                "0x3E": "ピ",
+                "0x3F": "プ",
+                "0x40": "ペ",
+                "0x41": "ポ",
+                "0x76": "\\m",
+                "0x77": "\\h",
+                "0x78": "\\p",
+                "0x79": "『",
+                "0x7A": "』",
+                "0x7C": "っ",
+                "0x7D": "ゃ",
+                "0x7E": "ょ",
+                "0x80": "０",
+                "0x81": "１",
+                "0x82": "２",
+                "0x83": "３",
+                "0x84": "４",
+                "0x85": "５",
+                "0x86": "６",
+                "0x87": "７",
+                "0x88": "８",
+                "0x89": "９",
+                "0x8A": "あ",
+                "0x8B": "い",
+                "0x8C": "う",
+                "0x8D": "え",
+                "0x8E": "お",
+                "0x8F": "か",
+                "0x90": "き",
+                "0x91": "く",
+                "0x92": "け",
+                "0x93": "こ",
+                "0x94": "さ",
+                "0x95": "し",
+                "0x96": "す",
+                "0x97": "せ",
+                "0x98": "そ",
+                "0x99": "た",
+                "0x9A": "ち",
+                "0x9B": "つ",
+                "0x9C": "て",
+                "0x9D": "と",
+                "0x9E": "な",
+                "0x9F": "に",
+                "0xA0": "ぬ",
+                "0xA1": "ね",
+                "0xA2": "の",
+                "0xA3": "は",
+                "0xA4": "ひ",
+                "0xA5": "ふ",
+                "0xA6": "へ",
+                "0xA7": "ほ",
+                "0xA8": "ま",
+                "0xA9": "み",
+                "0xAA": "む",
+                "0xAB": "め",
+                "0xAC": "も",
+                "0xAD": "や",
+                "0xAE": "ゆ",
+                "0xAF": "よ",
+                "0xB0": "ら",
+                "0xB1": "り",
+                "0xB2": "る",
+                "0xB3": "れ",
+                "0xB4": "ろ",
+                "0xB5": "わ",
+                "0xB6": "ん",
+                "0xB7": "ァ",
+                "0xB8": "ィ",
+                "0xBA": "ェ",
+                "0xBC": "ッ",
+                "0xBD": "ャ",
+                "0xBE": "ュ",
+                "0xBF": "ョ",
+                "0xC0": "〟",
+                "0xC1": "。",
+                "0xC2": "ー",
+                "0xC3": "‥",
+                "0xC4": "！",
+                "0xC5": "？",
+                "0xC6": "％",
+                "0xC7": "／",
+                "0xC8": "：",
+                "0xCA": "ア",
+                "0xCB": "イ",
+                "0xCC": "ウ",
+                "0xCD": "エ",
+                "0xCE": "オ",
+                "0xCF": "カ",
+                "0xD0": "キ",
+                "0xD1": "ク",
+                "0xD2": "ケ",
+                "0xD3": "コ",
+                "0xD4": "サ",
+                "0xD5": "シ",
+                "0xD6": "ス",
+                "0xD7": "セ",
+                "0xD8": "ソ",
+                "0xD9": "タ",
+                "0xDA": "チ",
+                "0xDB": "ツ",
+                "0xDC": "テ",
+                "0xDD": "ト",
+                "0xDE": "ナ",
+                "0xDF": "ニ",
+                "0xE0": "ヌ",
+                "0xE1": "ネ",
+                "0xE2": "ノ",
+                "0xE3": "ハ",
+                "0xE4": "ヒ",
+                "0xE5": "フ",
+                "0xE6": "ヘ",
+                "0xE7": "ホ",
+                "0xE8": "マ",
+                "0xE9": "ミ",
+                "0xEA": "ム",
+                "0xEB": "メ",
+                "0xEC": "モ",
+                "0xED": "ヤ",
+                "0xEE": "ユ",
+                "0xEF": "ヨ",
+                "0xF0": "ラ",
+                "0xF1": "リ",
+                "0xF2": "ル",
+                "0xF3": "レ",
+                "0xF4": "ロ",
+                "0xF5": "ワ",
+                "0xF6": "ン",
+                "0xFF": "\\pad"
+            }
+        },
+        "romaji": {
+            "name": "Text",
+            "char": {
+                "0x42": "Ａ",
+                "0x43": "Ｂ",
+                "0x44": "Ｃ",
+                "0x45": "Ｄ",
+                "0x46": "Ｅ",
+                "0x47": "Ｆ",
+                "0x48": "Ｇ",
+                "0x49": "Ｈ",
+                "0x4A": "Ｉ",
+                "0x4B": "Ｊ",
+                "0x4C": "Ｋ",
+                "0x4D": "Ｌ",
+                "0x4E": "Ｍ",
+                "0x4F": "Ｎ",
+                "0x50": "Ｏ",
+                "0x51": "Ｐ",
+                "0x52": "Ｑ",
+                "0x53": "Ｒ",
+                "0x54": "Ｓ",
+                "0x55": "Ｔ",
+                "0x56": "Ｕ",
+                "0x57": "Ｖ",
+                "0x58": "Ｗ",
+                "0x59": "Ｘ",
+                "0x5A": "Ｙ",
+                "0x5B": "Ｚ",
+                "0x5C": "ａ",
+                "0x5D": "ｂ",
+                "0x5E": "ｃ",
+                "0x5F": "ｄ",
+                "0x60": "ｅ",
+                "0x61": "ｆ",
+                "0x62": "ｇ",
+                "0x63": "ｈ",
+                "0x64": "ｉ",
+                "0x65": "ｊ",
+                "0x66": "ｋ",
+                "0x67": "ｌ",
+                "0x68": "ｍ",
+                "0x69": "ｎ",
+                "0x6A": "ｏ",
+                "0x6B": "ｐ",
+                "0x6C": "ｑ",
+                "0x6D": "ｒ",
+                "0x6E": "ｓ",
+                "0x6F": "ｔ",
+                "0x70": "ｕ",
+                "0x71": "ｖ",
+                "0x72": "ｗ",
+                "0x73": "ｘ",
+                "0x74": "ｙ",
+                "0x75": "ｚ",
+                "0xB8": "「",
+                "0xC9": "」"
+            }
+        },
+        "symbols": {
+            "name": "Text",
+            "char": {
+                "0x21": "\\petrify",
+                "0x22": "\\frog",
+                "0x23": "\\mini",
+                "0x24": "\\pig",
+                "0x25": "\\mute",
+                "0x26": "\\darkness",
+                "0x27": "\\poison",
+                "0x28": "\\float",
+                "0x29": "\\claw",
+                "0x2A": "\\rod",
+                "0x2B": "\\staff",
+                "0x2C": "\\darksword",
+                "0x2D": "\\sword",
+                "0x2E": "\\paladin",
+                "0x2F": "\\spear",
+                "0x30": "\\knife",
+                "0x31": "\\katana",
+                "0x32": "\\star",
+                "0x33": "\\boomerang",
+                "0x34": "\\axe",
+                "0x35": "\\wrench",
+                "0x36": "\\music",
+                "0x37": "\\bow",
+                "0x38": "\\arrow",
+                "0x39": "\\hammer",
+                "0x3A": "\\whip",
+                "0x3B": "\\shield",
+                "0x3C": "\\helmet",
+                "0x3D": "\\armor",
+                "0x3E": "\\glove",
+                "0x3F": "\\black",
+                "0x40": "\\white",
+                "0x41": "\\call"
+            }
+        }
+    },
+    "textEncoding": {
+        "text": {
+            "name": "Text",
+            "charTable": [
+                "kana"
+            ]
+        }
+    }
+}

@@ -1,0 +1,374 @@
+<!DOCTYPE HTML>
+<html lang="en-US">
+    <head>
+        <meta charset="UTF-8">
+        <title>FF6 Tools</title>
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+        <link rel="stylesheet" type="text/css" href="ff6tools.css" />
+        
+        <script src="https://unpkg.com/split.js/split.min.js"></script>
+        <script type="text/javascript" src="gfx.js"></script>
+        <script type="text/javascript" src="romtools.js"></script>
+        <script type="text/javascript" src="ff4map.js"></script>
+        <script type="text/javascript" src="ff4script.js"></script>
+        <script type="text/javascript" src="ff5map.js"></script>
+        <script type="text/javascript" src="ff6map.js"></script>
+        <script type="text/javascript" src="ff6script.js"></script>
+        <script type="text/javascript">
+            
+            var definition;
+            var rom;
+            var data;
+            var map;
+            var mapClass;
+            var scriptList;
+
+            window.onload = function() {
+                /////////////////////////////////////////
+//                var localROM = new XMLHttpRequest();
+//                localROM.onload = function() {
+//                    if (localROM.status != 200) return;
+//                    var arrayBuffer = localROM.response;
+//                    data = new Uint8Array(arrayBuffer);
+//
+//                    loadROM();
+//                };
+//                localROM.open("get", "roms\\ff3u.sfc");
+//                localROM.responseType = "arraybuffer";
+//                localROM.send();
+                /////////////////////////////////////////
+                var romfile = document.getElementById("rom-file");
+                romfile.addEventListener("change", loadFile);
+                
+                Split(["#nav", "#edit", "#toolbox"], {
+                    sizes: [20, 60, 20],
+                    minSize: [256, 480, 256],
+                    gutterSize: 6,
+                    snapOffset: 0,
+                    direction: 'horizontal',
+                    elementStyle: function (dimension, size, gutterSize) {
+                        return {
+                            'flex-basis': 'calc(' + size + '% - ' + gutterSize + 'px)'
+                        }
+                    },
+                    gutterStyle: function (dimension, gutterSize) {
+                        return {
+                            'flex-basis':  gutterSize + 'px',
+                            'background-color': 'hsl(0, 0%, 30%)'
+                        }
+                    }
+                });
+                
+                Split(["#map-edit", "#script"], {
+                    sizes: [50, 50],
+                    minSize: [0, 44],
+                    gutterSize: 6,
+                    snapOffset: 0,
+                    direction: 'vertical',
+                    elementStyle: function (dimension, size, gutterSize) {
+                        return {
+                            'flex-basis': 'calc(' + size + '% - ' + gutterSize + 'px)'
+                        }
+                    },
+                    gutterStyle: function (dimension, gutterSize) {
+                        return {
+                            'flex-basis':  gutterSize + 'px',
+                            'background-color': 'hsl(0, 0%, 30%)'
+                        }
+                    }
+                });
+            };
+            
+            function loadDefinition(url) {
+                
+                var xhr = new XMLHttpRequest();
+                xhr.onreadystatechange = function() {
+                    if (xhr.readyState != 4 || xhr.status !== 200) return;
+                    definition = JSON.parse(xhr.responseText);
+                    
+                    // create the rom object
+                    rom = ROMObject.create(null, definition);
+                    rom.disassemble(data);
+
+                    map = new mapClass(rom);
+                    
+                    loadMapNames();
+                    rom.select(rom.mapProperties.item(0));
+                    
+                    scriptList = new ROMScriptList(rom);
+                };
+                xhr.onerror = function() {
+                    console.log("Error opening ROM definition: " + url);
+                };
+                xhr.open("get", url);
+                xhr.send();
+            }
+            
+            function loadFile() {
+                
+                var romfile = document.getElementById("rom-file");
+                if (!romfile || !romfile.files[0]) return;
+                var file = romfile.files[0];
+                var filereader = new FileReader();
+                filereader.readAsArrayBuffer(file);
+                filereader.onload = function() {
+                    
+                    // get the file as a byte array
+                    var arrayBuffer = filereader.result;
+                    data = new Uint8Array(arrayBuffer);
+                                    
+                    loadROM();
+                };
+            }
+            
+            function loadROM() {
+                
+                if (data.length % 0x0400 === 0x0200) {
+                    // data has a copier header
+                    data = data.slice(0x0200);
+                }
+
+                var crc32 = ROM.crc32(data);
+                
+                switch (crc32) {
+                    case 0x65D0A825: // v1.0
+                    case 0x23084FCD: // v1.1
+                    case 0x6CDA700C: // Easy (J)
+                        loadDefinition("ff2u-sfc.json");
+                        mapClass = FF4Map;
+                        break;
+                    case 0x21027C5D: // v1.0
+                    case 0xCAA15E97: // v1.1
+                        loadDefinition("ff4j-sfc.json");
+                        mapClass = FF4Map;
+                        break;
+                    case 0xC1BC267D:
+                        loadDefinition("ff5j-sfc.json");
+                        mapClass = FF5Map;
+                        break;
+                    case 0x892E44BE:
+                        loadDefinition("ff5u-sfc.json");
+                        mapClass = FF5Map;
+                        break;
+                    case 0xA27F1C7A: // v1.0
+                    case 0xC0FA0464: // v1.1
+                        loadDefinition("ff3u-sfc.json");
+                        mapClass = FF6Map;
+                        break;
+                    case 0x45EF5AC8:
+                        loadDefinition("ff6j-sfc.json");
+                        mapClass = FF6Map;
+                        break;
+                    case 0xD708F5AB:
+                        loadDefinition("ff6u-gba.json");
+                        mapClass = FF6Map;
+                        break;
+                    default:
+                        return;
+                }
+            }
+
+            function saveROM() {
+                
+                if (!rom) return;
+                
+                // assemble the rom and attach the data to a blob
+                var data = new Uint8Array(rom.data.length);
+                rom.assemble(data);
+                var blob = new Blob([data.buffer]);
+                
+                // create a definition blob
+                var definition = JSON.stringify(rom.definition, null, 4);                
+                var defBlob = new Blob([definition]);
+                
+                // Create a hidden link element
+                var a = document.createElement("a");
+                a.style = "display: none";
+                document.body.appendChild(a);
+                
+                // Create a DOMString representing the blob and point the link element towards it
+                var url = window.URL.createObjectURL(blob);
+                a.href = url;
+                a.download = rom.name + '.' + rom.system;
+                
+                // programatically click the link to trigger the download
+                a.click();
+                
+                // release the reference to the file by revoking the Object URL
+                window.URL.revokeObjectURL(url);
+                document.body.removeChild(a);
+                
+                // update the script list since the script references will change
+                scriptList.update();
+
+//                // Create a DOMString representing the blob and point the link element towards it
+//                url = window.URL.createObjectURL(defBlob);
+//                a.href = url;
+//                a.download = 'ff3.json';
+//                
+//                // programatically click the link to trigger the download
+//                a.click();
+//                
+//                // release the reference to the file by revoking the Object URL
+//                window.URL.revokeObjectURL(url);
+            }
+            
+            function selectMap(m) {
+                
+                var navList = document.getElementById("navList");
+                for (var i = 0; i < navList.childNodes.length; i++) {
+                    if (i === m) {
+                        navList.childNodes[i].classList.add("selected");
+                    } else {
+                        navList.childNodes[i].classList.remove("selected");
+                    }
+                }
+            }
+            
+            function undo() {
+                if (rom.canUndo()) rom.undo();
+            }
+            
+            function redo() {
+                if (rom.canRedo()) rom.redo();
+            }
+            
+            function twoState(obj) {
+                if (obj.checked){
+                    // if checkbox is being checked, add a "checked" class
+                    obj.parentNode.classList.add("checked");
+                } else {
+                    // else remove it
+                    obj.parentNode.classList.remove("checked");
+                }
+            }
+            
+            function loadMapNames() {
+                var navList = document.getElementById("navList");
+                navList.innerHTML = "";
+                if (!rom.mapProperties) return;
+                for (var m = 0; m < rom.mapProperties.array.length; m++) {
+                    navList.appendChild(liForMap(m));
+                }
+            }
+            
+            function liForMap(m) {
+                var mapNames = rom.stringTable["mapProperties"];
+                var li = document.createElement("li");
+                li.onclick = function() {
+                    rom.select(rom.mapProperties.item(m));
+                }
+                var span = document.createElement("span");
+                span.innerHTML = m.toString();
+                span.classList.add("navListIndex");
+                li.appendChild(span);
+                li.innerHTML += mapNames.formattedString(m);
+                return li;
+            }
+            
+            function showNav() {
+                var nav = document.getElementById("nav");
+                if (nav.classList.contains("hidden")) {
+                    nav.classList.remove("hidden");
+                } else {
+                    nav.classList.add("hidden");
+                }
+            }
+
+            function showScript() {
+                var script = document.getElementById("script");
+                if (script.classList.contains("hidden")) {
+                    script.classList.remove("hidden");
+                } else {
+                    script.classList.add("hidden");
+                }
+            }
+
+            function showToolbox() {
+                var toolbox = document.getElementById("toolbox");
+                if (toolbox.classList.contains("hidden")) {
+                    toolbox.classList.remove("hidden");
+                    rom.showProperties();
+                } else {
+                    toolbox.classList.add("hidden");
+                }
+            }
+
+        </script>
+    </head>
+    
+    <body>
+        <div id="outer">
+            
+            <div id="topbar">
+                <div>
+                    <button class="icon-btn float-left" onclick="document.getElementById('rom-file').click();" ><i class="fas fa-folder-open"></i></button>
+                    <input type="file" style="display:none;" id="rom-file" name="file"/>
+                    <button class="icon-btn float-left" onclick="saveROM()"><i class="fas fa-save"></i></button>
+                    <button class="icon-btn float-left" onclick="undo()"><i class="fas fa-undo"></i></button>
+                    <button class="icon-btn float-left" onclick="redo()"><i class="fas fa-redo"></i></button>
+                    
+                    <button class="icon-btn float-right" onclick="showToolbox()"><i class="fas fa-angle-double-right"></i></button>
+                    <button class="icon-btn float-right" onclick="showScript()"><i class="fas fa-angle-double-down"></i></button>
+                    <button class="icon-btn float-right" onclick="showNav()"><i class="fas fa-angle-double-left"></i></button>
+                </div>
+            </div>
+
+            <div id="main">
+                <div id="nav">
+                    <ul id="navList"></ul>
+                </div>
+
+                <div id="edit">
+                    <div id="map-controls">
+                        <label class="two-state checked"><input id="showLayer1" type="checkbox" checked="true" onchange="twoState(this)">Layer 1</label>
+                        <label class="two-state checked"><input id="showLayer2" type="checkbox" checked="true" onchange="twoState(this)">Layer 2</label>
+                        <label class="two-state checked"><input id="showLayer3" type="checkbox" checked="true" onchange="twoState(this)">Layer 3</label>
+                        <label class="two-state checked"><input id="showTriggers" type="checkbox" checked="true" onchange="twoState(this)">Triggers</label>
+                        <input type="range" id="zoom" min="-2" max="2" step="1" value="0" oninput="map.changeZoom()" list="zoom-ticks">
+                        <p id="zoom-value">100%</p>
+                    </div>
+
+                    <div id="map-edit">
+                        <div id="map-scroll" class="no-select">
+                            <canvas id="map" width="256" height="256"></canvas>
+                            <canvas id="map-cursor" width="16" height="16"></canvas>
+                        </div>
+                    </div>
+                    
+                    <div id="script" class="hidden">
+                        <div id="script-bar">
+                            <button id="script-insert" class="icon-btn"><i class="fas fa-plus"></i></button>
+                            <button class="icon-btn" onclick="scriptList.delete()"><i class="fas fa-minus"></i></button>
+                            <button class="icon-btn" onclick="scriptList.moveUp()"><i class="fas fa-arrow-up"></i></button>
+                            <button class="icon-btn" onclick="scriptList.moveDown()"><i class="fas fa-arrow-down"></i></button>
+                            <button class="icon-btn" style="display:none"><i class="fas fa-copy"></i></button>
+                            <button class="icon-btn" style="display:none"><i class="fas fa-paste"></i></button>
+                        </div>
+                        <div id="script-div">
+                            <ul id="script-list"></ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="toolbox">
+
+                    <div id="tileset-layers">
+                        <button class="toolbox-button selected" value="0">Layer 1</button>
+                        <button class="toolbox-button" value="1">Layer 2</button>
+                        <button class="toolbox-button" value="2">Layer 3</button>
+                        <button class="toolbox-button" value="3">Triggers</button>
+                    </div>
+
+                    <div class="relative no-select">
+                        <canvas id="tileset" width="256" height="256"></canvas>
+                        <canvas id="tileset-cursor" width="256" height="256"></canvas>
+                    </div>
+
+                    <div id="properties"></div>
+                </div>
+            </div>
+        </div>
+        <ul id="menu" class="menu"></ul>
+    </body>
+</html>
