@@ -11,6 +11,7 @@ var GFX = {}
 
 GFX.makeLong = function(a,b) { return ((a & 0xFFFF) | ((b & 0xFFFF) << 16)); }
 GFX.makeWord = function(a,b) { return ((a & 0xFF) | ((b & 0xFF) << 8)); }
+GFX.makeByte = function(a,b) { return ((a & 0x0F) | ((b & 0x0F) << 4)); }
 GFX.hiWord = function(a) { return ((a >> 16) & 0xFFFF); }
 GFX.loWord = function(a) { return (a & 0xFFFF); }
 GFX.hiByte = function(a) { return ((a >> 8) & 0xFF); }
@@ -92,11 +93,15 @@ GFX.decodeLinear8bpp = function(data) {
     return data;
 }
 
+GFX.encodeLinear8bpp = function(data) {
+    return data;
+}
+
 GFX.decodeLinear4bpp = function(data) {
     
     // 8-bit source, 8-bit destination
     var src = new Uint8Array(data.buffer, data.byteOffset, data.byteLength);
-    var dest = new Uint8Array(data.byteLength * 2)
+    var dest = new Uint8Array(data.byteLength * 2);
     
     var s = 0;
     var d = 0;
@@ -110,11 +115,29 @@ GFX.decodeLinear4bpp = function(data) {
     return dest;
 }
 
+GFX.encodeLinear4bpp = function(data) {
+    
+    // 8-bit source, 8-bit destination
+    var src = new Uint8Array(data.buffer, data.byteOffset, data.byteLength);
+    var dest = new Uint8Array(Math.ceil(data.byteLength / 2));
+    
+    var s = 0;
+    var d = 0;
+    var a1, a2;
+
+    while (s < src.length) {
+        a1 = src[s++] & 0x0F;
+        a2 = (src[s++] || 0) & 0x0F;
+        dest[d++] = GFX.makeByte(a1,a2);
+    }
+    return dest;
+}
+
 GFX.decodeLinear2bpp = function(data) {
     
     // 8-bit source, 8-bit destination
     var src = new Uint8Array(data.buffer, data.byteOffset, data.byteLength);
-    var dest = new Uint8Array(data.byteLength * 2)
+    var dest = new Uint8Array(data.byteLength * 4);
     
     var s = 0;
     var d = 0;
@@ -130,11 +153,31 @@ GFX.decodeLinear2bpp = function(data) {
     return dest;
 }
 
+GFX.encodeLinear2bpp = function(data) {
+    
+    // 8-bit source, 8-bit destination
+    var src = new Uint8Array(data.buffer, data.byteOffset, data.byteLength);
+    var dest = new Uint8Array(Math.ceil(data.byteLength / 4));
+    
+    var s = 0;
+    var d = 0;
+    var a1, a2, a3, a4;
+
+    while (s < src.length) {
+        a1 = src[s++] & 0x03;
+        a2 = (src[s++] || 0) & 0x03;
+        a3 = (src[s++] || 0) & 0x03;
+        a4 = (src[s++] || 0) & 0x03;
+        dest[d++] = a1 | (a2 << 2) | (a3 << 4) | (a4 << 6);
+    }
+    return dest;
+}
+
 GFX.decodeSNES4bpp = function(data) {
     
     // 16-bit source, 8-bit destination
     var src = new Uint16Array(data.buffer, data.byteOffset, data.byteLength / 2);
-    var dest = new Uint8Array(data.byteLength * 2)
+    var dest = new Uint8Array(data.byteLength * 2);
     
     var s = 0;
     var d = 0;
@@ -165,7 +208,7 @@ GFX.decodeSNES3bpp = function(data) {
     // 16-bit/8-bit source, 8-bit destination
     var src16 = new Uint16Array(data.buffer, data.byteOffset, data.byteLength / 2);
     var src8 = new Uint8Array(data.buffer, data.byteOffset, data.byteLength);
-    var dest = new Uint8Array(data.byteLength * 8 / 3)
+    var dest = new Uint8Array(data.byteLength * 8 / 3);
 
     var s16 = 0;
     var s8 = 16;
@@ -197,7 +240,7 @@ GFX.decodeSNES2bpp = function(data) {
     
     // 16-bit source, 8-bit destination
     var src = new Uint16Array(data.buffer, data.byteOffset, data.byteLength / 2);
-    var dest = new Uint8Array(data.byteLength * 4)
+    var dest = new Uint8Array(data.byteLength * 4);
     
     var s = 0;
     var d = 0;

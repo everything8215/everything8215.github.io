@@ -65,54 +65,37 @@
                         "begin": 0,
                         "stringTable": "mapTitles"
                     },
-                    "showTimer": {
+                    "song": {
                         "type": "property",
-                        "name": "Show Timer",
-                        "begin": 1,
-                        "mask": "0x80",
-                        "bool": true
+                        "name": "Song",
+                        "begin": 28,
+                        "stringTable": "song"
                     },
-                    "spotlights": {
+                    "scriptPointer": {
                         "type": "property",
-                        "name": "Spotlights",
-                        "begin": 1,
-                        "mask": "0x20",
-                        "bool": true
+                        "name": "Start-Up Event",
+                        "begin": 0,
+                        "mask": "0xFFFFFF",
+                        "external": "mapStartupEvents[%i]",
+                        "script": "eventScript"
                     },
-                    "layer1Wavy": {
+                    "flags": {
                         "type": "property",
-                        "name": "Wavy Layer 1",
+                        "name": "Flags",
                         "begin": 1,
-                        "mask": "0x10",
-                        "bool": true
-                    },
-                    "layer2Wavy": {
-                        "type": "property",
-                        "name": "Wavy Layer 2",
-                        "begin": 1,
-                        "mask": "0x08",
-                        "bool": true
-                    },
-                    "layer3Wavy": {
-                        "type": "property",
-                        "name": "Wavy Layer 3",
-                        "begin": 1,
-                        "mask": "0x04",
-                        "bool": true
-                    },
-                    "warp": {
-                        "type": "property",
-                        "name": "Enable Warp",
-                        "begin": 1,
-                        "mask": "0x02",
-                        "bool": true
-                    },
-                    "xZone": {
-                        "type": "property",
-                        "name": "Enable X-Zone",
-                        "begin": 1,
-                        "mask": "0x01",
-                        "bool": true
+                        "mask": "0xFF",
+                        "flag": true,
+                        "stringTable": {
+                            "string": {
+                                "0": "Enable X-Zone",
+                                "1": "Enable Warp",
+                                "2": "Wavy Layer 3",
+                                "3": "Wavy Layer 2",
+                                "4": "Wavy Layer 1",
+                                "5": "Spotlights",
+                                "7": "Show Timer"
+                            }
+                        }
                     },
                     "layer3Priority": {
                         "type": "property",
@@ -320,10 +303,88 @@
                             "0": "Wrap Around"
                         }
                     },
+                    "parallax": {
+                        "type": "property",
+                        "name": "Parallax",
+                        "begin": 22,
+                        "stringTable": "mapParallax",
+                        "link": "mapParallax[%i]"
+                    },
+                    "overlay": {
+                        "type": "property",
+                        "name": "Sprite Overlay",
+                        "begin": 17
+                    },
                     "colorMath": {
                         "type": "property",
                         "name": "Color Math",
-                        "begin": 32
+                        "begin": 32,
+                        "stringTable": "mapColorMath",
+                        "link": "mapColorMath[%i]"
+                    },
+                    "enableBattles": {
+                        "type": "property",
+                        "name": "Enable Battles",
+                        "begin": 5,
+                        "mask": "0x80",
+                        "bool": true
+                    },
+                    "battleBackground": {
+                        "type": "property",
+                        "name": "Battle Background",
+                        "begin": 2,
+                        "mask": "0x7F",
+                        "stringTable": "battleBackground"
+                    },
+                    "battleGroup": {
+                        "type": "property",
+                        "name": "Battle Group",
+                        "begin": 0,
+                        "mask": "0xFF",
+                        "external": "mapBattleGroups[%i]"
+                    },
+                    "battleProbability": {
+                        "type": "property",
+                        "name": "Battle Probability",
+                        "begin": 0,
+                        "mask": "0x03",
+                        "external": "mapBattleProbability[%i]",
+                        "stringTable": {
+                            "string": {
+                                "0": "Normal",
+                                "1": "Low",
+                                "2": "High",
+                                "3": "Very High"
+                            }
+                        }
+                    },
+                    "unknown6_7": {
+                        "type": "property",
+                        "name": "Unknown 6.7",
+                        "begin": 6,
+                        "mask": "0x80",
+                        "bool": true
+                    },
+                    "unknown24_0": {
+                        "type": "property",
+                        "name": "Unknown 24.0",
+                        "begin": 24,
+                        "mask": "0x01",
+                        "bool": true
+                    },
+                    "unknown24_1": {
+                        "type": "property",
+                        "name": "Unknown 24.1",
+                        "begin": 24,
+                        "mask": "0x02",
+                        "bool": true
+                    },
+                    "unknown24_2": {
+                        "type": "property",
+                        "name": "Unknown 24.2",
+                        "begin": 24,
+                        "mask": "0x04",
+                        "bool": true
                     }
                 },
                 "length": 33
@@ -581,7 +642,7 @@
 					"0x010A": "Magitek Research Facility: Elevator",
 					"0x010B": "Kefka's Tower: Stairway (Unused)",
 					"0x010C": "Magitek Research Facility: Tube Room (Ending)",
-					"0x010D": "Magitek Factory: Stairway",
+					"0x010D": "Magitek Research Facility: Stairway",
 					"0x010E": "Magitek Factory: Save Point",
 					"0x010F": "Magitek Research Facility: Tube Room",
 					"0x0110": "Magitek Research Facility: Train Room",
@@ -977,47 +1038,54 @@
             "assembly": {
                 "type": "data",
                 "assembly": {
-                    "layer1": {
+                    "mathLayers": {
                         "type": "property",
-                        "name": "Affect Layer 1",
+                        "name": "Math Layers",
                         "begin": 0,
-                        "mask": "0x01",
-                        "bool": true
+                        "mask": "0x3F",
+                        "flag": true,
+                        "stringTable": {
+                            "string": {
+                                "0": "Layer 1",
+                                "1": "Layer 2",
+                                "2": "Layer 3",
+                                "3": "Layer 4",
+                                "4": "Sprites",
+                                "5": "Back Area"
+                            }
+                        }
                     },
-                    "layer2": {
+                    "mainscreen": {
                         "type": "property",
-                        "name": "Affect Layer 2",
-                        "begin": 0,
-                        "mask": "0x02",
-                        "bool": true
+                        "name": "Main Screen Layers",
+                        "begin": 1,
+                        "mask": "0x3F",
+                        "flag": true,
+                        "stringTable": {
+                            "string": {
+                                "0": "Layer 1",
+                                "1": "Layer 2",
+                                "2": "Layer 3",
+                                "3": "Layer 4",
+                                "4": "Sprites"
+                            }
+                        }
                     },
-                    "layer3": {
+                    "subscreen": {
                         "type": "property",
-                        "name": "Affect Layer 3",
-                        "begin": 0,
-                        "mask": "0x04",
-                        "bool": true
-                    },
-                    "layer4": {
-                        "type": "property",
-                        "name": "Affect Layer 4",
-                        "begin": 0,
-                        "mask": "0x08",
-                        "bool": true
-                    },
-                    "sprites": {
-                        "type": "property",
-                        "name": "Affect Sprites",
-                        "begin": 0,
-                        "mask": "0x10",
-                        "bool": true
-                    },
-                    "back": {
-                        "type": "property",
-                        "name": "Affect Back Area",
-                        "begin": 0,
-                        "mask": "0x20",
-                        "bool": true
+                        "name": "Sub Screen Layers",
+                        "begin": 2,
+                        "mask": "0x3F",
+                        "flag": true,
+                        "stringTable": {
+                            "string": {
+                                "0": "Layer 1",
+                                "1": "Layer 2",
+                                "2": "Layer 3",
+                                "3": "Layer 4",
+                                "4": "Sprites"
+                            }
+                        }
                     },
                     "half": {
                         "type": "property",
@@ -1032,79 +1100,107 @@
                         "begin": 0,
                         "mask": "0x80",
                         "bool": true
-                    },
-                    "main1": {
-                        "type": "property",
-                        "name": "Layer 1 Main Screen",
-                        "begin": 1,
-                        "mask": "0x01",
-                        "bool": true
-                    },
-                    "main2": {
-                        "type": "property",
-                        "name": "Layer 2 Main Screen",
-                        "begin": 1,
-                        "mask": "0x02",
-                        "bool": true
-                    },
-                    "main3": {
-                        "type": "property",
-                        "name": "Layer 3 Main Screen",
-                        "begin": 1,
-                        "mask": "0x04",
-                        "bool": true
-                    },
-                    "main4": {
-                        "type": "property",
-                        "name": "Layer 4 Main Screen",
-                        "begin": 1,
-                        "mask": "0x08",
-                        "bool": true
-                    },
-                    "mainSprites": {
-                        "type": "property",
-                        "name": "Sprites Main Screen",
-                        "begin": 1,
-                        "mask": "0x10",
-                        "bool": true
-                    },
-                    "sub1": {
-                        "type": "property",
-                        "name": "Layer 1 Sub Screen",
-                        "begin": 2,
-                        "mask": "0x01",
-                        "bool": true
-                    },
-                    "sub2": {
-                        "type": "property",
-                        "name": "Layer 2 Sub Screen",
-                        "begin": 2,
-                        "mask": "0x02",
-                        "bool": true
-                    },
-                    "sub3": {
-                        "type": "property",
-                        "name": "Layer 3 Sub Screen",
-                        "begin": 2,
-                        "mask": "0x04",
-                        "bool": true
-                    },
-                    "sub4": {
-                        "type": "property",
-                        "name": "Layer 4 Sub Screen",
-                        "begin": 2,
-                        "mask": "0x08",
-                        "bool": true
-                    },
-                    "subSprites": {
-                        "type": "property",
-                        "name": "Sprites Sub Screen",
-                        "begin": 2,
-                        "mask": "0x10",
-                        "bool": true
                     }
                 },
                 "length": 3
+            },
+            "stringTable": {
+                "name": "Map Color Math",
+                "length": 19,
+                "default": "Color Math %i",
+                "string": {
+                    "0": "None",
+                    "1": "Layer 3 Half Addition",
+                    "4": "Layer 2 Half Addition",
+                    "5": "Layer 3 Full Addition",
+                    "6": "Cyan's Dream",
+                    "7": "Beach (Raft)",
+                    "8": "Layer 1 Half Addition",
+                    "12": "Back Area Half Addition",
+                    "13": "Floating Island Shadow",
+                    "14": "Beach (Fish)",
+                    "15": "Darill's Tomb Torches",
+                    "17": "Burning Building"
+                }
+            }
+        },
+        "mapParallax": {
+            "type": "array",
+            "name": "Map Parallax",
+            "range": "0xC0FE40-0xC0FEE8",
+            "array": {
+                "length": 21,
+                "max": 32
+            },
+            "assembly": {
+                "type": "data",
+                "assembly": {
+                    "hSpeedLayer2": {
+                        "type": "property",
+                        "name": "Layer 2 Horizontal Speed",
+                        "begin": 0
+                    },
+                    "hMultiplierLayer2": {
+                        "type": "property",
+                        "name": "Layer 2 Horizontal Multiplier",
+                        "begin": 4
+                    },
+                    "vSpeedLayer2": {
+                        "type": "property",
+                        "name": "Layer 2 Vertical Speed",
+                        "begin": 1
+                    },
+                    "vMultiplierLayer2": {
+                        "type": "property",
+                        "name": "Layer 2 Vertical Multiplier",
+                        "begin": 5
+                    },
+                    "hSpeedLayer3": {
+                        "type": "property",
+                        "name": "Layer 3 Horizontal Speed",
+                        "begin": 2
+                    },
+                    "hMultiplierLayer3": {
+                        "type": "property",
+                        "name": "Layer 3 Horizontal Multiplier",
+                        "begin": 6
+                    },
+                    "vSpeedLayer3": {
+                        "type": "property",
+                        "name": "Layer 3 Vertical Speed",
+                        "begin": 3
+                    },
+                    "vMultiplierLayer3": {
+                        "type": "property",
+                        "name": "Layer 3 Vertical Multiplier",
+                        "begin": 7
+                    }
+                },
+                "length": 8
+            },
+            "stringTable": {
+                "name": "Map Parallax",
+                "default": "Parallax %i",
+                "string": {
+                    "0": "None",
+                    "1": "Phantom Forest",
+                    "2": "Parallax w/ Fog",
+                    "3": "Train",
+                    "4": "Parallax",
+                    "5": "Opera House",
+                    "6": "Floating Island",
+                    "8": "Airship",
+                    "9": "Sealed Gate",
+                    "10": "Fog",
+                    "11": "Fog (Moving Down)",
+                    "12": "Airship (Breaking Apart)",
+                    "13": "Slow Fog",
+                    "14": "Fanatics&apos; Tower",
+                    "15": "Kefka&apos;s Tower (Top)",
+                    "17": "Waterfall",
+                    "18": "Kefka's Tower",
+                    "20": "Fog"
+                }
             }
         },
         "mapTileProperties": {
@@ -1353,6 +1449,31 @@
                     "26": "Green Magicite Smoke",
                     "29": "Airship WoB Parallax"
                 }
+            }
+        },
+        "mapBattleGroups": {
+            "type": "array",
+            "name": "Map Battle Groups",
+            "range": "0xCF5600-0xCF5800",
+            "array": {
+                "length": 512
+            },
+            "assembly": {
+                "type": "assembly",
+                "length": 1
+            }
+        },
+        "mapBattleProbability": {
+            "type": "array",
+            "name": "Map Battle Probability",
+            "range": "0xCF5880-0xCF5900",
+            "format": "linear2bpp",
+            "array": {
+                "length": 512
+            },
+            "assembly": {
+                "type": "assembly",
+                "length": 1
             }
         },
         "vehicleGraphics": {
@@ -2336,6 +2457,146 @@
                 "default": "<esperNames[%i].text>"
             }
         },
+        "esperProperties": {
+            "type": "array",
+            "name": "Esper Properties",
+            "range": "0xD86E00-0xD87000",
+            "array": {
+                "length": 27
+            },
+            "assembly": {
+                "type": "data",
+                "assembly": {
+                    "esperName": {
+                        "type": "text",
+                        "name": "Name",
+                        "external": "esperNames[%i]",
+                        "encoding": "smallText",
+                        "length": 8
+                    },
+                    "spell1": {
+                        "type": "property",
+                        "name": "Spell 1",
+                        "begin": 1,
+                        "stringTable": "spellNames",
+                        "link": "attackProperties[%i]"
+                    },
+                    "rate1": {
+                        "type": "property",
+                        "name": "Rate 1",
+                        "begin": 0,
+                        "max": 100
+                    },
+                    "spell2": {
+                        "type": "property",
+                        "name": "Spell 2",
+                        "begin": 3,
+                        "stringTable": "spellNames",
+                        "link": "attackProperties[%i]"
+                    },
+                    "rate2": {
+                        "type": "property",
+                        "name": "Rate 2",
+                        "begin": 2,
+                        "max": 100
+                    },
+                    "spell3": {
+                        "type": "property",
+                        "name": "Spell 3",
+                        "begin": 5,
+                        "stringTable": "spellNames",
+                        "link": "attackProperties[%i]"
+                    },
+                    "rate3": {
+                        "type": "property",
+                        "name": "Rate 3",
+                        "begin": 4,
+                        "max": 100
+                    },
+                    "spell4": {
+                        "type": "property",
+                        "name": "Spell 4",
+                        "begin": 7,
+                        "stringTable": "spellNames",
+                        "link": "attackProperties[%i]"
+                    },
+                    "rate4": {
+                        "type": "property",
+                        "name": "Rate 4",
+                        "begin": 6,
+                        "max": 100
+                    },
+                    "spell5": {
+                        "type": "property",
+                        "name": "Spell 5",
+                        "begin": 9,
+                        "stringTable": "spellNames",
+                        "link": "attackProperties[%i]"
+                    },
+                    "rate5": {
+                        "type": "property",
+                        "name": "Rate 5",
+                        "begin": 8,
+                        "max": 100
+                    },
+                    "bonus": {
+                        "type": "property",
+                        "name": "Bonus",
+                        "begin": 10,
+                        "stringTable": "esperBonusNames",
+                        "link": "esperBonusNames[%i]"
+                    }
+                },
+                "length": 11
+            },
+            "stringTable": "esperNames"
+        },
+        "esperBonusNames": {
+            "type": "array",
+            "name": "Esper Bonus Names",
+            "range": "0xCFFEAE-0xCFFF9E",
+            "array": {
+                "length": 17
+            },
+            "assembly": {
+                "type": "data",
+                "length": 9,
+                "assembly": {
+                    "bonusName": {
+                        "type": "text",
+                        "name": "Name",
+                        "encoding": "smallText",
+                        "length": 9
+                    },
+                    "description": {
+                        "type": "text",
+                        "name": "Description",
+                        "encoding": "nullTerminated",
+                        "external": "esperBonusDescriptions[%i]"
+                    }
+                }
+            },
+            "stringTable": {
+                "name": "Esper Bonus Names",
+                "length": 17,
+                "default": "<esperBonusNames[%i].bonusName.text>",
+                "string": {
+                    "255": "None"
+                }
+            }
+        },
+        "esperBonusDescriptions": {
+            "type": "array",
+            "name": "Esper Bonus Descriptions",
+            "range": "0xEDFE00-0xEDFFA7",
+            "array": {
+                "length": 17
+            },
+            "pointerTable": {
+                "range": "0xEDFFD0-0xEE0000",
+                "offset": "0xEDFE00"
+            }
+        },
         "itemNames": {
             "type": "array",
             "name": "Item Names",
@@ -2574,6 +2835,54 @@
                 }
             }
         },
+        "spellNames": {
+            "type": "array",
+            "name": "Spell Names",
+            "range": "0xE6F567-0xE6F6E1",
+            "array": {
+                "length": 54
+            },
+            "assembly": {
+                "type": "text",
+                "encoding": "smallText",
+                "length": 7
+            },
+            "stringTable": {
+                "name": "Spell Names",
+                "length": 54,
+                "default": "<spellNames[%i].formattedText>",
+                "string": {
+                    "255": "None"
+                }
+            }
+        },
+        "attackProperties": {
+            "type": "array",
+            "name": "Attack Properties",
+            "range": "0xC46AC0-0xC478C0",
+            "array": {
+                "length": 256
+            },
+            "assembly": {
+                "type": "data",
+                "length": 14,
+                "assembly": {
+                    "mpCost": {
+                        "type": "property",
+                        "name": "MP Cost",
+                        "begin": 5
+                    }
+                }
+            },
+            "stringTable": {
+                "name": "Attack Names",
+                "default": "Attack %i",
+                "length": 256,
+                "string": {
+                    "0-54": "<spellNames[%i]"
+                }
+            }
+        },
         "rareItemNames": {
             "type": "array",
             "name": "Rare Item Names",
@@ -2630,7 +2939,8 @@
                             "type": "property",
                             "name": "Background",
                             "begin": 2,
-                            "mask": "0x3F"
+                            "mask": "0x3F",
+                            "stringTable": "battleBackground"
                         },
                         "flags": {
                             "type": "property",
@@ -2976,7 +3286,8 @@
                             "name": "Esper",
                             "begin": 1,
                             "offset": -54,
-                            "stringTable": "esperNames"
+                            "stringTable": "esperNames",
+                            "link": "esperProperties[%i]"
                         }
                     }
                 },
@@ -2984,7 +3295,26 @@
                     "name": "Give/Take GP",
                     "category": "Inventory",
                     "opcode": ["0x84", "0x85"],
-                    "length": 3
+                    "length": 3,
+                    "assembly": {
+                        "giveTake": {
+                            "type": "property",
+                            "name": "Give/Take",
+                            "begin": 0,
+                            "stringTable": {
+                                "string": {
+                                    "0x84": "Give",
+                                    "0x85": "Take"
+                                }
+                            }
+                        },
+                        "gp": {
+                            "type": "property",
+                            "name": "GP",
+                            "begin": 1,
+                            "mask": "0xFFFF"
+                        }
+                    }
                 },
                 "inventoryItem": {
                     "name": "Give/Take Item",
@@ -3026,7 +3356,7 @@
                             "type": "property",
                             "name": "Switch",
                             "begin": 1,
-                            "stringTable": "battleSwitchesGlobal"
+                            "stringTable": "battleSwitchGlobal"
                         },
                         "scriptPointer": {
                             "type": "property",
@@ -3058,10 +3388,82 @@
                     }
                 },
                 "jumpDialog": {
-                    "name": "Jump Based Dialog Choice",
+                    "name": "Jump Based on Dialog Choice",
                     "category": "Control",
                     "length": 1,
-                    "opcode": "0xB6"
+                    "opcode": "0xB6",
+                    "assembly": {
+                        "count": {
+                            "type": "property",
+                            "name": "Choices",
+                            "begin": 50,
+                            "min": 1,
+                            "max": 8
+                        },
+                        "scriptPointer1": {
+                            "type": "property",
+                            "name": "Choice 1",
+                            "begin": 1,
+                            "mask": "0xFFFFFF",
+                            "script": "eventScript"
+                        },
+                        "scriptPointer2": {
+                            "type": "property",
+                            "name": "Choice 2",
+                            "begin": 4,
+                            "mask": "0xFFFFFF",
+                            "invalid": "this.parent.count.value < 2",
+                            "script": "eventScript"
+                        },
+                        "scriptPointer3": {
+                            "type": "property",
+                            "name": "Choice 3",
+                            "begin": 7,
+                            "mask": "0xFFFFFF",
+                            "invalid": "this.parent.count.value < 3",
+                            "script": "eventScript"
+                        },
+                        "scriptPointer4": {
+                            "type": "property",
+                            "name": "Choice 4",
+                            "begin": 10,
+                            "mask": "0xFFFFFF",
+                            "invalid": "this.parent.count.value < 4",
+                            "script": "eventScript"
+                        },
+                        "scriptPointer5": {
+                            "type": "property",
+                            "name": "Choice 5",
+                            "begin": 13,
+                            "mask": "0xFFFFFF",
+                            "invalid": "this.parent.count.value < 5",
+                            "script": "eventScript"
+                        },
+                        "scriptPointer6": {
+                            "type": "property",
+                            "name": "Choice 6",
+                            "begin": 16,
+                            "mask": "0xFFFFFF",
+                            "invalid": "this.parent.count.value < 6",
+                            "script": "eventScript"
+                        },
+                        "scriptPointer7": {
+                            "type": "property",
+                            "name": "Choice 7",
+                            "begin": 19,
+                            "mask": "0xFFFFFF",
+                            "invalid": "this.parent.count.value < 7",
+                            "script": "eventScript"
+                        },
+                        "scriptPointer8": {
+                            "type": "property",
+                            "name": "Choice 8",
+                            "begin": 22,
+                            "mask": "0xFFFFFF",
+                            "invalid": "this.parent.count.value < 8",
+                            "script": "eventScript"
+                        }
+                    }
                 },
                 "jumpSub": {
                     "name": "Jump to Subroutine",
@@ -3385,6 +3787,11 @@
                     "category": "Menu",
                     "opcode": "0x9D"
                 },
+                "menuLoad": {
+                    "name": "Game Load Menu",
+                    "category": "Menu",
+                    "opcode": "0xAB"
+                },
                 "menuName": {
                     "name": "Name Change Menu",
                     "category": "Menu",
@@ -3516,6 +3923,11 @@
                             "stringTable": "mapSprites"
                         }
                     }
+                },
+                "objectLoad": {
+                    "name": "Load Saved Character Object Data",
+                    "category": "Object",
+                    "opcode": "0xAC"
                 },
                 "objectPalette": {
                     "name": "Change Object Palette",
@@ -3673,7 +4085,16 @@
                     "name": "Set the Current Party",
                     "category": "Party",
                     "opcode": "0x46",
-                    "length": 2
+                    "length": 2,
+                    "assembly": {
+                        "party": {
+                            "type": "property",
+                            "name": "Party",
+                            "begin": 1,
+                            "min": 1,
+                            "max": 7
+                        }
+                    }
                 },
                 "partyCharacters": {
                     "name": "Set the Party Characters",
@@ -3723,7 +4144,20 @@
                     "name": "Enable/Disable User Control",
                     "category": "Party",
                     "opcode": ["0x3A", "0x3B"],
-                    "length": 1
+                    "length": 1,
+                    "assembly": {
+                        "control": {
+                            "type": "property",
+                            "name": "User Control",
+                            "begin": 0,
+                            "stringTable": {
+                                "string": {
+                                    "0x3A": "Enable",
+                                    "0x3B": "Disable"
+                                }
+                            }
+                        }
+                    }
                 },
                 "partyMap": {
                     "name": "Change a Party's Map",
@@ -3962,19 +4396,116 @@
                     "name": "SPC Interrupt",
                     "category": "Sound",
                     "length": 4,
-                    "opcode": "0xF6"
+                    "opcode": "0xF6",
+                    "assembly": {
+                        "interrupt": {
+                            "type": "property",
+                            "name": "Interrupt",
+                            "begin": 1,
+                            "stringTable": {
+                                "string": {
+                                    "0x00": "No Interrupt",
+                                    "0x10": "Play Song",
+                                    "0x11": "Play Song (Pause Current Song)",
+                                    "0x14": "Play Song (Alt. Start)",
+                                    "0x15": "Play Song (Alt. Start, Pause Current Song)",
+                                    "0x18": "Play Sound Effect",
+                                    "0x20": "System Sound Effect: Select",
+                                    "0x21": "System Sound Effect: Move/Cancel",
+                                    "0x22": "System Sound Effect: Error",
+                                    "0x23": "System Sound Effect: Success",
+                                    "0x24": "System Sound Effect: Delete",
+                                    "0x28": "System Sound Effect: Player 1 Active",
+                                    "0x29": "System Sound Effect: Player 2 Active",
+                                    "0x2C": "System Sound Effect: Ching",
+                                    "0x80": "Set Song/Sound Effect Volume",
+                                    "0x81": "Set Song Volume",
+                                    "0x82": "Set Sound Effect Volume",
+                                    "0x83": "Set Sound Effect Pan",
+                                    "0x84": "Set Tempo",
+                                    "0x85": "Set Pitch",
+                                    "0x89": "Enable Conditional Jump",
+                                    "0xF0": "Stop All Sound",
+                                    "0xF1": "Stop Song",
+                                    "0xF2": "Stop Sound Effect",
+                                    "0xF3": "Set Mono/Stereo Mode",
+                                    "0xF4": "Mute Voices",
+                                    "0xF5": "Pause/Unpause Music",
+                                    "0xF6": "Enable/Disable Fast Forward",
+                                    "0xFC": "Set Echo Delay",
+                                    "0xFD": "Set DSP Register",
+                                    "0xFE": "Data Transfer",
+                                    "0xFF": "Reset"
+                                }
+                            }
+                        },
+                        "song": {
+                            "type": "property",
+                            "name": "Song",
+                            "begin": "2",
+                            "invalid": "(this.parent.interrupt.value < 0x10) || (this.parent.interrupt.value > 0x15)",
+                            "stringTable": "song"
+                        },
+                        "volume": {
+                            "type": "property",
+                            "name": "Volume",
+                            "begin": "3",
+                            "invalid": "(this.parent.interrupt.value < 0x10) || (this.parent.interrupt.value > 0x15)"
+                        },
+                        "resetCommand": {
+                            "type": "property",
+                            "name": "Command",
+                            "begin": "2",
+                            "invalid": "this.parent.interrupt.value !== 0xFF",
+                            "stringTable": {
+                                "string": {
+                                    "0x01": "Enable/Disable Waveform Output",
+                                    "0x02": "Enable/Disable Echo",
+                                    "0xF0": "Reset SPC"
+                                }
+                            }
+                        },
+                        "resetValue": {
+                            "type": "property",
+                            "name": "Enable/Disable",
+                            "begin": "3",
+                            "invalid": "(this.parent.interrupt.value !== 0xFF) || (this.parent.resetCommand.value === 0xF0)",
+                            "stringTable": {
+                                "string": {
+                                    "0": "Disable",
+                                    "1": "Enable"
+                                }
+                            }
+                        }
+                    }
                 },
                 "spcSong": {
                     "name": "Play Song",
                     "category": "Sound",
                     "length": 2,
-                    "opcode": "0xF0"
+                    "opcode": "0xF0",
+                    "assembly": {
+                        "song": {
+                            "type": "property",
+                            "name": "Song",
+                            "begin": 1,
+                            "stringTable": "song"
+                        }
+                    }
                 },
                 "spcSongFadeIn": {
                     "name": "Fade In Song",
                     "category": "Sound",
                     "length": 3,
-                    "opcode": "0xF1"
+                    "opcode": "0xF1",
+                    "assembly": {
+                        "song": {
+                            "type": "property",
+                            "name": "Song",
+                            "begin": 1,
+                            "stringTable": "song"
+                        }
+                    }
                 },
                 "spcSongFadeOut": {
                     "name": "Fade Out Song",
@@ -3986,7 +4517,15 @@
                     "name": "Play Song (manual)",
                     "category": "Sound",
                     "length": 3,
-                    "opcode": "0xEF"
+                    "opcode": "0xEF",
+                    "assembly": {
+                        "song": {
+                            "type": "property",
+                            "name": "Song",
+                            "begin": 1,
+                            "stringTable": "song"
+                        }
+                    }
                 },
                 "spcSongPrevious": {
                     "name": "Fade In Previous Song",
@@ -4006,11 +4545,37 @@
                     "length": 4,
                     "opcode": "0xF5"
                 },
+                "spcSync": {
+                    "name": "Sync SPC",
+                    "category": "Sound",
+                    "length": 2,
+                    "opcode": "0xF9",
+                    "assembly": {
+                        "position": {
+                            "type": "property",
+                            "name": "Position",
+                            "begin": 1
+                        }
+                    }
+                },
                 "spcWait": {
                     "name": "Wait for SPC",
                     "category": "Sound",
-                    "length": 2,
-                    "opcode": "0xF9"
+                    "length": 1,
+                    "opcode": ["0xFA", "0xF8"],
+                    "assembly": {
+                        "waitType": {
+                            "type": "property",
+                            "name": "Type",
+                            "begin": 0,
+                            "stringTable": {
+                                "string": {
+                                    "0xF8": "Port-2",
+                                    "0xFA": "Port-3"
+                                }
+                            }
+                        }
+                    }
                 },
                 "switchBattle": {
                     "name": "Change Battle Switch",
@@ -4022,7 +4587,7 @@
                             "type": "property",
                             "name": "Switch",
                             "begin": 1,
-                            "stringTable": "battleSwitchesGlobal"
+                            "stringTable": "battleSwitchGlobal"
                         }
                     }
                 },
@@ -4146,11 +4711,11 @@
                             "begin": 0,
                             "stringTable": {
                                 "string": {
-                                    "0x91": "15 Frames",
-                                    "0x92": "30 Frames",
-                                    "0x93": "45 Frames",
-                                    "0x94": "60 Frames",
-                                    "0x95": "120 Frames"
+                                    "0x91": "15 Frames (0.25s)",
+                                    "0x92": "30 Frames (0.5s)",
+                                    "0x93": "45 Frames (0.75s)",
+                                    "0x94": "60 Frames (1s)",
+                                    "0x95": "120 Frames (2s)"
                                 }
                             }
                         }
@@ -4162,10 +4727,29 @@
                     "length": 2,
                     "opcode": ["0xB4", "0xB5"],
                     "assembly": {
-                        "duration": {
+                        "units": {
+                            "type": "property",
+                            "name": "Units",
+                            "begin": 0,
+                            "stringTable": {
+                                "string": {
+                                    "0xB4": "Frames",
+                                    "0xB5": "Seconds"
+                                }
+                            }
+                        },
+                        "durationFrames": {
                             "type": "property",
                             "name": "Duration",
-                            "begin": 1
+                            "begin": 1,
+                            "invalid": "this.parent.units.value !== 0xB4"
+                        },
+                        "durationSeconds": {
+                            "type": "property",
+                            "name": "Duration",
+                            "begin": 1,
+                            "multiplier": 0.25,
+                            "invalid": "this.parent.units.value !== 0xB5"
                         }
                     }
                 }
@@ -5612,7 +6196,71 @@
         }
     },
     "stringTable": {
-        "battleSwitchesGlobal": {
+        "battleBackground": {
+            "name": "Battle Backgrounds",
+            "default": "Backrgound %i",
+            "length": 56,
+            "string": {
+                "0": "Field (WoB)",
+                "1": "Forest (WoR)",
+                "2": "Desert (WoB)",
+                "3": "Forest (WoB)",
+                "4": "Zozo Interior",
+                "5": "Field (WoR)",
+                "6": "Veldt",
+                "7": "Clouds",
+                "8": "Narshe Exterior",
+                "9": "Narshe Caves A",
+                "10": "Caves",
+                "11": "Mountains Exterior",
+                "12": "Mountains Interior",
+                "13": "River",
+                "14": "Imperial Camp",
+                "15": "Train Exterior",
+                "16": "Train Interior",
+                "17": "Narshe Caves B",
+                "18": "Snowfields",
+                "19": "Town Exterior",
+                "20": "Imperial Castle",
+                "21": "Floating Island",
+                "22": "Kefka&apos;s Tower Exterior",
+                "23": "Opera House Stage",
+                "24": "Opera House Catwalk",
+                "25": "Burning Building",
+                "26": "Castle Interior",
+                "27": "Magitek Research Facility",
+                "28": "Colosseum",
+                "29": "Magitek Factory",
+                "30": "Village Exterior",
+                "31": "Waterfall",
+                "32": "Owzer's House",
+                "33": "Train Tracks",
+                "34": "Sealed Gate",
+                "35": "Underwater",
+                "36": "Zozo",
+                "37": "Airship (WoB, Centered)",
+                "38": "Darill&apos;s Tomb",
+                "39": "Doma Castle",
+                "40": "Kefka's Tower Interior",
+                "41": "Airship (WoR)",
+                "42": "Fire Caves",
+                "43": "Town Interior",
+                "44": "Magitek Train Car",
+                "45": "Fanatics' Tower",
+                "46": "Cyan&apos;s Dream",
+                "47": "Desert (WoR)",
+                "48": "Airship (WoB)",
+                "50": "GhostTrain",
+                "51": "Doom",
+                "52": "Poltergeist",
+                "53": "Goddess",
+                "54": "Final Kefka",
+                "55": "Tentacles",
+                "63": "Map Default",
+                "255": "No Background Override"
+            }
+        },
+        "battleSwitchGlobal": {
             "name": "Global Battle Switches",
             "default": "Global Battle Switch %i",
             "string": {
@@ -6719,6 +7367,98 @@
                 "965": "Narshe: Locked Weapon Shop"
             }
         },
+        "song": {
+            "name": "Songs",
+            "default": "Song %i",
+            "string": {
+                "0": "Silence",
+                "1": "The Prelude",
+                "2": "Opening Theme 1",
+                "3": "Opening Theme 2",
+                "4": "Opening Theme 3",
+                "5": "Awakening",
+                "6": "Terra",
+                "7": "Shadow",
+                "8": "Strago",
+                "9": "Gau",
+                "10": "Edgar & Sabin",
+                "11": "Coin Song",
+                "12": "Cyan",
+                "13": "Locke",
+                "14": "Forever Rachel",
+                "15": "Relm",
+                "16": "Setzer",
+                "17": "Epitaph",
+                "18": "Celes",
+                "19": "Techno de Chocobo",
+                "20": "The Decisive Battle",
+                "21": "Johnny C. Bad",
+                "22": "Kefka",
+                "23": "The Mines of Narshe",
+                "24": "Phantom Forest",
+                "25": "Veldt",
+                "26": "Save Them!",
+                "27": "The Emperor Gestahl",
+                "28": "Troops March On",
+                "29": "Under Martial Law",
+                "30": "Waterfall",
+                "31": "Metamorphosis",
+                "32": "Phantom Train",
+                "33": "Another World of Beasts",
+                "34": "Grand Finale 2",
+                "35": "Mt. Kolts",
+                "36": "Battle Theme",
+                "37": "Fanfare",
+                "38": "The Wedding Waltz 1",
+                "39": "Aria de Mezzo Caraterre",
+                "40": "The Serpent Trench",
+                "41": "Slam Shuffle",
+                "42": "Kids Run Through the City Corner",
+                "43": "???",
+                "44": "Grand Finale 1",
+                "45": "Gogo",
+                "46": "Returners",
+                "47": "Fanfare",
+                "48": "Umaro",
+                "49": "Mog",
+                "50": "The Unforgiven",
+                "51": "The Fierce Battle",
+                "52": "The Day After",
+                "53": "Blackjack",
+                "54": "Catastrophe",
+                "55": "The Magic House",
+                "56": "Nighty Night",
+                "57": "Wind",
+                "58": "Windy Shores",
+                "59": "Dancing Mad 1, 2 & 3",
+                "60": "Train Braking",
+                "61": "Spinach Rag",
+                "62": "Rest in Piece",
+                "63": "Chocobos Running",
+                "64": "The Dream of a Train",
+                "65": "Overture 1",
+                "66": "Overture 2",
+                "67": "Overture 3",
+                "68": "The Wedding Waltz 1",
+                "69": "The Wedding Waltz 2",
+                "70": "The Wedding Waltz 3",
+                "71": "Devil's Lab",
+                "72": "Fire!/Explosion",
+                "73": "Cranes Rising",
+                "74": "Inside the Burning House",
+                "75": "New Continent",
+                "76": "Searching for Friends",
+                "77": "Fanatics",
+                "78": "Last Dungeon and Aura",
+                "79": "Dark World",
+                "80": "Dancing Mad 5",
+                "81": "Silence",
+                "82": "Dancing Mad 4",
+                "83": "Ending Theme 1",
+                "84": "Ending Theme 2",
+                "0xFF": "Continue Previous Song"
+            }
+        },
         "treasureSwitches": {
             "name": "Treasure Switches",
             "length": 384,
@@ -6949,7 +7689,7 @@
                 "224": "Kefka's Tower: Tack Star",
                 "225": "Kefka's Tower: Inferno's Room A",
                 "226": "Kefka's Tower: Factory Room A",
-                "227": "Thamasa: Strago &amp; Relm's House",
+                "227": "Thamasa: Strago & Relm's House",
                 "228": "Gogo's Cave: Right Before Gogo's Room",
                 "229": "Pot in Colosseum Guy's House",
                 "230": "South Figaro: Lower Left Barrel",

@@ -918,47 +918,54 @@
             "assembly": {
                 "type": "data",
                 "assembly": {
-                    "layer1": {
+                    "mathLayers": {
                         "type": "property",
-                        "name": "Affect Layer 1",
+                        "name": "Math Layers",
                         "begin": 0,
-                        "mask": "0x01",
-                        "bool": true
+                        "mask": "0x3F",
+                        "flag": true,
+                        "stringTable": {
+                            "string": {
+                                "0": "Layer 1",
+                                "1": "Layer 2",
+                                "2": "Layer 3",
+                                "3": "Layer 4",
+                                "4": "Sprites",
+                                "5": "Back Area"
+                            }
+                        }
                     },
-                    "layer2": {
+                    "mainscreen": {
                         "type": "property",
-                        "name": "Affect Layer 2",
-                        "begin": 0,
-                        "mask": "0x02",
-                        "bool": true
+                        "name": "Main Screen",
+                        "begin": 1,
+                        "mask": "0x3F",
+                        "flag": true,
+                        "stringTable": {
+                            "string": {
+                                "0": "Layer 1",
+                                "1": "Layer 2",
+                                "2": "Layer 3",
+                                "3": "Layer 4",
+                                "4": "Sprites"
+                            }
+                        }
                     },
-                    "layer3": {
+                    "subscreen": {
                         "type": "property",
-                        "name": "Affect Layer 3",
-                        "begin": 0,
-                        "mask": "0x04",
-                        "bool": true
-                    },
-                    "layer4": {
-                        "type": "property",
-                        "name": "Affect Layer 4",
-                        "begin": 0,
-                        "mask": "0x08",
-                        "bool": true
-                    },
-                    "sprites": {
-                        "type": "property",
-                        "name": "Affect Sprites",
-                        "begin": 0,
-                        "mask": "0x10",
-                        "bool": true
-                    },
-                    "back": {
-                        "type": "property",
-                        "name": "Affect Back Area",
-                        "begin": 0,
-                        "mask": "0x20",
-                        "bool": true
+                        "name": "Sub Screen",
+                        "begin": 2,
+                        "mask": "0x3F",
+                        "flag": true,
+                        "stringTable": {
+                            "string": {
+                                "0": "Layer 1",
+                                "1": "Layer 2",
+                                "2": "Layer 3",
+                                "3": "Layer 4",
+                                "4": "Sprites"
+                            }
+                        }
                     },
                     "half": {
                         "type": "property",
@@ -973,79 +980,28 @@
                         "begin": 0,
                         "mask": "0x80",
                         "bool": true
-                    },
-                    "main1": {
-                        "type": "property",
-                        "name": "Layer 1 Main Screen",
-                        "begin": 1,
-                        "mask": "0x01",
-                        "bool": true
-                    },
-                    "main2": {
-                        "type": "property",
-                        "name": "Layer 2 Main Screen",
-                        "begin": 1,
-                        "mask": "0x02",
-                        "bool": true
-                    },
-                    "main3": {
-                        "type": "property",
-                        "name": "Layer 3 Main Screen",
-                        "begin": 1,
-                        "mask": "0x04",
-                        "bool": true
-                    },
-                    "main4": {
-                        "type": "property",
-                        "name": "Layer 4 Main Screen",
-                        "begin": 1,
-                        "mask": "0x08",
-                        "bool": true
-                    },
-                    "mainSprites": {
-                        "type": "property",
-                        "name": "Sprites Main Screen",
-                        "begin": 1,
-                        "mask": "0x10",
-                        "bool": true
-                    },
-                    "sub1": {
-                        "type": "property",
-                        "name": "Layer 1 Sub Screen",
-                        "begin": 2,
-                        "mask": "0x01",
-                        "bool": true
-                    },
-                    "sub2": {
-                        "type": "property",
-                        "name": "Layer 2 Sub Screen",
-                        "begin": 2,
-                        "mask": "0x02",
-                        "bool": true
-                    },
-                    "sub3": {
-                        "type": "property",
-                        "name": "Layer 3 Sub Screen",
-                        "begin": 2,
-                        "mask": "0x04",
-                        "bool": true
-                    },
-                    "sub4": {
-                        "type": "property",
-                        "name": "Layer 4 Sub Screen",
-                        "begin": 2,
-                        "mask": "0x08",
-                        "bool": true
-                    },
-                    "subSprites": {
-                        "type": "property",
-                        "name": "Sprites Sub Screen",
-                        "begin": 2,
-                        "mask": "0x10",
-                        "bool": true
                     }
                 },
                 "length": 3
+            },
+            "stringTable": {
+                "name": "Map Color Math",
+                "length": 19,
+                "default": "Color Math %i",
+                "string": {
+                    "0": "None",
+                    "1": "Layer 3 Half Addition",
+                    "4": "Layer 2 Half Addition",
+                    "5": "Layer 3 Full Addition",
+                    "6": "Cyan's Dream",
+                    "7": "Beach (Raft)",
+                    "8": "Layer 1 Half Addition",
+                    "12": "Back Area Half Addition",
+                    "13": "Floating Island Shadow",
+                    "14": "Beach (Fish)",
+                    "15": "Darill's Tomb Torches",
+                    "17": "Burning Building"
+                }
             }
         },
         "mapTileProperties": {

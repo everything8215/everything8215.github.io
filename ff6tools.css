@@ -31,6 +31,7 @@ body {
     font-size: 20px;
     cursor: default;
     outline: none;
+    align-content: center;
 }
 
 .icon-btn:hover {
@@ -533,4 +534,40 @@ body {
 .menu-item-disabled {
     background-color: hsl(0, 0%, 95%);
     color: gray;
+}
+
+.tooltip {
+    position: relative;
+    display: inline-block;
+}
+
+.tooltip .tooltiptext {
+    display: none;
+    z-index: 10;
+    width: 120px;
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    font-size: small;
+    border-radius: 5px;
+    padding: 5px;
+    position: absolute;
+    top: 150%;
+    left: 50%;
+    margin-left: -65px;
+}
+
+.tooltip .tooltiptext::after {
+    content: "";
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: transparent transparent black transparent;
+}
+
+.tooltip:hover .tooltiptext {
+/*    display: inline-block;*/
 }

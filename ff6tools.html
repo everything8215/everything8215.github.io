@@ -16,12 +16,7 @@
         <script type="text/javascript" src="ff6script.js"></script>
         <script type="text/javascript">
             
-            var definition;
-            var rom;
-            var data;
-            var map;
-            var mapClass;
-            var scriptList;
+            var rom, definition, data, map, mapClass, scriptList;
 
             window.onload = function() {
                 /////////////////////////////////////////
@@ -302,15 +297,36 @@
             
             <div id="topbar">
                 <div>
-                    <button class="icon-btn float-left" onclick="document.getElementById('rom-file').click();" ><i class="fas fa-folder-open"></i></button>
+                    <button class="icon-btn float-left tooltip" onclick="document.getElementById('rom-file').click();" >
+                        <i class="fas fa-folder-open"></i>
+                        <span class="tooltiptext">Open ROM</span>
+                    </button>
                     <input type="file" style="display:none;" id="rom-file" name="file"/>
-                    <button class="icon-btn float-left" onclick="saveROM()"><i class="fas fa-save"></i></button>
-                    <button class="icon-btn float-left" onclick="undo()"><i class="fas fa-undo"></i></button>
-                    <button class="icon-btn float-left" onclick="redo()"><i class="fas fa-redo"></i></button>
+                    <button class="icon-btn float-left tooltip" onclick="saveROM()">
+                        <i class="fas fa-save"></i>
+                        <span class="tooltiptext">Save ROM</span>
+                    </button>
+                    <button class="icon-btn float-left tooltip" onclick="undo()">
+                        <i class="fas fa-undo"></i>
+                        <span class="tooltiptext">Undo</span>
+                    </button>
+                    <button class="icon-btn float-left tooltip" onclick="redo()">
+                        <i class="fas fa-redo"></i>
+                        <span class="tooltiptext">Redo</span>
+                    </button>
                     
-                    <button class="icon-btn float-right" onclick="showToolbox()"><i class="fas fa-angle-double-right"></i></button>
-                    <button class="icon-btn float-right" onclick="showScript()"><i class="fas fa-angle-double-down"></i></button>
-                    <button class="icon-btn float-right" onclick="showNav()"><i class="fas fa-angle-double-left"></i></button>
+                    <button class="icon-btn float-right tooltip" onclick="showToolbox()">
+                        <i class="fas fa-angle-double-right"></i>
+                        <span class="tooltiptext">Show/Hide Toolbox</span>
+                    </button>
+                    <button class="icon-btn float-right tooltip" onclick="showScript()">
+                        <i class="fas fa-angle-double-down"></i>
+                        <span class="tooltiptext">Show/Hide Script</span>
+                    </button>
+                    <button class="icon-btn float-right tooltip" onclick="showNav()">
+                        <i class="fas fa-angle-double-left"></i>
+                        <span class="tooltiptext">Show/Hide Navigator</span>
+                    </button>
                 </div>
             </div>
 
@@ -321,7 +337,7 @@
 
                 <div id="edit">
                     <div id="map-controls">
-                        <label class="two-state checked"><input id="showLayer1" type="checkbox" checked="true" onchange="twoState(this)">Layer 1</label>
+                        <label class="two-state checked tooltip"><input id="showLayer1" type="checkbox" checked="true" onchange="twoState(this)">Layer 1</label>
                         <label class="two-state checked"><input id="showLayer2" type="checkbox" checked="true" onchange="twoState(this)">Layer 2</label>
                         <label class="two-state checked"><input id="showLayer3" type="checkbox" checked="true" onchange="twoState(this)">Layer 3</label>
                         <label class="two-state checked"><input id="showTriggers" type="checkbox" checked="true" onchange="twoState(this)">Triggers</label>

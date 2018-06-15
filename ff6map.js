@@ -366,11 +366,11 @@ FF6Map.prototype.changeLayer = function(id) {
     var colorMath = this.rom.mapColorMath.item(map.colorMath.value);
     this.ppu.layers[0].main = this.showLayer1;
     if (this.m > 2) {
-        this.ppu.layers[0].sub = this.showLayer1 && colorMath.sub1.value;
-        this.ppu.layers[1].main = this.showLayer2 && colorMath.main2.value;
-        this.ppu.layers[1].sub = this.showLayer2 && colorMath.sub2.value;
-        this.ppu.layers[2].main = this.showLayer3 && colorMath.main3.value;
-        this.ppu.layers[2].sub = this.showLayer3 && colorMath.sub3.value;
+        this.ppu.layers[0].sub = this.showLayer1 && (colorMath.subscreen.value & 0x01);
+        this.ppu.layers[1].main = this.showLayer2 && (colorMath.mainscreen.value & 0x02);
+        this.ppu.layers[1].sub = this.showLayer2 && (colorMath.subscreen.value & 0x02);
+        this.ppu.layers[2].main = this.showLayer3 && (colorMath.mainscreen.value & 0x04);
+        this.ppu.layers[2].sub = this.showLayer3 && (colorMath.subscreen.value & 0x04);
     }
     this.invalidateMap();
     this.drawMap();
@@ -558,8 +558,8 @@ FF6Map.prototype.loadMap = function(m) {
     this.ppu.layers[0].gfx = gfx;
     this.ppu.layers[0].tiles = this.layer[0].tiles;
     this.ppu.layers[0].main = this.showLayer1; // layer 1 always in main screen
-    this.ppu.layers[0].sub = this.showLayer1 && colorMath.sub1.value;
-    this.ppu.layers[0].math = colorMath.layer1.value;
+    this.ppu.layers[0].sub = this.showLayer1 && (colorMath.subscreen.value & 0x01);
+    this.ppu.layers[0].math = (colorMath.mathLayers.value & 0x01);
 
     // layer 2
     this.ppu.layers[1].format = format;
@@ -571,9 +571,9 @@ FF6Map.prototype.loadMap = function(m) {
     this.ppu.layers[1].z[1] = GFX.Z.snes2H;
     this.ppu.layers[1].gfx = gfx;
     this.ppu.layers[1].tiles = this.layer[1].tiles;
-    this.ppu.layers[1].main = this.showLayer2 && colorMath.main2.value;
-    this.ppu.layers[1].sub = this.showLayer2 && colorMath.sub2.value;
-    this.ppu.layers[1].math = colorMath.layer2.value;
+    this.ppu.layers[1].main = this.showLayer2 && (colorMath.mainscreen.value & 0x02);
+    this.ppu.layers[1].sub = this.showLayer2 && (colorMath.subscreen.value & 0x02);
+    this.ppu.layers[1].math = (colorMath.mathLayers.value & 0x02);
 
     // layer 3
     var format = this.rom.isSFC ? GFX.TileFormat.snes2bppTile : GFX.TileFormat.gba2bppTile;
@@ -586,9 +586,9 @@ FF6Map.prototype.loadMap = function(m) {
     this.ppu.layers[2].z[1] = GFX.Z.snes3P; // always high priority layer 3
     this.ppu.layers[2].gfx = gfx.subarray(0xC000);
     this.ppu.layers[2].tiles = this.layer[2].tiles;
-    this.ppu.layers[2].main = this.showLayer3 && colorMath.main3.value;
-    this.ppu.layers[2].sub = this.showLayer3 && colorMath.sub3.value;
-    this.ppu.layers[2].math = colorMath.layer3.value;
+    this.ppu.layers[2].main = this.showLayer3 && (colorMath.mainscreen.value & 0x04);
+    this.ppu.layers[2].sub = this.showLayer3 && (colorMath.subscreen.value & 0x04);
+    this.ppu.layers[2].math = (colorMath.mathLayers.value & 0x04);
 
     this.scrollDiv.style.width = (this.ppu.width * this.zoom).toString() + "px";
     this.scrollDiv.style.height = (this.ppu.height * this.zoom).toString() + "px";
@@ -730,8 +730,11 @@ FF6Map.prototype.drawMap = function() {
 }
 
 FF6Map.prototype.reloadTriggers = function() {
+    for (var t = 0; t < this.triggers.length; t++) {
+        this.observer.stopObserving(this.triggers[t]);
+    }
     this.loadTriggers();
-    this.drawMap();    
+    this.drawMap();
 }
 
 FF6Map.prototype.loadTriggers = function() {
@@ -824,6 +827,7 @@ FF6Map.prototype.deleteTrigger = function() {
     triggers.removeAssembly(index);
     this.rom.endAction();
     
+    this.observer.stopObserving(trigger);
     this.selectedTrigger = null;
     this.rom.select(null);
 }

@@ -113,7 +113,7 @@ FF6Script.initScript = function(script) {
         
         // startup event
         offset = script.rom.mapStartupEvents.item(m).scriptPointer.value;
-        label = script.rom.stringTable.mapStartupEvents.formattedString(m);
+        label = script.rom.stringTable.mapProperties.formattedString(m);
         script.addPlaceholder(script.rom.mapStartupEvents.item(m).scriptPointer, offset, "event", label);
     }
 
@@ -181,19 +181,20 @@ FF6Script.didDisassemble = function(command, data) {
                 break;
             }
             command.range.end += choices * 3;
+            command.count.value = choices;
             
-            var scriptPointerDefinition = {
-                "type": "property",
-                "mask": "0xFFFFFF",
-                "script": "eventScript"
-            }
-            
-            for (c = 1; c <= choices; c++) {
-                scriptPointerDefinition.begin = c * 3 - 2;
-                scriptPointerDefinition.name = "Script Pointer " + c;
-                scriptPointerDefinition.key = "scriptPointer" + c;
-                command.addAssembly(scriptPointerDefinition);
-            }
+//            var scriptPointerDefinition = {
+//                "type": "property",
+//                "mask": "0xFFFFFF",
+//                "script": "eventScript"
+//            }
+//            
+//            for (c = 1; c <= choices; c++) {
+//                scriptPointerDefinition.begin = c * 3 - 2;
+//                scriptPointerDefinition.name = "Script Pointer " + c;
+//                scriptPointerDefinition.key = "scriptPointer" + c;
+//                command.addAssembly(scriptPointerDefinition);
+//            }
             
             ROMData.prototype.disassemble.call(command, data);
             for (c = 1; c <= choices; c++) {
