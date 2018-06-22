@@ -20,17 +20,17 @@
 
             window.onload = function() {
                 /////////////////////////////////////////
-//                var localROM = new XMLHttpRequest();
-//                localROM.onload = function() {
-//                    if (localROM.status != 200) return;
-//                    var arrayBuffer = localROM.response;
-//                    data = new Uint8Array(arrayBuffer);
-//
-//                    loadROM();
-//                };
-//                localROM.open("get", "roms\\ff3u.sfc");
-//                localROM.responseType = "arraybuffer";
-//                localROM.send();
+                var localROM = new XMLHttpRequest();
+                localROM.onload = function() {
+                    if (localROM.status != 200) return;
+                    var arrayBuffer = localROM.response;
+                    data = new Uint8Array(arrayBuffer);
+
+                    loadROM();
+                };
+                localROM.open("get", "roms\\ff3u.sfc");
+                localROM.responseType = "arraybuffer";
+                localROM.send();
                 /////////////////////////////////////////
                 var romfile = document.getElementById("rom-file");
                 romfile.addEventListener("change", loadFile);
@@ -128,12 +128,12 @@
                 switch (crc32) {
                     case 0x65D0A825: // v1.0
                     case 0x23084FCD: // v1.1
-                    case 0x6CDA700C: // Easy (J)
                         loadDefinition("ff2u-sfc.json");
                         mapClass = FF4Map;
                         break;
                     case 0x21027C5D: // v1.0
                     case 0xCAA15E97: // v1.1
+                    case 0x6CDA700C: // Easy (J)
                         loadDefinition("ff4j-sfc.json");
                         mapClass = FF4Map;
                         break;

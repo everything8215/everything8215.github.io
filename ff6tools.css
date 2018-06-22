@@ -462,6 +462,12 @@ body {
     padding: 0px 0px;
 }
 
+.property-text {
+    resize: vertical;
+    vertical-align: middle;
+    overflow-y: visible;
+}
+
 .property-check-div {
     padding-top: 4px;
 }

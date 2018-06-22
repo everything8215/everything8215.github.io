@@ -7,44 +7,1037 @@
     "system": "sfc",
     "mode": "hiROM",
     "assembly": {
-        "snesHeader": {
-            "type": "data",
-            "name": "SNES Header",
-            "range": "0xC0FFB0-0xC0FFE0",
+        "attackProperties": {
+            "type": "array",
+            "name": "Attack Properties",
+            "range": "0xC46AC0-0xC478C0",
+            "array": {
+                "length": 256
+            },
             "assembly": {
-                "gameCode": {
-                    "type": "text",
-                    "name": "Game Code",
-                    "length": 2
+                "type": "data",
+                "length": 14,
+                "assembly": {
+                    "mpCost": {
+                        "type": "property",
+                        "name": "MP Cost",
+                        "begin": 5
+                    }
+                }
+            },
+            "stringTable": {
+                "name": "Attack Names",
+                "default": "Attack %i",
+                "length": 256,
+                "string": {
+                    "0-54": "<spellNames[%i]"
+                }
+            }
+        },
+        "characterNames": {
+            "type": "array",
+            "name": "Character Names",
+            "range": "0xC478C0-0xC47A40",
+            "array": {
+                "length": 64,
+                "max": 64
+            },
+            "assembly": {
+                "type": "text",
+                "encoding": "smallText",
+                "length": 6
+            },
+            "stringTable": {
+                "name": "Character Names",
+                "length": 64,
+                "default": "<characterNames[%i]>"
+            }
+        },
+        "dialog": {
+            "type": "array",
+            "name": "Dialog",
+            "range": "0xCD0000-0xCEEFBB",
+            "autoBank": true,
+            "array": {
+                "length": 3084
+            },
+            "assembly": {
+                "type": "text",
+                "encoding": "dialog"
+            },
+            "pointerTable": {
+                "range": "0xCCE602-0xCD0000",
+                "offset": "0xCD0000"
+            },
+            "stringTable": {
+                "name": "Dialog",
+                "length": 3084,
+                "default": "<dialog[%i]>"
+            }
+        },
+        "entranceTriggersMulti": {
+            "type": "array",
+            "name": "Multi-Tile Entrance Triggers",
+            "range": "0xEDF882-0xEDFCAA",
+            "isSequential": true,
+            "array": {
+                "length": 415
+            },
+            "assembly": {
+                "type": "array",
+                "assembly": {
+                    "type": "data",
+                    "assembly": {
+                        "x": {
+                            "type": "property",
+                            "name": "X Position",
+                            "begin": 0,
+                            "hidden": true
+                        },
+                        "y": {
+                            "type": "property",
+                            "name": "Y Position",
+                            "begin": 1,
+                            "hidden": true
+                        },
+                        "length": {
+                            "type": "property",
+                            "name": "Length",
+                            "begin": 2,
+                            "mask": "0x7F",
+                            "offset": 1
+                        },
+                        "vertical": {
+                            "type": "property",
+                            "name": "Vertical",
+                            "begin": 2,
+                            "mask": "0x80",
+                            "bool": true
+                        },
+                        "map": {
+                            "type": "property",
+                            "name": "Map",
+                            "begin": 3,
+                            "mask": "0x01FF",
+                            "stringTable": "mapProperties",
+                            "link": "mapProperties[%i]"
+                        },
+                        "setParent": {
+                            "type": "property",
+                            "name": "Set Parent Map",
+                            "begin": 4,
+                            "mask": "0x02",
+                            "bool": true
+                        },
+                        "z": {
+                            "type": "property",
+                            "name": "Z-Level",
+                            "begin": 4,
+                            "mask": "0x04",
+                            "stringTable": {
+                                "string": {
+                                    "0": "Lower",
+                                    "1": "Upper"
+                                }
+                            }
+                        },
+                        "title": {
+                            "type": "property",
+                            "name": "Show Map Title",
+                            "begin": 4,
+                            "mask": "0x08",
+                            "bool": true
+                        },
+                        "direction": {
+                            "type": "property",
+                            "name": "Facing Direction",
+                            "begin": 4,
+                            "mask": "0x30",
+                            "stringTable": "directions"
+                        },
+                        "xDest": {
+                            "type": "property",
+                            "name": "X Destination",
+                            "begin": 5
+                        },
+                        "yDest": {
+                            "type": "property",
+                            "name": "Y Destination",
+                            "begin": 6
+                        }
+                    },
+                    "length": 7
+                }
+            },
+            "pointerTable": {
+                "range": "0xEDF480-0xEDF882",
+                "offset": "0xEDF480"
+            }
+        },
+        "entranceTriggersSingle": {
+            "type": "array",
+            "name": "Single-Tile Entrance Triggers",
+            "range": "0xDFBF02-0xDFD978",
+            "isSequential": true,
+            "array": {
+                "length": 415
+            },
+            "assembly": {
+                "type": "array",
+                "assembly": {
+                    "type": "data",
+                    "assembly": {
+                        "x": {
+                            "type": "property",
+                            "name": "X Position",
+                            "begin": 0,
+                            "hidden": true
+                        },
+                        "y": {
+                            "type": "property",
+                            "name": "Y Position",
+                            "begin": 1,
+                            "hidden": true
+                        },
+                        "map": {
+                            "type": "property",
+                            "name": "Map",
+                            "begin": 2,
+                            "mask": "0x01FF",
+                            "stringTable": "mapProperties",
+                            "link": "mapProperties[%i]"
+                        },
+                        "setParent": {
+                            "type": "property",
+                            "name": "Set Parent Map",
+                            "begin": 3,
+                            "mask": "0x02",
+                            "bool": true
+                        },
+                        "z": {
+                            "type": "property",
+                            "name": "Z-Level",
+                            "begin": 3,
+                            "mask": "0x04",
+                            "stringTable": {
+                                "string": {
+                                    "0": "Lower",
+                                    "1": "Upper"
+                                }
+                            }
+                        },
+                        "title": {
+                            "type": "property",
+                            "name": "Show Map Title",
+                            "begin": 3,
+                            "mask": "0x08",
+                            "bool": true
+                        },
+                        "direction": {
+                            "type": "property",
+                            "name": "Facing Direction",
+                            "begin": 3,
+                            "mask": "0x30",
+                            "stringTable": "directions"
+                        },
+                        "xDest": {
+                            "type": "property",
+                            "name": "X Destination",
+                            "begin": 4
+                        },
+                        "yDest": {
+                            "type": "property",
+                            "name": "Y Destination",
+                            "begin": 5
+                        }
+                    },
+                    "length": 6
+                }
+            },
+            "pointerTable": {
+                "range": "0xDFBB00-0xDFBF02",
+                "offset": "0xDFBB00"
+            }
+        },
+        "esperAttackDescriptions": {
+            "type": "array",
+            "name": "Esper Attack Descriptions",
+            "range": "0xCF3940-0xCF3C40",
+            "array": {
+                "length": 27
+            },
+            "pointerTable": {
+                "range": "0xCFFE40-0xCFFE80",
+                "offset": "0xCF3940"
+            }
+        },
+        "esperAttackNames": {
+            "type": "array",
+            "name": "Esper Attack Names",
+            "range": "0xE6FE8F-0xE6FF9D",
+            "array": {
+                "length": 27
+            },
+            "assembly": {
+                "type": "assembly",
+                "length": 10
+            },
+            "stringTable": {
+                "name": "Esper Attack Names",
+                "length": 27,
+                "default": "<esperProperties[%i].attackName>"
+            }
+        },
+        "esperBonusDescriptions": {
+            "type": "array",
+            "name": "Esper Bonus Descriptions",
+            "range": "0xEDFE00-0xEDFFA7",
+            "array": {
+                "length": 17
+            },
+            "pointerTable": {
+                "range": "0xEDFFD0-0xEE0000",
+                "offset": "0xEDFE00"
+            }
+        },
+        "esperBonusNames": {
+            "type": "array",
+            "name": "Esper Bonus Names",
+            "range": "0xCFFEAE-0xCFFF9E",
+            "array": {
+                "length": 17
+            },
+            "assembly": {
+                "type": "data",
+                "length": 9,
+                "assembly": {
+                    "bonusName": {
+                        "type": "text",
+                        "name": "Name",
+                        "encoding": "smallText",
+                        "length": 9
+                    },
+                    "description": {
+                        "type": "text",
+                        "name": "Description",
+                        "encoding": "nullTerminated",
+                        "external": "esperBonusDescriptions[%i]"
+                    }
+                }
+            },
+            "stringTable": {
+                "name": "Esper Bonus Names",
+                "length": 17,
+                "default": "<esperBonusNames[%i].bonusName>",
+                "string": {
+                    "255": "None"
+                }
+            }
+        },
+        "esperMenuOrder": {
+            "type": "array",
+            "name": "Esper Menu Order",
+            "range": "0xD1F9B5-0xD1F9D0",
+            "array": {
+                "length": 27
+            },
+            "assembly": {
+                "type": "assembly",
+                "length": 1
+            }
+        },
+        "esperNames": {
+            "type": "array",
+            "name": "Esper Names",
+            "range": "0xE6F6E1-0xE6F7B9",
+            "array": {
+                "length": 27
+            },
+            "assembly": {
+                "type": "assembly",
+                "length": 8
+            },
+            "stringTable": {
+                "name": "Esper Names",
+                "length": 27,
+                "default": "<esperProperties[%i].esperName>"
+            }
+        },
+        "esperProperties": {
+            "type": "array",
+            "name": "Esper Properties",
+            "range": "0xD86E00-0xD87000",
+            "array": {
+                "length": 27
+            },
+            "assembly": {
+                "type": "data",
+                "assembly": {
+                    "esperName": {
+                        "type": "text",
+                        "name": "Name",
+                        "external": "esperNames[%i]",
+                        "encoding": "smallText",
+                        "length": 8
+                    },
+                    "attackName": {
+                        "type": "text",
+                        "name": "Attack Name",
+                        "external": "esperAttackNames[%i]",
+                        "encoding": "smallText",
+                        "length": 10
+                    },
+                    "attackDescription": {
+                        "type": "text",
+                        "name": "Attack Desc.",
+                        "external": "esperAttackDescriptions[%i]",
+                        "encoding": "nullTerminated"
+                    },
+                    "menuOrder": {
+                        "type": "property",
+                        "name": "Menu Order",
+                        "external": "esperMenuOrder[%i]"
+                    },
+                    "spell1": {
+                        "type": "property",
+                        "name": "Spell 1",
+                        "begin": 1,
+                        "stringTable": "spellNames",
+                        "link": "attackProperties[%i]"
+                    },
+                    "rate1": {
+                        "type": "property",
+                        "name": "Rate 1",
+                        "begin": 0,
+                        "max": 100
+                    },
+                    "spell2": {
+                        "type": "property",
+                        "name": "Spell 2",
+                        "begin": 3,
+                        "stringTable": "spellNames",
+                        "link": "attackProperties[%i]"
+                    },
+                    "rate2": {
+                        "type": "property",
+                        "name": "Rate 2",
+                        "begin": 2,
+                        "max": 100
+                    },
+                    "spell3": {
+                        "type": "property",
+                        "name": "Spell 3",
+                        "begin": 5,
+                        "stringTable": "spellNames",
+                        "link": "attackProperties[%i]"
+                    },
+                    "rate3": {
+                        "type": "property",
+                        "name": "Rate 3",
+                        "begin": 4,
+                        "max": 100
+                    },
+                    "spell4": {
+                        "type": "property",
+                        "name": "Spell 4",
+                        "begin": 7,
+                        "stringTable": "spellNames",
+                        "link": "attackProperties[%i]"
+                    },
+                    "rate4": {
+                        "type": "property",
+                        "name": "Rate 4",
+                        "begin": 6,
+                        "max": 100
+                    },
+                    "spell5": {
+                        "type": "property",
+                        "name": "Spell 5",
+                        "begin": 9,
+                        "stringTable": "spellNames",
+                        "link": "attackProperties[%i]"
+                    },
+                    "rate5": {
+                        "type": "property",
+                        "name": "Rate 5",
+                        "begin": 8,
+                        "max": 100
+                    },
+                    "bonus": {
+                        "type": "property",
+                        "name": "Bonus",
+                        "begin": 10,
+                        "stringTable": "esperBonusNames",
+                        "link": "esperBonusNames[%i]"
+                    }
                 },
-                "makerCode": {
-                    "type": "text",
-                    "name": "Maker Code",
-                    "begin": 2,
-                    "length": 4
+                "length": 11
+            },
+            "stringTable": "esperNames"
+        },
+        "eventScript": {
+            "type": "script",
+            "name": "Event Script",
+            "range": "0xCA0000-0xCCE5EE",
+            "encoding": ["event", "object", "world", "vehicle"],
+            "label": {
+                "0xCA0000": "No Event",
+                "0xCA0001": "Wait for Dialog Window",
+                "0xCA0003": "Game Start",
+                "0xCA0008": "Chest: Item",
+                "0xCA000C": "Chest: Spell",
+                "0xCA0010": "Chest: GP",
+                "0xCA0014": "Chest: Empty",
+                "0xCA0018": "Random Battle",
+                "0xCA0034": "Tent",
+                "0xCA0039": "Warp/Warp Stone",
+                "0xCA0040": "Chest: Monster-in-a-box",
+                "0xCA0078": "Falcon: Deck",
+                "0xCA009D": "Doom Gaze",
+                "0xCA00EA": "Tent: Animation",
+                "0xCA0108": "Warp: Animation",
+                "0xCA015E": "Tent: Animation (World)",
+                "0xCA01A2": "Kefka's Tower",
+                "0xCA0405": "Phoenix Cave",
+                "0xCA057D": "Final Battle/Ending",
+                "0xCA5ADE": "Floating Island: Cinematic",
+                "0xCA5E33": "New Game",
+                "0xCA5EA9": "Post-Battle",
+                "0xCA5EB3": "Return",
+                "0xCA5EB4": "Return (World)",
+                "0xCAA6C0": {
+                    "label": "Blackjack Book",
+                    "encoding": "vehicle"
                 },
-                "gameTitle": {
-                    "type": "text",
-                    "name": "Game Title",
-                    "begin": 16,
-                    "length": 21
+                "0xCACA64": "Check Facing Direction",
+                "0xCACD31": "Inn: No Dream",
+                "0xCACD3C": "Inn: Normal",
+                "0xCACD5B": "Inn: Dream 1",
+                "0xCACDD9": "Inn: Dream 2",
+                "0xCACE51": "Inn: Dream 3",
+                "0xCACEFE": "Inn: Dream 4",
+                "0xCACF67": "Inn: Fade Out",
+                "0xCACF96": "Inn: Fade In",
+                "0xCB69FF": "Not Enough GP",
+                "0xCC985B": "Prologue",
+                "0xCC9AEB": "Save Point",
+                "0xCCE566": "Game Over"
+            }
+        },
+        "eventTriggers": {
+            "type": "array",
+            "name": "Event Triggers",
+            "range": "0xC40342-0xC419FE",
+            "isSequential": true,
+            "array": {
+                "length": 415
+            },
+            "assembly": {
+                "type": "array",
+                "assembly": {
+                    "type": "data",
+                    "assembly": {
+                        "x": {
+                            "type": "property",
+                            "name": "X Position",
+                            "begin": 0,
+                            "hidden": true
+                        },
+                        "y": {
+                            "type": "property",
+                            "name": "Y Position",
+                            "begin": 1,
+                            "hidden": true
+                        },
+                        "scriptPointer": {
+                            "type": "property",
+                            "name": "Script Pointer",
+                            "begin": 2,
+                            "mask": "0xFFFFFF",
+                            "script": "eventScript"
+                        }
+                    },
+                    "length": 5
+                }
+            },
+            "pointerTable": {
+                "range": "0xC40000-0xC40342",
+                "offset": "0xC40000"
+            }
+        },
+        "itemDescriptions": {
+            "type": "array",
+            "name": "Item Descriptions",
+            "range": "0xED6400-0xED7787",
+            "array": {
+                "length": 256,
+                "max": 256
+            },
+            "assembly": {
+                "type": "text",
+                "encoding": "nullTerminated"
+            },
+            "pointerTable": {
+                "range": "0xED7AA0-0xED7CA0",
+                "offset": "0xED6400"
+            }
+        },
+        "itemNames": {
+            "type": "array",
+            "name": "Item Names",
+            "range": "0xD2B300-0xD2C000",
+            "array": {
+                "length": 256,
+                "max": 256
+            },
+            "assembly": {
+                "type": "data",
+                "length": 13,
+                "assembly": {
+                    "itemType": {
+                        "type": "property",
+                        "name": "Item Type"
+                    },
+                    "itemName": {
+                        "type": "text",
+                        "name": "Item Name",
+                        "range": "1-13",
+                        "encoding": "smallText"
+                    }
+                }
+            },
+            "stringTable": {
+                "name": "Item Names",
+                "length": 256,
+                "default": "<itemNames[%i].itemName>",
+                "string": {
+                    "0xFF": "Empty"
+                }
+            }
+        },
+        "mapAnimationGraphics": {
+            "type": "assembly",
+            "name": "Map Animation Graphics",
+            "range": "0xE60000-0xE68000",
+            "format": "snes4bpp"
+        },
+        "mapAnimationProperties": {
+            "type": "array",
+            "name": "Map Animation Properties",
+            "range": "0xC091FF-0xC0979F",
+            "array": {
+                "length": 20
+            },
+            "assembly": {
+                "type": "array",
+                "array": {},
+                "assembly": {
+                    "type": "data",
+                    "assembly": {
+                        "speed": {
+                            "type": "property",
+                            "name": "Speed",
+                            "begin": 0,
+                            "mask": "0xFFFF"
+                        },
+                        "frame1": {
+                            "type": "property",
+                            "name": "Frame 1",
+                            "begin": 2,
+                            "mask": "0xFFFF"
+                        },
+                        "frame2": {
+                            "type": "property",
+                            "name": "Frame 2",
+                            "begin": 4,
+                            "mask": "0xFFFF"
+                        },
+                        "frame3": {
+                            "type": "property",
+                            "name": "Frame 3",
+                            "begin": 6,
+                            "mask": "0xFFFF"
+                        },
+                        "frame4": {
+                            "type": "property",
+                            "name": "Frame 4",
+                            "begin": 8,
+                            "mask": "0xFFFF"
+                        }
+                    },
+                    "length": 10
+                }
+            },
+            "pointerTable": {
+                "range": "0xC091D5-0xC091FF",
+                "offset": "0xC091FF"
+            }
+        },
+        "mapAnimationGraphicsLayer3": {
+            "type": "array",
+            "name": "Map Animation Graphics (Layer 3)",
+            "range": "0xE6CDC0-0xE6F198",
+            "array": {
+                "length": 6
+            },
+            "assembly": {
+                "format": ["snes2bpp", "ff6-lzss"]
+            },
+            "pointerTable": {
+                "range": "0xE6CDA0-0xE6CDC0",
+                "pointerLength": 3,
+                "offset": "0xE6CDC0"
+            }
+        },
+        "mapAnimationPropertiesLayer3": {
+            "type": "array",
+            "name": "Map Animation Properties (Layer 3)",
+            "range": "0xC097AD-0xC09825",
+            "array": {
+                "length": 6
+            },
+            "assembly": {
+                "type": "data",
+                "assembly": {
+                    "speed": {
+                        "type": "property",
+                        "name": "Speed",
+                        "begin": 0,
+                        "mask": "0xFFFF"
+                    },
+                    "size": {
+                        "type": "property",
+                        "name": "Size",
+                        "begin": 2,
+                        "mask": "0xFFFF"
+                    },
+                    "frame1": {
+                        "type": "property",
+                        "name": "Frame 1",
+                        "begin": 4,
+                        "mask": "0xFFFF"
+                    },
+                    "frame2": {
+                        "type": "property",
+                        "name": "Frame 2",
+                        "begin": 6,
+                        "mask": "0xFFFF"
+                    },
+                    "frame3": {
+                        "type": "property",
+                        "name": "Frame 3",
+                        "begin": 8,
+                        "mask": "0xFFFF"
+                    },
+                    "frame4": {
+                        "type": "property",
+                        "name": "Frame 4",
+                        "begin": 10,
+                        "mask": "0xFFFF"
+                    },
+                    "frame5": {
+                        "type": "property",
+                        "name": "Frame 5",
+                        "begin": 12,
+                        "mask": "0xFFFF"
+                    },
+                    "frame6": {
+                        "type": "property",
+                        "name": "Frame 6",
+                        "begin": 14,
+                        "mask": "0xFFFF"
+                    },
+                    "frame7": {
+                        "type": "property",
+                        "name": "Frame 7",
+                        "begin": 16,
+                        "mask": "0xFFFF"
+                    },
+                    "frame8": {
+                        "type": "property",
+                        "name": "Frame 8",
+                        "begin": 18,
+                        "mask": "0xFFFF"
+                    }
+                }
+            },
+            "pointerTable": {
+                "range": "0xC0979F-0xC097AD",
+                "offset": "0xC097AD"
+            }
+        },
+        "mapBattleGroups": {
+            "type": "array",
+            "name": "Map Battle Groups",
+            "range": "0xCF5600-0xCF5800",
+            "array": {
+                "length": 512
+            },
+            "assembly": {
+                "type": "assembly",
+                "length": 1
+            }
+        },
+        "mapBattleProbability": {
+            "type": "array",
+            "name": "Map Battle Probability",
+            "range": "0xCF5880-0xCF5900",
+            "format": "linear2bpp",
+            "array": {
+                "length": 512
+            },
+            "assembly": {
+                "type": "assembly",
+                "length": 1
+            }
+        },
+        "mapColorMath": {
+            "type": "array",
+            "name": "Map Color Math Properties",
+            "range": "0xC0FE00-0xC0FE40",
+            "array": {
+                "length": 19
+            },
+            "assembly": {
+                "type": "data",
+                "assembly": {
+                    "mathLayers": {
+                        "type": "property",
+                        "name": "Math Layers",
+                        "begin": 0,
+                        "mask": "0x3F",
+                        "flag": true,
+                        "stringTable": {
+                            "string": {
+                                "0": "Layer 1",
+                                "1": "Layer 2",
+                                "2": "Layer 3",
+                                "3": "Layer 4",
+                                "4": "Sprites",
+                                "5": "Back Area"
+                            }
+                        }
+                    },
+                    "mainscreen": {
+                        "type": "property",
+                        "name": "Main Screen Layers",
+                        "begin": 1,
+                        "mask": "0x3F",
+                        "flag": true,
+                        "stringTable": {
+                            "string": {
+                                "0": "Layer 1",
+                                "1": "Layer 2",
+                                "2": "Layer 3",
+                                "3": "Layer 4",
+                                "4": "Sprites"
+                            }
+                        }
+                    },
+                    "subscreen": {
+                        "type": "property",
+                        "name": "Sub Screen Layers",
+                        "begin": 2,
+                        "mask": "0x3F",
+                        "flag": true,
+                        "stringTable": {
+                            "string": {
+                                "0": "Layer 1",
+                                "1": "Layer 2",
+                                "2": "Layer 3",
+                                "3": "Layer 4",
+                                "4": "Sprites"
+                            }
+                        }
+                    },
+                    "half": {
+                        "type": "property",
+                        "name": "Half Add/Sub",
+                        "begin": 0,
+                        "mask": "0x40",
+                        "bool": true
+                    },
+                    "subtract": {
+                        "type": "property",
+                        "name": "Subtract",
+                        "begin": 0,
+                        "mask": "0x80",
+                        "bool": true
+                    }
                 },
-                "expansionRAMSize": {
-                    "type": "property",
-                    "name": "Expansion RAM Size",
-                    "begin": 13
+                "length": 3
+            },
+            "stringTable": {
+                "name": "Map Color Math",
+                "length": 19,
+                "default": "Color Math %i",
+                "string": {
+                    "0": "None",
+                    "1": "Layer 3 Half Addition",
+                    "4": "Layer 2 Half Addition",
+                    "5": "Layer 3 Full Addition",
+                    "6": "Cyan's Dream",
+                    "7": "Beach (Raft)",
+                    "8": "Layer 1 Half Addition",
+                    "12": "Back Area Half Addition",
+                    "13": "Floating Island Shadow",
+                    "14": "Beach (Fish)",
+                    "15": "Darill's Tomb Torches",
+                    "17": "Burning Building"
+                }
+            }
+        },
+        "mapGraphics": {
+            "type": "array",
+            "name": "Map Graphics",
+            "range": "0xDFDB00-0xE5F400",
+            "array": {
+                "length": 82,
+                "max": 128
+            },
+            "assembly": {
+                "format": "snes4bpp"
+            },
+            "pointerTable": {
+                "range": "0xDFDA00-0xDFDB00",
+                "pointerLength": 3,
+                "offset": "0xDFDB00"
+            }
+        },
+        "mapGraphicsLayer3": {
+            "type": "array",
+            "name": "Map Graphics (Layer 3)",
+            "range": "0xE68780-0xE6CD60",
+            "array": {
+                "length": 18
+            },
+            "assembly": {
+                "type": "data",
+                "format": "ff6-lzss",
+                "assembly": {
+                    "tileset": {
+                        "type": "assembly",
+                        "length": "0x40"
+                    },
+                    "graphics": {
+                        "type": "assembly",
+                        "begin": "0x40",
+                        "length": "0x1000",
+                        "format": "snes2bpp"
+                    }
+                }
+            },
+            "pointerTable": {
+                "range": "0xE6CD60-0xE6CDA0",
+                "pointerLength": 3,
+                "offset": "0xE68780"
+            }
+        },
+        "mapLayouts": {
+            "type": "array",
+            "name": "Map Layouts",
+            "range": "0xD9D1B0-0xDE0000",
+            "array": {
+                "length": 350
+            },
+            "assembly": {
+                "format": "ff6-lzss"
+            },
+            "pointerTable": {
+                "range": "0xD9CD90-0xD9D1B0",
+                "pointerLength": 3,
+                "offset": "0xD9D1B0"
+            }
+        },
+        "mapPalettes": {
+            "type": "array",
+            "name": "Map Palettes",
+            "range": "0xEDC480-0xEDF480",
+            "array": {
+                "length": 48,
+                "max": 128
+            },
+            "assembly": {
+                "length": 256,
+                "format": "bgr555"
+            }
+        },
+        "mapParallax": {
+            "type": "array",
+            "name": "Map Parallax",
+            "range": "0xC0FE40-0xC0FEE8",
+            "array": {
+                "length": 21,
+                "max": 32
+            },
+            "assembly": {
+                "type": "data",
+                "assembly": {
+                    "hSpeedLayer2": {
+                        "type": "property",
+                        "name": "Layer 2 Horizontal Speed",
+                        "begin": 0
+                    },
+                    "hMultiplierLayer2": {
+                        "type": "property",
+                        "name": "Layer 2 Horizontal Multiplier",
+                        "begin": 4
+                    },
+                    "vSpeedLayer2": {
+                        "type": "property",
+                        "name": "Layer 2 Vertical Speed",
+                        "begin": 1
+                    },
+                    "vMultiplierLayer2": {
+                        "type": "property",
+                        "name": "Layer 2 Vertical Multiplier",
+                        "begin": 5
+                    },
+                    "hSpeedLayer3": {
+                        "type": "property",
+                        "name": "Layer 3 Horizontal Speed",
+                        "begin": 2
+                    },
+                    "hMultiplierLayer3": {
+                        "type": "property",
+                        "name": "Layer 3 Horizontal Multiplier",
+                        "begin": 6
+                    },
+                    "vSpeedLayer3": {
+                        "type": "property",
+                        "name": "Layer 3 Vertical Speed",
+                        "begin": 3
+                    },
+                    "vMultiplierLayer3": {
+                        "type": "property",
+                        "name": "Layer 3 Vertical Multiplier",
+                        "begin": 7
+                    }
                 },
-                "checksumInverse": {
-                    "type": "property",
-                    "name": "Checksum Inverse",
-                    "begin": 44,
-                    "mask": "0xFFFF"
-                },
-                "checksum": {
-                    "type": "property",
-                    "name": "Checksum",
-                    "begin": 46,
-                    "mask": "0xFFFF"
+                "length": 8
+            },
+            "stringTable": {
+                "name": "Map Parallax",
+                "default": "Parallax %i",
+                "string": {
+                    "0": "None",
+                    "1": "Phantom Forest",
+                    "2": "Parallax w/ Fog",
+                    "3": "Train",
+                    "4": "Parallax",
+                    "5": "Opera House",
+                    "6": "Floating Island",
+                    "8": "Airship",
+                    "9": "Sealed Gate",
+                    "10": "Fog",
+                    "11": "Fog (Moving Down)",
+                    "12": "Airship (Breaking Apart)",
+                    "13": "Slow Fog",
+                    "14": "Fanatics&apos; Tower",
+                    "15": "Kefka&apos;s Tower (Top)",
+                    "17": "Waterfall",
+                    "18": "Kefka's Tower",
+                    "20": "Fog"
                 }
             }
         },
@@ -63,7 +1056,8 @@
                         "type": "property",
                         "name": "Title",
                         "begin": 0,
-                        "stringTable": "mapTitles"
+                        "stringTable": "mapTitles",
+                        "link": "mapTitles[%i]"
                     },
                     "song": {
                         "type": "property",
@@ -786,421 +1780,160 @@
                 }
             }
         },
-        "mapGraphics": {
-            "type": "array",
-            "name": "Map Graphics",
-            "range": "0xDFDB00-0xE5F400",
-            "array": {
-                "length": 82,
-                "max": 128
-            },
-            "assembly": {
-                "format": "snes4bpp"
-            },
-            "pointerTable": {
-                "range": "0xDFDA00-0xDFDB00",
-                "pointerLength": 3,
-                "offset": "0xDFDB00"
-            }
-        },
-        "mapGraphicsLayer3": {
-            "type": "array",
-            "name": "Map Graphics (Layer 3)",
-            "range": "0xE68780-0xE6CD60",
-            "array": {
-                "length": 18
-            },
-            "assembly": {
-                "type": "data",
-                "format": "ff6-lzss",
-                "assembly": {
-                    "tileset": {
-                        "type": "assembly",
-                        "length": "0x40"
-                    },
-                    "graphics": {
-                        "type": "assembly",
-                        "begin": "0x40",
-                        "length": "0x1000",
-                        "format": "snes2bpp"
-                    }
-                }
-            },
-            "pointerTable": {
-                "range": "0xE6CD60-0xE6CDA0",
-                "pointerLength": 3,
-                "offset": "0xE68780"
-            }
-        },
-        "mapAnimationGraphics": {
+        "mapSpriteGraphics": {
             "type": "assembly",
-            "name": "Map Animation Graphics",
-            "range": "0xE60000-0xE68000",
+            "name": "Map Sprite Graphics",
+            "range": "0xD50000-0xD83000",
             "format": "snes4bpp"
         },
-        "mapAnimationProperties": {
+        "mapSpriteLayouts": {
             "type": "array",
-            "name": "Map Animation Properties",
-            "range": "0xC091FF-0xC0979F",
+            "name": "Map Sprite Layouts",
+            "range": "0xC0CE3A-0xC0D0F2",
             "array": {
-                "length": 20
-            },
-            "assembly": {
-                "type": "array",
-                "array": {},
-                "assembly": {
-                    "type": "data",
-                    "assembly": {
-                        "speed": {
-                            "type": "property",
-                            "name": "Speed",
-                            "begin": 0,
-                            "mask": "0xFFFF"
-                        },
-                        "frame1": {
-                            "type": "property",
-                            "name": "Frame 1",
-                            "begin": 2,
-                            "mask": "0xFFFF"
-                        },
-                        "frame2": {
-                            "type": "property",
-                            "name": "Frame 2",
-                            "begin": 4,
-                            "mask": "0xFFFF"
-                        },
-                        "frame3": {
-                            "type": "property",
-                            "name": "Frame 3",
-                            "begin": 6,
-                            "mask": "0xFFFF"
-                        },
-                        "frame4": {
-                            "type": "property",
-                            "name": "Frame 4",
-                            "begin": 8,
-                            "mask": "0xFFFF"
-                        }
-                    },
-                    "length": 10
-                }
-            },
-            "pointerTable": {
-                "range": "0xC091D5-0xC091FF",
-                "offset": "0xC091FF"
-            }
-        },
-        "mapAnimationGraphicsLayer3": {
-            "type": "array",
-            "name": "Map Animation Graphics (Layer 3)",
-            "range": "0xE6CDC0-0xE6F198",
-            "array": {
-                "length": 6
-            },
-            "assembly": {
-                "format": ["snes2bpp", "ff6-lzss"]
-            },
-            "pointerTable": {
-                "range": "0xE6CDA0-0xE6CDC0",
-                "pointerLength": 3,
-                "offset": "0xE6CDC0"
-            }
-        },
-        "mapAnimationPropertiesLayer3": {
-            "type": "array",
-            "name": "Map Animation Properties (Layer 3)",
-            "range": "0xC097AD-0xC09825",
-            "array": {
-                "length": 6
+                "length": 58
             },
             "assembly": {
                 "type": "data",
+                "length": 12,
                 "assembly": {
-                    "speed": {
+                    "tile1": {
                         "type": "property",
-                        "name": "Speed",
+                        "name": "Tile 1 Offset",
                         "begin": 0,
                         "mask": "0xFFFF"
                     },
-                    "size": {
+                    "tile2": {
                         "type": "property",
-                        "name": "Size",
+                        "name": "Tile 2 Offset",
                         "begin": 2,
                         "mask": "0xFFFF"
                     },
-                    "frame1": {
+                    "tile3": {
                         "type": "property",
-                        "name": "Frame 1",
+                        "name": "Tile 3 Offset",
                         "begin": 4,
                         "mask": "0xFFFF"
                     },
-                    "frame2": {
+                    "tile4": {
                         "type": "property",
-                        "name": "Frame 2",
+                        "name": "Tile 4 Offset",
                         "begin": 6,
                         "mask": "0xFFFF"
                     },
-                    "frame3": {
+                    "tile5": {
                         "type": "property",
-                        "name": "Frame 3",
+                        "name": "Tile 5 Offset",
                         "begin": 8,
                         "mask": "0xFFFF"
                     },
-                    "frame4": {
+                    "tile6": {
                         "type": "property",
-                        "name": "Frame 4",
+                        "name": "Tile 6 Offset",
                         "begin": 10,
                         "mask": "0xFFFF"
-                    },
-                    "frame5": {
-                        "type": "property",
-                        "name": "Frame 5",
-                        "begin": 12,
-                        "mask": "0xFFFF"
-                    },
-                    "frame6": {
-                        "type": "property",
-                        "name": "Frame 6",
-                        "begin": 14,
-                        "mask": "0xFFFF"
-                    },
-                    "frame7": {
-                        "type": "property",
-                        "name": "Frame 7",
-                        "begin": 16,
-                        "mask": "0xFFFF"
-                    },
-                    "frame8": {
-                        "type": "property",
-                        "name": "Frame 8",
-                        "begin": 18,
-                        "mask": "0xFFFF"
                     }
                 }
-            },
-            "pointerTable": {
-                "range": "0xC0979F-0xC097AD",
-                "offset": "0xC097AD"
             }
         },
-        "mapPalettes": {
+        "mapSpritePalettes": {
             "type": "array",
-            "name": "Map Palettes",
-            "range": "0xEDC480-0xEDF480",
+            "name": "Map Sprite Palettes",
+            "range": "0xE68000-0xE68400",
             "array": {
-                "length": 48,
-                "max": 128
+                "length": 32
             },
             "assembly": {
-                "length": 256,
+                "type": "assembly",
+                "length": 32,
                 "format": "bgr555"
+            },
+            "stringTable": {
+                "name": "Map Sprite Palettes",
+                "default": "Palette %i",
+                "length": 32,
+                "string": {
+                    "0": "Edgar, Sabin, Celes",
+                    "1": "Locke",
+                    "2": "Terra",
+                    "3": "Strago, Relm, Gau, Gogo",
+                    "4": "Cyan, Shadow, Setzer",
+                    "5": "Mog, Umaro",
+                    "6": "Rainbow",
+                    "7": "Chocobo/Magitek",
+                    "8": "Esper Terra",
+                    "9": "Edgar, Sabin, Celes (Lighter)",
+                    "10": "Machinery A",
+                    "11": "Raft",
+                    "12": "Machinery B",
+                    "13": "Guardian",
+                    "14": "Sealed Gate Door",
+                    "15": "Vector Crane",
+                    "16": "Gray (Statue/Smoke)",
+                    "17": "Treasure Chest",
+                    "18": "Chadarnook",
+                    "19": "Rock",
+                    "20": "Falcon",
+                    "21": "Odin",
+                    "22": "Kefka's Tower / Orange Parallax",
+                    "23": "Kefka's Tower / Blue/White Parallax",
+                    "24": "Kefka's Tower / Map 356 Parallax",
+                    "25": "Dadaluma",
+                    "26": "Green Magicite Smoke",
+                    "29": "Airship WoB Parallax"
+                }
             }
         },
-        "mapTilesets": {
+        "mapSpritePointersHi": {
             "type": "array",
-            "name": "Map Tilesets",
-            "range": "0xDE0000-0xDFB400",
+            "name": "Map Sprite Graphics Pointers (High Word)",
+            "range": "0xC0D23C-0xC0D386",
             "array": {
-                "length": 75
-            },
-            "assembly": {
-                "format": "ff6-lzss"
-            },
-            "pointerTable": {
-                "range": "0xDFBA00-0xDFBB00",
-                "pointerLength": 3,
-                "offset": "0xDE0000"
-            }
-        },
-        "mapLayouts": {
-            "type": "array",
-            "name": "Map Layouts",
-            "range": "0xD9D1B0-0xDE0000",
-            "array": {
-                "length": 350
-            },
-            "assembly": {
-                "format": "ff6-lzss"
-            },
-            "pointerTable": {
-                "range": "0xD9CD90-0xD9D1B0",
-                "pointerLength": 3,
-                "offset": "0xD9D1B0"
-            }
-        },
-        "mapColorMath": {
-            "type": "array",
-            "name": "Map Color Math Properties",
-            "range": "0xC0FE00-0xC0FE40",
-            "array": {
-                "length": 19
+                "length": 165
             },
             "assembly": {
                 "type": "data",
                 "assembly": {
-                    "mathLayers": {
+                    "pointer": {
                         "type": "property",
-                        "name": "Math Layers",
+                        "name": "Pointer",
                         "begin": 0,
-                        "mask": "0x3F",
-                        "flag": true,
-                        "stringTable": {
-                            "string": {
-                                "0": "Layer 1",
-                                "1": "Layer 2",
-                                "2": "Layer 3",
-                                "3": "Layer 4",
-                                "4": "Sprites",
-                                "5": "Back Area"
-                            }
-                        }
-                    },
-                    "mainscreen": {
-                        "type": "property",
-                        "name": "Main Screen Layers",
-                        "begin": 1,
-                        "mask": "0x3F",
-                        "flag": true,
-                        "stringTable": {
-                            "string": {
-                                "0": "Layer 1",
-                                "1": "Layer 2",
-                                "2": "Layer 3",
-                                "3": "Layer 4",
-                                "4": "Sprites"
-                            }
-                        }
-                    },
-                    "subscreen": {
-                        "type": "property",
-                        "name": "Sub Screen Layers",
-                        "begin": 2,
-                        "mask": "0x3F",
-                        "flag": true,
-                        "stringTable": {
-                            "string": {
-                                "0": "Layer 1",
-                                "1": "Layer 2",
-                                "2": "Layer 3",
-                                "3": "Layer 4",
-                                "4": "Sprites"
-                            }
-                        }
-                    },
-                    "half": {
-                        "type": "property",
-                        "name": "Half Add/Sub",
-                        "begin": 0,
-                        "mask": "0x40",
-                        "bool": true
-                    },
-                    "subtract": {
-                        "type": "property",
-                        "name": "Subtract",
-                        "begin": 0,
-                        "mask": "0x80",
-                        "bool": true
+                        "mask": "0xFFFF"
                     }
                 },
+                "length": 2
+            }
+        },
+        "mapSpritePointersLo": {
+            "type": "array",
+            "name": "Map Sprite Graphics Pointers (Low Word)",
+            "range": "0xC0D0F2-0xC0D23C",
+            "array": {
+                "length": 165
+            },
+            "assembly": {
+                "type": "data",
+                "assembly": {
+                    "pointer": {
+                        "type": "property",
+                        "name": "Pointer",
+                        "begin": 0,
+                        "mask": "0xFFFF"
+                    }
+                },
+                "length": 2
+            }
+        },
+        "mapStartupEvents": {
+            "type": "array",
+            "name": "Map Startup Events",
+            "range": "0xD1FA00-0xD20000",
+            "array": {
+                "length": 512
+            },
+            "assembly": {
+                "type": "assembly",
                 "length": 3
-            },
-            "stringTable": {
-                "name": "Map Color Math",
-                "length": 19,
-                "default": "Color Math %i",
-                "string": {
-                    "0": "None",
-                    "1": "Layer 3 Half Addition",
-                    "4": "Layer 2 Half Addition",
-                    "5": "Layer 3 Full Addition",
-                    "6": "Cyan's Dream",
-                    "7": "Beach (Raft)",
-                    "8": "Layer 1 Half Addition",
-                    "12": "Back Area Half Addition",
-                    "13": "Floating Island Shadow",
-                    "14": "Beach (Fish)",
-                    "15": "Darill's Tomb Torches",
-                    "17": "Burning Building"
-                }
-            }
-        },
-        "mapParallax": {
-            "type": "array",
-            "name": "Map Parallax",
-            "range": "0xC0FE40-0xC0FEE8",
-            "array": {
-                "length": 21,
-                "max": 32
-            },
-            "assembly": {
-                "type": "data",
-                "assembly": {
-                    "hSpeedLayer2": {
-                        "type": "property",
-                        "name": "Layer 2 Horizontal Speed",
-                        "begin": 0
-                    },
-                    "hMultiplierLayer2": {
-                        "type": "property",
-                        "name": "Layer 2 Horizontal Multiplier",
-                        "begin": 4
-                    },
-                    "vSpeedLayer2": {
-                        "type": "property",
-                        "name": "Layer 2 Vertical Speed",
-                        "begin": 1
-                    },
-                    "vMultiplierLayer2": {
-                        "type": "property",
-                        "name": "Layer 2 Vertical Multiplier",
-                        "begin": 5
-                    },
-                    "hSpeedLayer3": {
-                        "type": "property",
-                        "name": "Layer 3 Horizontal Speed",
-                        "begin": 2
-                    },
-                    "hMultiplierLayer3": {
-                        "type": "property",
-                        "name": "Layer 3 Horizontal Multiplier",
-                        "begin": 6
-                    },
-                    "vSpeedLayer3": {
-                        "type": "property",
-                        "name": "Layer 3 Vertical Speed",
-                        "begin": 3
-                    },
-                    "vMultiplierLayer3": {
-                        "type": "property",
-                        "name": "Layer 3 Vertical Multiplier",
-                        "begin": 7
-                    }
-                },
-                "length": 8
-            },
-            "stringTable": {
-                "name": "Map Parallax",
-                "default": "Parallax %i",
-                "string": {
-                    "0": "None",
-                    "1": "Phantom Forest",
-                    "2": "Parallax w/ Fog",
-                    "3": "Train",
-                    "4": "Parallax",
-                    "5": "Opera House",
-                    "6": "Floating Island",
-                    "8": "Airship",
-                    "9": "Sealed Gate",
-                    "10": "Fog",
-                    "11": "Fog (Moving Down)",
-                    "12": "Airship (Breaking Apart)",
-                    "13": "Slow Fog",
-                    "14": "Fanatics&apos; Tower",
-                    "15": "Kefka&apos;s Tower (Top)",
-                    "17": "Waterfall",
-                    "18": "Kefka's Tower",
-                    "20": "Fog"
-                }
             }
         },
         "mapTileProperties": {
@@ -1213,7 +1946,7 @@
             },
             "assembly": {
                 "type": "array",
-                "format": ["interlace(1,256,512)", "ff6-lzss"],
+                "format": ["interlace(1,2,256)", "ff6-lzss"],
                 "array": {
                     "length": 256
                 },
@@ -1307,539 +2040,46 @@
                 }
             }
         },
-        "mapSpriteGraphics": {
-            "type": "assembly",
-            "name": "Map Sprite Graphics",
-            "range": "0xD50000-0xD83000",
-            "format": "snes4bpp"
-        },
-        "mapSpriteLayouts": {
+        "mapTilesets": {
             "type": "array",
-            "name": "Map Sprite Layouts",
-            "range": "0xC0CE3A-0xC0D0F2",
+            "name": "Map Tilesets",
+            "range": "0xDE0000-0xDFB400",
             "array": {
-                "length": 58
+                "length": 75
             },
             "assembly": {
-                "type": "data",
-                "length": 12,
-                "assembly": {
-                    "tile1": {
-                        "type": "property",
-                        "name": "Tile 1 Offset",
-                        "begin": 0,
-                        "mask": "0xFFFF"
-                    },
-                    "tile2": {
-                        "type": "property",
-                        "name": "Tile 2 Offset",
-                        "begin": 2,
-                        "mask": "0xFFFF"
-                    },
-                    "tile3": {
-                        "type": "property",
-                        "name": "Tile 3 Offset",
-                        "begin": 4,
-                        "mask": "0xFFFF"
-                    },
-                    "tile4": {
-                        "type": "property",
-                        "name": "Tile 4 Offset",
-                        "begin": 6,
-                        "mask": "0xFFFF"
-                    },
-                    "tile5": {
-                        "type": "property",
-                        "name": "Tile 5 Offset",
-                        "begin": 8,
-                        "mask": "0xFFFF"
-                    },
-                    "tile6": {
-                        "type": "property",
-                        "name": "Tile 6 Offset",
-                        "begin": 10,
-                        "mask": "0xFFFF"
-                    }
-                }
+                "format": "ff6-lzss"
+            },
+            "pointerTable": {
+                "range": "0xDFBA00-0xDFBB00",
+                "pointerLength": 3,
+                "offset": "0xDE0000"
             }
         },
-        "mapSpritePointersLo": {
+        "mapTitles": {
             "type": "array",
-            "name": "Map Sprite Graphics Pointers (Low Word)",
-            "range": "0xC0D0F2-0xC0D23C",
+            "name": "Map Title",
+            "range": "0xCEF100-0xCEF463",
             "array": {
-                "length": 165
+                "length": 73,
+                "max": 256
             },
             "assembly": {
-                "type": "data",
-                "assembly": {
-                    "pointer": {
-                        "type": "property",
-                        "name": "Pointer",
-                        "begin": 0,
-                        "mask": "0xFFFF"
-                    }
-                },
-                "length": 2
-            }
-        },
-        "mapSpritePointersHi": {
-            "type": "array",
-            "name": "Map Sprite Graphics Pointers (High Word)",
-            "range": "0xC0D23C-0xC0D386",
-            "array": {
-                "length": 165
+                "type": "text",
+                "name": "Title",
+                "encoding": "dialog"
             },
-            "assembly": {
-                "type": "data",
-                "assembly": {
-                    "pointer": {
-                        "type": "property",
-                        "name": "Pointer",
-                        "begin": 0,
-                        "mask": "0xFFFF"
-                    }
-                },
-                "length": 2
-            }
-        },
-        "mapSpritePalettes": {
-            "type": "array",
-            "name": "Map Sprite Palettes",
-            "range": "0xE68000-0xE68400",
-            "array": {
-                "length": 32
-            },
-            "assembly": {
-                "type": "assembly",
-                "length": 32,
-                "format": "bgr555"
+            "pointerTable": {
+                "range": "0xE68400-0xE68492",
+                "offset": "0xCEF100"
             },
             "stringTable": {
-                "name": "Map Sprite Palettes",
-                "default": "Palette %i",
-                "length": 32,
+                "name": "Map Titles",
+                "length": 73,
+                "default": "<mapTitles[%i]>",
                 "string": {
-                    "0": "Edgar, Sabin, Celes",
-                    "1": "Locke",
-                    "2": "Terra",
-                    "3": "Strago, Relm, Gau, Gogo",
-                    "4": "Cyan, Shadow, Setzer",
-                    "5": "Mog, Umaro",
-                    "6": "Rainbow",
-                    "7": "Chocobo/Magitek",
-                    "8": "Esper Terra",
-                    "9": "Edgar, Sabin, Celes (Lighter)",
-                    "10": "Machinery A",
-                    "11": "Raft",
-                    "12": "Machinery B",
-                    "13": "Guardian",
-                    "14": "Sealed Gate Door",
-                    "15": "Vector Crane",
-                    "16": "Gray (Statue/Smoke)",
-                    "17": "Treasure Chest",
-                    "18": "Chadarnook",
-                    "19": "Rock",
-                    "20": "Falcon",
-                    "21": "Odin",
-                    "22": "Kefka's Tower / Orange Parallax",
-                    "23": "Kefka's Tower / Blue/White Parallax",
-                    "24": "Kefka's Tower / Map 356 Parallax",
-                    "25": "Dadaluma",
-                    "26": "Green Magicite Smoke",
-                    "29": "Airship WoB Parallax"
+                    "0": "No Title"
                 }
-            }
-        },
-        "mapBattleGroups": {
-            "type": "array",
-            "name": "Map Battle Groups",
-            "range": "0xCF5600-0xCF5800",
-            "array": {
-                "length": 512
-            },
-            "assembly": {
-                "type": "assembly",
-                "length": 1
-            }
-        },
-        "mapBattleProbability": {
-            "type": "array",
-            "name": "Map Battle Probability",
-            "range": "0xCF5880-0xCF5900",
-            "format": "linear2bpp",
-            "array": {
-                "length": 512
-            },
-            "assembly": {
-                "type": "assembly",
-                "length": 1
-            }
-        },
-        "vehicleGraphics": {
-            "type": "assembly",
-            "name": "Vehicle Graphics",
-            "range": "0xD83000-0xD85000",
-            "format": "snes4bpp"
-        },
-        "mapStartupEvents": {
-            "type": "array",
-            "name": "Map Startup Events",
-            "range": "0xD1FA00-0xD20000",
-            "array": {
-                "length": 512
-            },
-            "assembly": {
-                "type": "data",
-                "assembly": {
-                    "scriptPointer": {
-                        "type": "property",
-                        "name": "Script Pointer",
-                        "mask": "0xFFFFFF",
-                        "script": "eventScript"
-                    }
-                },
-                "length": 3
-            },
-            "stringTable": {
-                "name": "Map Startup Events",
-                "length": 512,
-                "default": "Map %i"
-            }
-        },
-        "vehicleEvents": {
-            "type": "array",
-            "name": "Vehicle Events",
-            "range": "0xEEB269-0xEEB27E",
-            "array": {
-                "length": 7
-            },
-            "assembly": {
-                "type": "data",
-                "assembly": {
-                    "scriptPointer": {
-                        "type": "property",
-                        "name": "Script Pointer",
-                        "mask": "0xFFFFFF",
-                        "script": "eventScript"
-                    }
-                },
-                "length": 3
-            },
-            "stringTable": {
-                "name": "Vehicle Events",
-                "length": 7,
-                "default": "Vehicle Event %i",
-                "string": {
-                    "0": "Blackjack: Deck",
-                    "1": "Tent (World)",
-                    "2": "Blackjack: Ground Entrance",
-                    "3": "Phoenix Cave (World)",
-                    "4": "Kefka's Tower (World)",
-                    "5": "Gogo's Lair",
-                    "6": "Doom Gaze (World)"
-                }
-            }
-        },
-        "eventTriggers": {
-            "type": "array",
-            "name": "Event Triggers",
-            "range": "0xC40342-0xC419FE",
-            "isSequential": true,
-            "array": {
-                "length": 415
-            },
-            "assembly": {
-                "type": "array",
-                "assembly": {
-                    "type": "data",
-                    "assembly": {
-                        "x": {
-                            "type": "property",
-                            "name": "X Position",
-                            "begin": 0,
-                            "hidden": true
-                        },
-                        "y": {
-                            "type": "property",
-                            "name": "Y Position",
-                            "begin": 1,
-                            "hidden": true
-                        },
-                        "scriptPointer": {
-                            "type": "property",
-                            "name": "Script Pointer",
-                            "begin": 2,
-                            "mask": "0xFFFFFF",
-                            "script": "eventScript"
-                        }
-                    },
-                    "length": 5
-                }
-            },
-            "pointerTable": {
-                "range": "0xC40000-0xC40342",
-                "offset": "0xC40000"
-            }
-        },
-        "entranceTriggersSingle": {
-            "type": "array",
-            "name": "Single-Tile Entrance Triggers",
-            "range": "0xDFBF02-0xDFD978",
-            "isSequential": true,
-            "array": {
-                "length": 415
-            },
-            "assembly": {
-                "type": "array",
-                "assembly": {
-                    "type": "data",
-                    "assembly": {
-                        "x": {
-                            "type": "property",
-                            "name": "X Position",
-                            "begin": 0,
-                            "hidden": true
-                        },
-                        "y": {
-                            "type": "property",
-                            "name": "Y Position",
-                            "begin": 1,
-                            "hidden": true
-                        },
-                        "map": {
-                            "type": "property",
-                            "name": "Map",
-                            "begin": 2,
-                            "mask": "0x01FF",
-                            "stringTable": "mapProperties",
-                            "link": "mapProperties[%i]"
-                        },
-                        "setParent": {
-                            "type": "property",
-                            "name": "Set Parent Map",
-                            "begin": 3,
-                            "mask": "0x02",
-                            "bool": true
-                        },
-                        "z": {
-                            "type": "property",
-                            "name": "Z-Level",
-                            "begin": 3,
-                            "mask": "0x04",
-                            "stringTable": {
-                                "string": {
-                                    "0": "Lower",
-                                    "1": "Upper"
-                                }
-                            }
-                        },
-                        "title": {
-                            "type": "property",
-                            "name": "Show Map Title",
-                            "begin": 3,
-                            "mask": "0x08",
-                            "bool": true
-                        },
-                        "direction": {
-                            "type": "property",
-                            "name": "Facing Direction",
-                            "begin": 3,
-                            "mask": "0x30",
-                            "stringTable": "directions"
-                        },
-                        "xDest": {
-                            "type": "property",
-                            "name": "X Destination",
-                            "begin": 4
-                        },
-                        "yDest": {
-                            "type": "property",
-                            "name": "Y Destination",
-                            "begin": 5
-                        }
-                    },
-                    "length": 6
-                }
-            },
-            "pointerTable": {
-                "range": "0xDFBB00-0xDFBF02",
-                "offset": "0xDFBB00"
-            }
-        },
-        "entranceTriggersMulti": {
-            "type": "array",
-            "name": "Multi-Tile Entrance Triggers",
-            "range": "0xEDF882-0xEDFCAA",
-            "isSequential": true,
-            "array": {
-                "length": 415
-            },
-            "assembly": {
-                "type": "array",
-                "assembly": {
-                    "type": "data",
-                    "assembly": {
-                        "x": {
-                            "type": "property",
-                            "name": "X Position",
-                            "begin": 0,
-                            "hidden": true
-                        },
-                        "y": {
-                            "type": "property",
-                            "name": "Y Position",
-                            "begin": 1,
-                            "hidden": true
-                        },
-                        "length": {
-                            "type": "property",
-                            "name": "Length",
-                            "begin": 2,
-                            "mask": "0x7F",
-                            "offset": 1
-                        },
-                        "vertical": {
-                            "type": "property",
-                            "name": "Vertical",
-                            "begin": 2,
-                            "mask": "0x80",
-                            "bool": true
-                        },
-                        "map": {
-                            "type": "property",
-                            "name": "Map",
-                            "begin": 3,
-                            "mask": "0x01FF",
-                            "stringTable": "mapProperties",
-                            "link": "mapProperties[%i]"
-                        },
-                        "setParent": {
-                            "type": "property",
-                            "name": "Set Parent Map",
-                            "begin": 4,
-                            "mask": "0x02",
-                            "bool": true
-                        },
-                        "z": {
-                            "type": "property",
-                            "name": "Z-Level",
-                            "begin": 4,
-                            "mask": "0x04",
-                            "stringTable": {
-                                "string": {
-                                    "0": "Lower",
-                                    "1": "Upper"
-                                }
-                            }
-                        },
-                        "title": {
-                            "type": "property",
-                            "name": "Show Map Title",
-                            "begin": 4,
-                            "mask": "0x08",
-                            "bool": true
-                        },
-                        "direction": {
-                            "type": "property",
-                            "name": "Facing Direction",
-                            "begin": 4,
-                            "mask": "0x30",
-                            "stringTable": "directions"
-                        },
-                        "xDest": {
-                            "type": "property",
-                            "name": "X Destination",
-                            "begin": 5
-                        },
-                        "yDest": {
-                            "type": "property",
-                            "name": "Y Destination",
-                            "begin": 6
-                        }
-                    },
-                    "length": 7
-                }
-            },
-            "pointerTable": {
-                "range": "0xEDF480-0xEDF882",
-                "offset": "0xEDF480"
-            }
-        },
-        "treasureProperties": {
-            "type": "array",
-            "name": "Treasure Properties",
-            "range": "0xED8634-0xED8BCA",
-            "isSequential": true,
-            "array": {
-                "length": 415
-            },
-            "assembly": {
-                "type": "array",
-                "assembly": {
-                    "type": "data",
-                    "assembly": {
-                        "x": {
-                            "type": "property",
-                            "name": "X Position",
-                            "begin": 0,
-                            "hidden": true
-                        },
-                        "y": {
-                            "type": "property",
-                            "name": "Y Position",
-                            "begin": 1,
-                            "hidden": true
-                        },
-                        "switch": {
-                            "type": "property",
-                            "name": "Switch",
-                            "begin": 2,
-                            "mask": "0x01FF",
-                            "stringTable": "treasureSwitches"
-                        },
-                        "treasureType": {
-                            "type": "property",
-                            "name": "Type",
-                            "begin": 3,
-                            "mask": "0xF0",
-                            "stringTable": {
-                                "name": "Treasure Types",
-                                "string": {
-                                    "0": "Empty",
-                                    "2": "Monster-in-a-box",
-                                    "4": "Item",
-                                    "8": "GP"
-                                }
-                            }
-                        },
-                        "battle": {
-                            "type": "property",
-                            "name": "Battle",
-                            "begin": 4,
-                            "invalid": "this.parent.treasureType.value !== 2"
-                        },
-                        "item": {
-                            "type": "property",
-                            "name": "Item",
-                            "begin": 4,
-                            "stringTable": "itemNames",
-                            "invalid": "this.parent.treasureType.value !== 4"
-                        },
-                        "gp": {
-                            "type": "property",
-                            "name": "GP",
-                            "begin": 4,
-                            "multiplier": 100,
-                            "invalid": "this.parent.treasureType.value !== 8"
-                        }
-                    },
-                    "length": 5
-                }
-            },
-            "pointerTable": {
-                "range": "0xED82F4-0xED8634",
-                "offset": "0xED8634"
             }
         },
         "npcProperties": {
@@ -1939,12 +2179,28 @@
                             "mask": "0x7F",
                             "hidden": true
                         },
+                        "vehicle": {
+                            "type": "property",
+                            "name": "Vehicle",
+                            "begin": 7,
+                            "mask": "0xC0",
+                            "stringTable": {
+                                "string": {
+                                    "0": "None",
+                                    "1": "Chocobo",
+                                    "2": "Magitek Armor",
+                                    "3": "Raft"
+                                }
+                            },
+                            "disabled": "this.parent.animation.value !== 0"
+                        },
                         "showRider": {
                             "type": "property",
                             "name": "Show Rider",
                             "begin": 4,
                             "mask": "0x80",
-                            "bool": true
+                            "bool": true,
+                            "hidden": "this.parent.vehicle.value === 0"
                         },
                         "special": {
                             "type": "property",
@@ -2007,21 +2263,6 @@
                                     "3": "Low"
                                 }
                             }
-                        },
-                        "vehicle": {
-                            "type": "property",
-                            "name": "Vehicle",
-                            "begin": 7,
-                            "mask": "0xC0",
-                            "stringTable": {
-                                "string": {
-                                    "0": "None",
-                                    "1": "Chocobo",
-                                    "2": "Magitek Armor",
-                                    "3": "Raft"
-                                }
-                            },
-                            "disabled": "this.parent.animation.value !== 0"
                         },
                         "direction": {
                             "type": "property",
@@ -2124,6 +2365,437 @@
             "pointerTable": {
                 "range": "0xC41A10-0xC41D52",
                 "offset": "0xC41A10"
+            }
+        },
+        "rareItemDescriptions": {
+            "type": "array",
+            "name": "Rare Item Descriptions",
+            "range": "0xCEFCB0-0xCEFEDF",
+            "array": {
+                "length": 20,
+                "max": 20
+            },
+            "assembly": {
+                "type": "text",
+                "encoding": "nullTerminated"
+            },
+            "pointerTable": {
+                "range": "0xCEFB60-0xCEFBA0",
+                "offset": "0xCEFCB0"
+            }
+        },
+        "rareItemNames": {
+            "type": "array",
+            "name": "Rare Item Names",
+            "range": "0xCEFBA0-0xCEFCB0",
+            "array": {
+                "length": 20
+            },
+            "assembly": {
+                "type": "text",
+                "length": 13,
+                "encoding": "smallText"
+            },
+            "stringTable": {
+                "name": "Rare Item Names",
+                "length": 20,
+                "default": "<rareItemNames[%i]>"
+            }
+        },
+        "shopProperties": {
+            "type": "array",
+            "name": "Shop Properties",
+            "range": "0xC47AC0-0xC47F40",
+            "array": {
+                "length": 128
+            },
+            "assembly": {
+                "type": "data",
+                "length": 9,
+                "assembly": {
+                    "shopType": {
+                        "type": "property",
+                        "name": "Type",
+                        "begin": 0,
+                        "mask": "0x07",
+                        "stringTable": {
+                            "string": {
+                                "0": "None",
+                                "1": "Weapon",
+                                "2": "Armor",
+                                "3": "Item",
+                                "4": "Relics",
+                                "5": "Vendor"
+                            }
+                        }
+                    },
+                    "priceAdjust": {
+                        "type": "property",
+                        "name": "Price Modifier",
+                        "begin": 0,
+                        "mask": "0x38",
+                        "stringTable": {
+                            "string": {
+                                "0": "Normal",
+                                "1": "+50%",
+                                "2": "+100%",
+                                "3": "-50%",
+                                "4": "-50% female / +50% male",
+                                "5": "-50% male / +50% female",
+                                "6": "-50% for Edgar"
+                            }
+                        }
+                    },
+                    "item1": {
+                        "type": "property",
+                        "name": "Item 1",
+                        "begin": 1,
+                        "stringTable": "itemNames"
+                    },
+                    "item2": {
+                        "type": "property",
+                        "name": "Item 2",
+                        "begin": 2,
+                        "stringTable": "itemNames"
+                    },
+                    "item3": {
+                        "type": "property",
+                        "name": "Item 3",
+                        "begin": 3,
+                        "stringTable": "itemNames"
+                    },
+                    "item4": {
+                        "type": "property",
+                        "name": "Item 4",
+                        "begin": 4,
+                        "stringTable": "itemNames"
+                    },
+                    "item5": {
+                        "type": "property",
+                        "name": "Item 5",
+                        "begin": 5,
+                        "stringTable": "itemNames"
+                    },
+                    "item6": {
+                        "type": "property",
+                        "name": "Item 6",
+                        "begin": 6,
+                        "stringTable": "itemNames"
+                    },
+                    "item7": {
+                        "type": "property",
+                        "name": "Item 7",
+                        "begin": 7,
+                        "stringTable": "itemNames"
+                    },
+                    "item8": {
+                        "type": "property",
+                        "name": "Item 8",
+                        "begin": 8,
+                        "stringTable": "itemNames"
+                    }
+                }
+            },
+            "stringTable": {
+                "name": "Shop Properties",
+                "length": 48,
+                "default": "Shop %i",
+                "string": {
+                    "0": "Narshe: Weapons (Before Vector)",
+                    "1": "Narshe: Armor (Before Vector)",
+                    "2": "Narshe: Relics (Before Vector)",
+                    "3": "Narshe: Items (Before Vector)",
+                    "4": "Figaro Castle: Items (1st Time)",
+                    "5": "South Figaro: Weapons (WoB)",
+                    "6": "South Figaro: Armor (WoB)",
+                    "7": "South Figaro: Relics (WoB)",
+                    "8": "South Figaro: Items (WoB)",
+                    "9": "Mobliz: Weapons",
+                    "10": "Mobliz: Armor",
+                    "11": "Mobliz: Relics",
+                    "12": "Mobliz: Items",
+                    "13": "Nikeah: Weapons (WoB)",
+                    "14": "Nikeah: Armor (WoB)",
+                    "15": "Nikeah: Items (WoB)",
+                    "16": "Nikeah: Relics (WoB)",
+                    "17": "Kohlingen: Weapons (WoB)",
+                    "18": "Kohlingen: Armor (WoB)",
+                    "19": "Kohlingen: Items (WoB)",
+                    "20": "Jidoor: Weapons (WoB)",
+                    "21": "Jidoor: Armor (WoB)",
+                    "22": "Jidoor: Items (WoB)",
+                    "23": "Jidoor: Relics (WoB)",
+                    "24": "Albrook: Items (WoB)",
+                    "25": "Albrook: Weapons (WoB)",
+                    "26": "Albrook: Armor (WoB)",
+                    "27": "Vector: Weapons",
+                    "28": "Vector: Armor",
+                    "29": "Tzen: Weapons (WoB)",
+                    "30": "Tzen: Armor (WoB)",
+                    "31": "Tzen: Items (WoB)",
+                    "32": "Tzen: Relics (WoB)",
+                    "33": "Thamasa: Weapons (WoB)",
+                    "34": "Thamasa: Armor (WoB)",
+                    "35": "Thamasa: Items (WoB)",
+                    "36": "Returner's Hideout: Items",
+                    "37": "Maranda: Weapons (WoB)",
+                    "38": "Maranda: Armor (WoB)",
+                    "39": "Crazy Old Man's House: Vendor",
+                    "40": "Albrook: Relics (WoB)",
+                    "41": "Narshe: Weapons (After Vector)",
+                    "42": "Narshe: Armor (After Vector)",
+                    "43": "Narshe: Relics (After Vector)",
+                    "44": "Narshe: Items (After Vector)",
+                    "45": "Thamasa: Relics (WoB)",
+                    "46": "Blackjack: Items",
+                    "47": "Figaro Castle: Items (2nd Time)",
+                    "48": "Albrook: Items (WoR)",
+                    "49": "Albrook: Weapons (WoR)",
+                    "50": "Albrook: Armor (WoR)",
+                    "51": "Albrook: Relics (WoR)",
+                    "52": "Tzen: Weapons (WoR)",
+                    "53": "Tzen: Armor (WoR)",
+                    "54": "Tzen: Items (WoR)",
+                    "55": "Tzen: Relic (WoR)",
+                    "56": "Nikeah: Weapons (WoR)",
+                    "57": "Nikeah: Armor (WoR)",
+                    "58": "Nikeah: Items (WoR)",
+                    "59": "Nikeah: Relics (WoR)",
+                    "60": "South Figaro: Weapons (WoR)",
+                    "61": "South Figaro: Armor (WoR)",
+                    "62": "South Figaro: Relics (WoR)",
+                    "63": "South Figaro: Items (WoR)",
+                    "64": "Figaro Castle: Items (WoR)",
+                    "65": "Kohlingen: Weapons (WoR)",
+                    "66": "Kohlingen: Armor (WoR)",
+                    "67": "Kohlingen: Items (WoR)",
+                    "68": "Narshe: Weapons (WoR)",
+                    "69": "Narshe: Armor (WoR)",
+                    "70": "Narshe: Relics (WoR)",
+                    "71": "Narshe: Items (WoR)",
+                    "72": "Thamasa: Weapons (WoR)",
+                    "73": "Thamasa: Armor (WoR)",
+                    "74": "Thamasa: Items (WoR)",
+                    "75": "Thamasa: Relics (WoR)",
+                    "76": "Jidoor: Weapons (WoR)",
+                    "77": "Jidoor: Armor (WoR)",
+                    "78": "Jidoor: Items (WoR)",
+                    "79": "Jidoor: Relics (WoR)",
+                    "80": "Maranda: Weapons (WoR)",
+                    "81": "Maranda: Armor (WoR)",
+                    "82": "Figaro Castle: Tools (1st Time)",
+                    "83": "Figaro Castle: Tools (2nd Time)",
+                    "84": "Figaro Castle: Tools (WoR)",
+                    "85": "Phantom Train: Items"
+                }
+            }
+        },
+        "snesHeader": {
+            "type": "data",
+            "name": "SNES Header",
+            "range": "0xC0FFB0-0xC0FFE0",
+            "assembly": {
+                "gameCode": {
+                    "type": "text",
+                    "name": "Game Code",
+                    "length": 2
+                },
+                "makerCode": {
+                    "type": "text",
+                    "name": "Maker Code",
+                    "begin": 2,
+                    "length": 4
+                },
+                "gameTitle": {
+                    "type": "text",
+                    "name": "Game Title",
+                    "begin": 16,
+                    "length": 21
+                },
+                "expansionRAMSize": {
+                    "type": "property",
+                    "name": "Expansion RAM Size",
+                    "begin": 13
+                },
+                "checksumInverse": {
+                    "type": "property",
+                    "name": "Checksum Inverse",
+                    "begin": 44,
+                    "mask": "0xFFFF"
+                },
+                "checksum": {
+                    "type": "property",
+                    "name": "Checksum",
+                    "begin": 46,
+                    "mask": "0xFFFF"
+                }
+            }
+        },
+        "spellNames": {
+            "type": "array",
+            "name": "Spell Names",
+            "range": "0xE6F567-0xE6F6E1",
+            "array": {
+                "length": 54
+            },
+            "assembly": {
+                "type": "text",
+                "encoding": "smallText",
+                "length": 7
+            },
+            "stringTable": {
+                "name": "Spell Names",
+                "length": 54,
+                "default": "<spellNames[%i]>",
+                "string": {
+                    "255": "None"
+                }
+            }
+        },
+        "statusNames": {
+            "type": "array",
+            "name": "Status Names",
+            "range": "0xC2ADE1-0xC2AF21",
+            "array": {
+                "length": 32
+            },
+            "assembly": {
+                "type": "text",
+                "length": 10,
+                "encoding": "smallText"
+            },
+            "stringTable": {
+                "name": "Status Names",
+                "length": 32,
+                "default": "<statusNames[%i]>",
+                "string": {
+                    "4": "Magitek",
+                    "8": "Sleep",
+                    "9": "HP Leak",
+                    "23": "Dance",
+                    "25": "Interceptor",
+                    "26": "Hidden",
+                    "27": "Chant",
+                    "28": "Morph",
+                    "30": "Freeze",
+                    "31": "Rage"
+                }
+            }
+        },
+        "treasureProperties": {
+            "type": "array",
+            "name": "Treasure Properties",
+            "range": "0xED8634-0xED8BCA",
+            "isSequential": true,
+            "array": {
+                "length": 415
+            },
+            "assembly": {
+                "type": "array",
+                "assembly": {
+                    "type": "data",
+                    "assembly": {
+                        "x": {
+                            "type": "property",
+                            "name": "X Position",
+                            "begin": 0,
+                            "hidden": true
+                        },
+                        "y": {
+                            "type": "property",
+                            "name": "Y Position",
+                            "begin": 1,
+                            "hidden": true
+                        },
+                        "switch": {
+                            "type": "property",
+                            "name": "Switch",
+                            "begin": 2,
+                            "mask": "0x01FF",
+                            "stringTable": "treasureSwitches"
+                        },
+                        "treasureType": {
+                            "type": "property",
+                            "name": "Type",
+                            "begin": 3,
+                            "mask": "0xF0",
+                            "stringTable": {
+                                "name": "Treasure Types",
+                                "string": {
+                                    "0": "Empty",
+                                    "2": "Monster-in-a-box",
+                                    "4": "Item",
+                                    "8": "GP"
+                                }
+                            }
+                        },
+                        "battle": {
+                            "type": "property",
+                            "name": "Battle",
+                            "begin": 4,
+                            "invalid": "this.parent.treasureType.value !== 2"
+                        },
+                        "item": {
+                            "type": "property",
+                            "name": "Item",
+                            "begin": 4,
+                            "stringTable": "itemNames",
+                            "invalid": "this.parent.treasureType.value !== 4"
+                        },
+                        "gp": {
+                            "type": "property",
+                            "name": "GP",
+                            "begin": 4,
+                            "multiplier": 100,
+                            "invalid": "this.parent.treasureType.value !== 8"
+                        }
+                    },
+                    "length": 5
+                }
+            },
+            "pointerTable": {
+                "range": "0xED82F4-0xED8634",
+                "offset": "0xED8634"
+            }
+        },
+        "vehicleGraphics": {
+            "type": "assembly",
+            "name": "Vehicle Graphics",
+            "range": "0xD83000-0xD85000",
+            "format": "snes4bpp"
+        },
+        "vehicleEvents": {
+            "type": "array",
+            "name": "Vehicle Events",
+            "range": "0xEEB269-0xEEB27E",
+            "array": {
+                "length": 7
+            },
+            "assembly": {
+                "type": "data",
+                "assembly": {
+                    "scriptPointer": {
+                        "type": "property",
+                        "name": "Script Pointer",
+                        "mask": "0xFFFFFF",
+                        "script": "eventScript"
+                    }
+                },
+                "length": 3
+            },
+            "stringTable": {
+                "name": "Vehicle Events",
+                "length": 7,
+                "default": "Vehicle Event %i",
+                "string": {
+                    "0": "Blackjack: Deck",
+                    "1": "Tent (World)",
+                    "2": "Blackjack: Ground Entrance",
+                    "3": "Phoenix Cave (World)",
+                    "4": "Kefka's Tower (World)",
+                    "5": "Gogo's Lair",
+                    "6": "Doom Gaze (World)"
+                }
             }
         },
         "worldLayout1": {
@@ -2323,600 +2995,6 @@
                     }
                 }
             }
-        },
-        "mapTitles": {
-            "type": "array",
-            "name": "Map Titles",
-            "range": "0xCEF100-0xCEF463",
-            "array": {
-                "length": 73,
-                "max": 256
-            },
-            "assembly": {
-                "type": "text",
-                "encoding": "dialog"
-            },
-            "pointerTable": {
-                "range": "0xE68400-0xE68492",
-                "offset": "0xCEF100"
-            },
-            "stringTable": {
-                "name": "Map Titles",
-                "length": 73,
-                "default": "<mapTitles[%i].text>",
-                "string": {
-                    "0": "No Title"
-                }
-            }
-        },
-        "dialog": {
-            "type": "array",
-            "name": "Dialog",
-            "range": "0xCD0000-0xCEEFBB",
-            "autoBank": true,
-            "array": {
-                "length": 3084
-            },
-            "assembly": {
-                "type": "text",
-                "encoding": "dialog"
-            },
-            "pointerTable": {
-                "range": "0xCCE602-0xCD0000",
-                "offset": "0xCD0000"
-            },
-            "stringTable": {
-                "name": "Dialog",
-                "length": 3084,
-                "default": "<dialog[%i].formattedText>"
-            }
-        },
-        "eventScript": {
-            "type": "script",
-            "name": "Event Script",
-            "range": "0xCA0000-0xCCE5EE",
-            "encoding": ["event", "object", "world", "vehicle"],
-            "label": {
-                "0xCA0000": "No Event",
-                "0xCA0001": "Wait for Dialog Window",
-                "0xCA0003": "Game Start",
-                "0xCA0008": "Chest: Item",
-                "0xCA000C": "Chest: Spell",
-                "0xCA0010": "Chest: GP",
-                "0xCA0014": "Chest: Empty",
-                "0xCA0018": "Random Battle",
-                "0xCA0034": "Tent",
-                "0xCA0039": "Warp/Warp Stone",
-                "0xCA0040": "Chest: Monster-in-a-box",
-                "0xCA0078": "Falcon: Deck",
-                "0xCA009D": "Doom Gaze",
-                "0xCA00EA": "Tent: Animation",
-                "0xCA0108": "Warp: Animation",
-                "0xCA015E": "Tent: Animation (World)",
-                "0xCA01A2": "Kefka's Tower",
-                "0xCA0405": "Phoenix Cave",
-                "0xCA057D": "Final Battle/Ending",
-                "0xCA5ADE": "Floating Island: Cinematic",
-                "0xCA5E33": "New Game",
-                "0xCA5EA9": "Post-Battle",
-                "0xCA5EB3": "Return",
-                "0xCA5EB4": "Return (World)",
-                "0xCAA6C0": {
-                    "label": "Blackjack Book",
-                    "encoding": "vehicle"
-                },
-                "0xCACA64": "Check Facing Direction",
-                "0xCACD31": "Inn: No Dream",
-                "0xCACD3C": "Inn: Normal",
-                "0xCACD5B": "Inn: Dream 1",
-                "0xCACDD9": "Inn: Dream 2",
-                "0xCACE51": "Inn: Dream 3",
-                "0xCACEFE": "Inn: Dream 4",
-                "0xCACF67": "Inn: Fade Out",
-                "0xCACF96": "Inn: Fade In",
-                "0xCB69FF": "Not Enough GP",
-                "0xCC985B": "Prologue",
-                "0xCC9AEB": "Save Point",
-                "0xCCE566": "Game Over"
-            }
-        },
-        "characterNames": {
-            "type": "array",
-            "name": "Character Names",
-            "range": "0xC478C0-0xC47A40",
-            "array": {
-                "length": 64,
-                "max": 64
-            },
-            "assembly": {
-                "type": "text",
-                "encoding": "smallText",
-                "length": 6
-            },
-            "stringTable": {
-                "name": "Character Names",
-                "length": 64,
-                "default": "<characterNames[%i].text>"
-            }
-        },
-        "esperNames": {
-            "type": "array",
-            "name": "Esper Names",
-            "range": "0xE6F6E1-0xE6F7B9",
-            "array": {
-                "length": 27
-            },
-            "assembly": {
-                "type": "text",
-                "encoding": "smallText",
-                "length": 8
-            },
-            "stringTable": {
-                "name": "Esper Names",
-                "length": 27,
-                "default": "<esperNames[%i].text>"
-            }
-        },
-        "esperProperties": {
-            "type": "array",
-            "name": "Esper Properties",
-            "range": "0xD86E00-0xD87000",
-            "array": {
-                "length": 27
-            },
-            "assembly": {
-                "type": "data",
-                "assembly": {
-                    "esperName": {
-                        "type": "text",
-                        "name": "Name",
-                        "external": "esperNames[%i]",
-                        "encoding": "smallText",
-                        "length": 8
-                    },
-                    "spell1": {
-                        "type": "property",
-                        "name": "Spell 1",
-                        "begin": 1,
-                        "stringTable": "spellNames",
-                        "link": "attackProperties[%i]"
-                    },
-                    "rate1": {
-                        "type": "property",
-                        "name": "Rate 1",
-                        "begin": 0,
-                        "max": 100
-                    },
-                    "spell2": {
-                        "type": "property",
-                        "name": "Spell 2",
-                        "begin": 3,
-                        "stringTable": "spellNames",
-                        "link": "attackProperties[%i]"
-                    },
-                    "rate2": {
-                        "type": "property",
-                        "name": "Rate 2",
-                        "begin": 2,
-                        "max": 100
-                    },
-                    "spell3": {
-                        "type": "property",
-                        "name": "Spell 3",
-                        "begin": 5,
-                        "stringTable": "spellNames",
-                        "link": "attackProperties[%i]"
-                    },
-                    "rate3": {
-                        "type": "property",
-                        "name": "Rate 3",
-                        "begin": 4,
-                        "max": 100
-                    },
-                    "spell4": {
-                        "type": "property",
-                        "name": "Spell 4",
-                        "begin": 7,
-                        "stringTable": "spellNames",
-                        "link": "attackProperties[%i]"
-                    },
-                    "rate4": {
-                        "type": "property",
-                        "name": "Rate 4",
-                        "begin": 6,
-                        "max": 100
-                    },
-                    "spell5": {
-                        "type": "property",
-                        "name": "Spell 5",
-                        "begin": 9,
-                        "stringTable": "spellNames",
-                        "link": "attackProperties[%i]"
-                    },
-                    "rate5": {
-                        "type": "property",
-                        "name": "Rate 5",
-                        "begin": 8,
-                        "max": 100
-                    },
-                    "bonus": {
-                        "type": "property",
-                        "name": "Bonus",
-                        "begin": 10,
-                        "stringTable": "esperBonusNames",
-                        "link": "esperBonusNames[%i]"
-                    }
-                },
-                "length": 11
-            },
-            "stringTable": "esperNames"
-        },
-        "esperBonusNames": {
-            "type": "array",
-            "name": "Esper Bonus Names",
-            "range": "0xCFFEAE-0xCFFF9E",
-            "array": {
-                "length": 17
-            },
-            "assembly": {
-                "type": "data",
-                "length": 9,
-                "assembly": {
-                    "bonusName": {
-                        "type": "text",
-                        "name": "Name",
-                        "encoding": "smallText",
-                        "length": 9
-                    },
-                    "description": {
-                        "type": "text",
-                        "name": "Description",
-                        "encoding": "nullTerminated",
-                        "external": "esperBonusDescriptions[%i]"
-                    }
-                }
-            },
-            "stringTable": {
-                "name": "Esper Bonus Names",
-                "length": 17,
-                "default": "<esperBonusNames[%i].bonusName.text>",
-                "string": {
-                    "255": "None"
-                }
-            }
-        },
-        "esperBonusDescriptions": {
-            "type": "array",
-            "name": "Esper Bonus Descriptions",
-            "range": "0xEDFE00-0xEDFFA7",
-            "array": {
-                "length": 17
-            },
-            "pointerTable": {
-                "range": "0xEDFFD0-0xEE0000",
-                "offset": "0xEDFE00"
-            }
-        },
-        "itemNames": {
-            "type": "array",
-            "name": "Item Names",
-            "range": "0xD2B300-0xD2C000",
-            "array": {
-                "length": 256,
-                "max": 256
-            },
-            "assembly": {
-                "type": "data",
-                "length": 13,
-                "assembly": {
-                    "itemType": {
-                        "type": "property",
-                        "name": "Item Type"
-                    },
-                    "itemName": {
-                        "type": "text",
-                        "name": "Item Name",
-                        "range": "1-13",
-                        "encoding": "smallText"
-                    }
-                }
-            },
-            "stringTable": {
-                "name": "Item Names",
-                "length": 256,
-                "default": "<itemNames[%i].itemName.text>",
-                "string": {
-                    "0xFF": "Empty"
-                }
-            }
-        },
-        "itemDescriptions": {
-            "type": "array",
-            "name": "Item Descriptions",
-            "range": "0xED6400-0xED7787",
-            "array": {
-                "length": 256,
-                "max": 256
-            },
-            "assembly": {
-                "type": "text",
-                "encoding": "nullTerminated"
-            },
-            "pointerTable": {
-                "range": "0xED7AA0-0xED7CA0",
-                "offset": "0xED6400"
-            }
-        },
-        "shopProperties": {
-            "type": "array",
-            "name": "Shop Properties",
-            "range": "0xC47AC0-0xC47F40",
-            "array": {
-                "length": 128
-            },
-            "assembly": {
-                "type": "data",
-                "length": 9,
-                "assembly": {
-                    "shopType": {
-                        "type": "property",
-                        "name": "Type",
-                        "begin": 0,
-                        "mask": "0x07",
-                        "stringTable": {
-                            "string": {
-                                "0": "None",
-                                "1": "Weapon",
-                                "2": "Armor",
-                                "3": "Item",
-                                "4": "Relics",
-                                "5": "Vendor"
-                            }
-                        }
-                    },
-                    "priceAdjust": {
-                        "type": "property",
-                        "name": "Price Modifier",
-                        "begin": 0,
-                        "mask": "0x38",
-                        "stringTable": {
-                            "string": {
-                                "0": "Normal",
-                                "1": "+50%",
-                                "2": "+100%",
-                                "3": "-50%",
-                                "4": "-50% female / +50% male",
-                                "5": "-50% male / +50% female",
-                                "6": "-50% for Edgar"
-                            }
-                        }
-                    },
-                    "item1": {
-                        "type": "property",
-                        "name": "Item 1",
-                        "begin": 1,
-                        "stringTable": "itemNames"
-                    },
-                    "item2": {
-                        "type": "property",
-                        "name": "Item 2",
-                        "begin": 2,
-                        "stringTable": "itemNames"
-                    },
-                    "item3": {
-                        "type": "property",
-                        "name": "Item 3",
-                        "begin": 3,
-                        "stringTable": "itemNames"
-                    },
-                    "item4": {
-                        "type": "property",
-                        "name": "Item 4",
-                        "begin": 4,
-                        "stringTable": "itemNames"
-                    },
-                    "item5": {
-                        "type": "property",
-                        "name": "Item 5",
-                        "begin": 5,
-                        "stringTable": "itemNames"
-                    },
-                    "item6": {
-                        "type": "property",
-                        "name": "Item 6",
-                        "begin": 6,
-                        "stringTable": "itemNames"
-                    },
-                    "item7": {
-                        "type": "property",
-                        "name": "Item 7",
-                        "begin": 7,
-                        "stringTable": "itemNames"
-                    },
-                    "item8": {
-                        "type": "property",
-                        "name": "Item 8",
-                        "begin": 8,
-                        "stringTable": "itemNames"
-                    }
-                }
-            },
-            "stringTable": {
-                "name": "Shop Properties",
-                "length": 48,
-                "default": "Shop %i",
-                "string": {
-                    "0": "Narshe: Weapons (Before Vector)",
-                    "1": "Narshe: Armor (Before Vector)",
-                    "2": "Narshe: Relics (Before Vector)",
-                    "3": "Narshe: Items (Before Vector)",
-                    "4": "Figaro Castle: Items (1st Time)",
-                    "5": "South Figaro: Weapons (WoB)",
-                    "6": "South Figaro: Armor (WoB)",
-                    "7": "South Figaro: Relics (WoB)",
-                    "8": "South Figaro: Items (WoB)",
-                    "9": "Mobliz: Weapons",
-                    "10": "Mobliz: Armor",
-                    "11": "Mobliz: Relics",
-                    "12": "Mobliz: Items",
-                    "13": "Nikeah: Weapons (WoB)",
-                    "14": "Nikeah: Armor (WoB)",
-                    "15": "Nikeah: Items (WoB)",
-                    "16": "Nikeah: Relics (WoB)",
-                    "17": "Kohlingen: Weapons (WoB)",
-                    "18": "Kohlingen: Armor (WoB)",
-                    "19": "Kohlingen: Items (WoB)",
-                    "20": "Jidoor: Weapons (WoB)",
-                    "21": "Jidoor: Armor (WoB)",
-                    "22": "Jidoor: Items (WoB)",
-                    "23": "Jidoor: Relics (WoB)",
-                    "24": "Albrook: Items (WoB)",
-                    "25": "Albrook: Weapons (WoB)",
-                    "26": "Albrook: Armor (WoB)",
-                    "27": "Vector: Weapons",
-                    "28": "Vector: Armor",
-                    "29": "Tzen: Weapons (WoB)",
-                    "30": "Tzen: Armor (WoB)",
-                    "31": "Tzen: Items (WoB)",
-                    "32": "Tzen: Relics (WoB)",
-                    "33": "Thamasa: Weapons (WoB)",
-                    "34": "Thamasa: Armor (WoB)",
-                    "35": "Thamasa: Items (WoB)",
-                    "36": "Returner's Hideout: Items",
-                    "37": "Maranda: Weapons (WoB)",
-                    "38": "Maranda: Armor (WoB)",
-                    "39": "Crazy Old Man's House: Vendor",
-                    "40": "Albrook: Relics (WoB)",
-                    "41": "Narshe: Weapons (After Vector)",
-                    "42": "Narshe: Armor (After Vector)",
-                    "43": "Narshe: Relics (After Vector)",
-                    "44": "Narshe: Items (After Vector)",
-                    "45": "Thamasa: Relics (WoB)",
-                    "46": "Blackjack: Items",
-                    "47": "Figaro Castle: Items (2nd Time)",
-                    "48": "Albrook: Items (WoR)",
-                    "49": "Albrook: Weapons (WoR)",
-                    "50": "Albrook: Armor (WoR)",
-                    "51": "Albrook: Relics (WoR)",
-                    "52": "Tzen: Weapons (WoR)",
-                    "53": "Tzen: Armor (WoR)",
-                    "54": "Tzen: Items (WoR)",
-                    "55": "Tzen: Relic (WoR)",
-                    "56": "Nikeah: Weapons (WoR)",
-                    "57": "Nikeah: Armor (WoR)",
-                    "58": "Nikeah: Items (WoR)",
-                    "59": "Nikeah: Relics (WoR)",
-                    "60": "South Figaro: Weapons (WoR)",
-                    "61": "South Figaro: Armor (WoR)",
-                    "62": "South Figaro: Relics (WoR)",
-                    "63": "South Figaro: Items (WoR)",
-                    "64": "Figaro Castle: Items (WoR)",
-                    "65": "Kohlingen: Weapons (WoR)",
-                    "66": "Kohlingen: Armor (WoR)",
-                    "67": "Kohlingen: Items (WoR)",
-                    "68": "Narshe: Weapons (WoR)",
-                    "69": "Narshe: Armor (WoR)",
-                    "70": "Narshe: Relics (WoR)",
-                    "71": "Narshe: Items (WoR)",
-                    "72": "Thamasa: Weapons (WoR)",
-                    "73": "Thamasa: Armor (WoR)",
-                    "74": "Thamasa: Items (WoR)",
-                    "75": "Thamasa: Relics (WoR)",
-                    "76": "Jidoor: Weapons (WoR)",
-                    "77": "Jidoor: Armor (WoR)",
-                    "78": "Jidoor: Items (WoR)",
-                    "79": "Jidoor: Relics (WoR)",
-                    "80": "Maranda: Weapons (WoR)",
-                    "81": "Maranda: Armor (WoR)",
-                    "82": "Figaro Castle: Tools (1st Time)",
-                    "83": "Figaro Castle: Tools (2nd Time)",
-                    "84": "Figaro Castle: Tools (WoR)",
-                    "85": "Phantom Train: Items"
-                }
-            }
-        },
-        "spellNames": {
-            "type": "array",
-            "name": "Spell Names",
-            "range": "0xE6F567-0xE6F6E1",
-            "array": {
-                "length": 54
-            },
-            "assembly": {
-                "type": "text",
-                "encoding": "smallText",
-                "length": 7
-            },
-            "stringTable": {
-                "name": "Spell Names",
-                "length": 54,
-                "default": "<spellNames[%i].formattedText>",
-                "string": {
-                    "255": "None"
-                }
-            }
-        },
-        "attackProperties": {
-            "type": "array",
-            "name": "Attack Properties",
-            "range": "0xC46AC0-0xC478C0",
-            "array": {
-                "length": 256
-            },
-            "assembly": {
-                "type": "data",
-                "length": 14,
-                "assembly": {
-                    "mpCost": {
-                        "type": "property",
-                        "name": "MP Cost",
-                        "begin": 5
-                    }
-                }
-            },
-            "stringTable": {
-                "name": "Attack Names",
-                "default": "Attack %i",
-                "length": 256,
-                "string": {
-                    "0-54": "<spellNames[%i]"
-                }
-            }
-        },
-        "rareItemNames": {
-            "type": "array",
-            "name": "Rare Item Names",
-            "range": "0xCEFBA0-0xCEFCB0",
-            "array": {
-                "length": 20
-            },
-            "assembly": {
-                "type": "text",
-                "length": 13,
-                "encoding": "smallText"
-            },
-            "stringTable": {
-                "name": "Rare Item Names",
-                "length": 20,
-                "default": "<rareItemNames[%i].text>"
-            }
-        },
-        "rareItemDescriptions": {
-            "type": "array",
-            "name": "Rare Item Descriptions",
-            "range": "0xCEFCB0-0xCEFEDF",
-            "array": {
-                "length": 20,
-                "max": 20
-            },
-            "assembly": {
-                "type": "text",
-                "encoding": "nullTerminated"
-            },
-            "pointerTable": {
-                "range": "0xCEFB60-0xCEFBA0",
-                "offset": "0xCEFCB0"
-            }
         }
     },
     "scriptEncoding": {
@@ -2928,8 +3006,19 @@
                     "name": "Event Battle",
                     "category": "Battle",
                     "length": 3,
-                    "opcode": ["0x4C", "0x4D"],
+                    "opcode": ["0x4D", "0x4C"],
                     "assembly": {
+                        "type": {
+                            "type": "property",
+                            "name": "Type",
+                            "begin": 0,
+                            "stringTable": {
+                                "string": {
+                                    "0x4C": "Collision",
+                                    "0x4D": "Normal"
+                                }
+                            }
+                        },
                         "battle": {
                             "type": "property",
                             "name": "Battle",
@@ -3078,7 +3167,7 @@
                         },
                         "party": {
                             "type": "property",
-                            "name": "Properties",
+                            "name": "Party",
                             "begin": 2,
                             "min": 1,
                             "max": 7,
@@ -3134,11 +3223,36 @@
                     "opcode": "0x88-0x8B",
                     "length": 4,
                     "assembly": {
+                        "effect": {
+                            "type": "property",
+                            "name": "Effect",
+                            "begin": 0,
+                            "stringTable": {
+                                "string": {
+                                    "0x88": "Remove (AND)",
+                                    "0x89": "Toggle (XOR)",
+                                    "0x8A": "Set (OR)"
+                                }
+                            }
+                        },
                         "character": {
                             "type": "property",
                             "name": "Character",
                             "begin": 1,
                             "stringTable": "eventObjects"
+                        },
+                        "status": {
+                            "type": "property",
+                            "name": "Status",
+                            "begin": 2,
+                            "mask": "0xFFFF",
+                            "flag": true,
+                            "stringTable": {
+                                "string": {
+                                    "0-8": "<stringTable.statusNames[7-%i]>",
+                                    "8-16": "<stringTable.statusNames[39-%i]>"
+                                }
+                            }
                         }
                     }
                 },
@@ -3216,7 +3330,8 @@
                             "name": "Dialog",
                             "begin": 1,
                             "mask": "0x3FFF",
-                            "stringTable": "dialog"
+                            "stringTable": "dialog",
+                            "link": "dialog[%i]"
                         },
                         "dialogType": {
                             "type": "property",
@@ -3687,7 +3802,7 @@
                     "name": "Change Map",
                     "category": "Map",
                     "length": 6,
-                    "opcode": "0x6A-0x6C",
+                    "opcode": ["0x6A", "0x6B"],
                     "assembly": {
                         "map": {
                             "type": "property",
@@ -3697,11 +3812,83 @@
                             "stringTable": "mapProperties",
                             "link": "mapProperties[%i]"
                         },
+                        "setParent": {
+                            "type": "property",
+                            "name": "Set Parent Map",
+                            "begin": 2,
+                            "mask": "0x02",
+                            "bool": true
+                        },
+                        "z": {
+                            "type": "property",
+                            "name": "Z-Level",
+                            "begin": 2,
+                            "mask": "0x04",
+                            "invalid": "this.parent.map.value < 3",
+                            "stringTable": {
+                                "string": {
+                                    "0": "Lower",
+                                    "1": "Upper"
+                                }
+                            }
+                        },
+                        "title": {
+                            "type": "property",
+                            "name": "Show Map Title",
+                            "begin": 2,
+                            "mask": "0x08",
+                            "invalid": "this.parent.map.value < 3",
+                            "bool": true
+                        },
+                        "direction": {
+                            "type": "property",
+                            "name": "Facing Direction",
+                            "begin": 2,
+                            "mask": "0x30",
+                            "invalid": "this.parent.map.value < 3",
+                            "stringTable": "directions"
+                        },
+                        "xDest": {
+                            "type": "property",
+                            "name": "X Destination",
+                            "begin": 3
+                        },
+                        "yDest": {
+                            "type": "property",
+                            "name": "Y Destination",
+                            "begin": 4
+                        },
                         "vehicle": {
                             "type": "property",
                             "name": "Vehicle",
                             "begin": 5,
-                            "mask": "0x03"
+                            "mask": "0x03",
+                            "invalid": "(this.parent.map.value > 2) && (this.parent.map.value != 511)",
+                            "stringTable": "vehiclesWorld"
+                        },
+                        "noSizeUpdate": {
+                            "type": "property",
+                            "name": "No Size Update",
+                            "begin": 5,
+                            "mask": "0x20",
+                            "invalid": "this.parent.map.value < 3",
+                            "bool": true
+                        },
+                        "manualFade": {
+                            "type": "property",
+                            "name": "Manual Fade-In",
+                            "begin": 5,
+                            "mask": "0x40",
+                            "invalid": "this.parent.map.value < 3",
+                            "bool": true
+                        },
+                        "enableMapEvent": {
+                            "type": "property",
+                            "name": "Enable Map Event",
+                            "begin": 5,
+                            "mask": "0x80",
+                            "invalid": "this.parent.map.value < 3",
+                            "bool": true
                         }
                     }
                 },
@@ -3767,13 +3954,86 @@
                             "name": "Map",
                             "begin": 1,
                             "mask": "0x01FF",
+                            "stringTable": "mapProperties",
                             "link": "mapProperties[%i]"
+                        },
+                        "setParent": {
+                            "type": "property",
+                            "name": "Set Parent Map",
+                            "begin": 2,
+                            "mask": "0x02",
+                            "bool": true
+                        },
+                        "z": {
+                            "type": "property",
+                            "name": "Z-Level",
+                            "begin": 2,
+                            "mask": "0x04",
+                            "invalid": "this.parent.map.value < 3",
+                            "stringTable": {
+                                "string": {
+                                    "0": "Lower",
+                                    "1": "Upper"
+                                }
+                            }
+                        },
+                        "title": {
+                            "type": "property",
+                            "name": "Show Map Title",
+                            "begin": 2,
+                            "mask": "0x08",
+                            "invalid": "this.parent.map.value < 3",
+                            "bool": true
+                        },
+                        "direction": {
+                            "type": "property",
+                            "name": "Facing Direction",
+                            "begin": 2,
+                            "mask": "0x30",
+                            "invalid": "this.parent.map.value < 3",
+                            "stringTable": "directions"
+                        },
+                        "xDest": {
+                            "type": "property",
+                            "name": "X Destination",
+                            "begin": 3
+                        },
+                        "yDest": {
+                            "type": "property",
+                            "name": "Y Destination",
+                            "begin": 4
                         },
                         "vehicle": {
                             "type": "property",
                             "name": "Vehicle",
                             "begin": 5,
-                            "mask": "0x03"
+                            "mask": "0x03",
+                            "invalid": "(this.parent.map.value > 2) && (this.parent.map.value != 511)",
+                            "stringTable": "vehiclesWorld"
+                        },
+                        "noSizeUpdate": {
+                            "type": "property",
+                            "name": "No Size Update",
+                            "begin": 5,
+                            "mask": "0x20",
+                            "invalid": "this.parent.map.value < 3",
+                            "bool": true
+                        },
+                        "manualFade": {
+                            "type": "property",
+                            "name": "Manual Fade-In",
+                            "begin": 5,
+                            "mask": "0x40",
+                            "invalid": "this.parent.map.value < 3",
+                            "bool": true
+                        },
+                        "enableMapEvent": {
+                            "type": "property",
+                            "name": "Enable Map Event",
+                            "begin": 5,
+                            "mask": "0x80",
+                            "invalid": "this.parent.map.value < 3",
+                            "bool": true
                         }
                     }
                 },
@@ -3812,6 +4072,11 @@
                     "category": "Menu",
                     "opcode": "0x99",
                     "length": 4
+                },
+                "menuRestore": {
+                    "name": "Restore Saved Game",
+                    "category": "Menu",
+                    "opcode": "0x4F"
                 },
                 "menuShop": {
                     "name": "Shop Menu",
@@ -5067,6 +5332,23 @@
                         }
                     }
                 },
+                "arrows": {
+                    "name": "Direction Arrows",
+                    "opcode": "0xDA-0xDD",
+                    "assembly": {
+                        "arrows": {
+                            "type": "property",
+                            "name": "Arrows",
+                            "stringTable": {
+                                "string": {
+                                    "0xDA": "Show Arrows",
+                                    "0xDB": "Lock Arrows",
+                                    "0xDC": "Hide Arrows"
+                                }
+                            }
+                        }
+                    }
+                },
                 "battle": {
                     "name": "Event Battle",
                     "length": 3,
@@ -5112,9 +5394,67 @@
                         }
                     }
                 },
+                "cinematic": {
+                    "name": "Show Cinematic",
+                    "opcode": ["0xF2", "0xF3", "0xF5", "0xF6", "0xF8-0xFD", "0xFE"],
+                    "assembly": {
+                        "cinematic": {
+                            "type": "property",
+                            "name": "Cinematic",
+                            "stringTable": {
+                                "string": {
+                                    "0xF2": "Ending Airship Scene",
+                                    "0xF3": "Light of Judgement 1",
+                                    "0xF5": "Light of Judgement 2",
+                                    "0xF6": "Unknown",
+                                    "0xF8": "Light of Judgement 3",
+                                    "0xF9": "Light of Judgement 4",
+                                    "0xFA": "Falcon Rising from Water",
+                                    "0xFB": "Airship Smoking",
+                                    "0xFC": "Airship Crashing",
+                                    "0xFE": "Vector Approach"
+                                }
+                            }
+                        }
+                    }
+                },
                 "end": {
                     "name": "End of Script",
                     "opcode": "0xFF"
+                },
+                "fade": {
+                    "name": "Fade In/Out",
+                    "opcode": ["0xD8", "0xD9"],
+                    "assembly": {
+                        "fade": {
+                            "type": "property",
+                            "name": "Fade",
+                            "stringTable": {
+                                "string": {
+                                    "0xD8": "Fade In",
+                                    "0xD9": "Fade Out"
+                                }
+                            }
+                        }
+                    }
+                },
+                "graphic": {
+                    "name": "Change Vehicle Graphic",
+                    "opcode": ["0xF4", "0xF7", "0xFD"],
+                    "assembly": {
+                        "graphic": {
+                            "type": "property",
+                            "name": "Graphic",
+                            "begin": 0,
+                            "stringTable": {
+                                "string": {
+                                    "0xF4": "Falcon",
+                                    "0xF7": "Bird",
+                                    "0xFD": "Esper Terra"
+                                }
+                            }
+                        }
+                    }
                 },
                 "jumpSwitch": {
                     "name": "Jump Based on Switch",
@@ -5286,11 +5626,99 @@
                             "stringTable": "mapProperties",
                             "link": "mapProperties[%i]"
                         },
+                        "setParent": {
+                            "type": "property",
+                            "name": "Set Parent Map",
+                            "begin": 2,
+                            "mask": "0x02",
+                            "bool": true
+                        },
+                        "z": {
+                            "type": "property",
+                            "name": "Z-Level",
+                            "begin": 2,
+                            "mask": "0x04",
+                            "invalid": "this.parent.map.value < 3",
+                            "stringTable": {
+                                "string": {
+                                    "0": "Lower",
+                                    "1": "Upper"
+                                }
+                            }
+                        },
+                        "title": {
+                            "type": "property",
+                            "name": "Show Map Title",
+                            "begin": 2,
+                            "mask": "0x08",
+                            "invalid": "this.parent.map.value < 3",
+                            "bool": true
+                        },
+                        "direction": {
+                            "type": "property",
+                            "name": "Facing Direction",
+                            "begin": 2,
+                            "mask": "0x30",
+                            "invalid": "this.parent.map.value < 3",
+                            "stringTable": "directions"
+                        },
+                        "xDest": {
+                            "type": "property",
+                            "name": "X Destination",
+                            "begin": 3
+                        },
+                        "yDest": {
+                            "type": "property",
+                            "name": "Y Destination",
+                            "begin": 4
+                        },
                         "vehicle": {
                             "type": "property",
                             "name": "Vehicle",
                             "begin": 5,
-                            "mask": "0x03"
+                            "mask": "0x03",
+                            "invalid": "(this.parent.map.value > 2) && (this.parent.map.value != 511)",
+                            "stringTable": "vehiclesWorld"
+                        },
+                        "noSizeUpdate": {
+                            "type": "property",
+                            "name": "No Size Update",
+                            "begin": 5,
+                            "mask": "0x20",
+                            "invalid": "this.parent.map.value < 3",
+                            "bool": true
+                        },
+                        "manualFade": {
+                            "type": "property",
+                            "name": "Manual Fade-In",
+                            "begin": 5,
+                            "mask": "0x40",
+                            "invalid": "this.parent.map.value < 3",
+                            "bool": true
+                        },
+                        "enableMapEvent": {
+                            "type": "property",
+                            "name": "Enable Map Event",
+                            "begin": 5,
+                            "mask": "0x80",
+                            "invalid": "this.parent.map.value < 3",
+                            "bool": true
+                        }
+                    }
+                },
+                "miniMap": {
+                    "name": "Show/Hide Mini-Map",
+                    "opcode": ["0xDD", "0xDF"],
+                    "assembly": {
+                        "fade": {
+                            "type": "property",
+                            "name": "Fade",
+                            "stringTable": {
+                                "string": {
+                                    "0xDD": "Hide Mini-Map",
+                                    "0xDF": "Show Mini-Map"
+                                }
+                            }
                         }
                     }
                 },
@@ -5360,6 +5788,23 @@
                                 "string": {
                                     "0xD8": "Fade In",
                                     "0xD9": "Fade Out"
+                                }
+                            }
+                        }
+                    }
+                },
+                "showHide": {
+                    "name": "Show/Hide Vehicle Sprite",
+                    "opcode": ["0xD0", "0xD1"],
+                    "assembly": {
+                        "showHide": {
+                            "type": "property",
+                            "name": "Show/Hide",
+                            "begin": 0,
+                            "stringTable": {
+                                "string": {
+                                    "0xD0": "Show Vehicle",
+                                    "0xD1": "Hide Vehicle"
                                 }
                             }
                         }
@@ -5436,7 +5881,8 @@
                             "type": "property",
                             "name": "Action",
                             "begin": 0,
-                            "mask": "0x3F"
+                            "mask": "0x3F",
+                            "stringTable": "mapSpriteActions"
                         },
                         "hFlip": {
                             "type": "property",
@@ -5447,9 +5893,78 @@
                         }
                     }
                 },
+                "character": {
+                    "name": "Show/Hide Character Sprite",
+                    "opcode": ["0xD0", "0xD1"],
+                    "assembly": {
+                        "showHide": {
+                            "type": "property",
+                            "name": "Show/Hide",
+                            "begin": 0,
+                            "stringTable": {
+                                "string": {
+                                    "0xD0": "Show Character",
+                                    "0xD1": "Hide Character"
+                                }
+                            }
+                        }
+                    }
+                },
+                "direction": {
+                    "name": "Change Facing Direction",
+                    "opcode": "0xCC-0xD0",
+                    "assembly": {
+                        "direction": {
+                            "type": "property",
+                            "name": "Direction",
+                            "begin": 0,
+                            "stringTable": {
+                                "string": {
+                                    "0xCC": "Up",
+                                    "0xCD": "Right",
+                                    "0xCE": "Down",
+                                    "0xCF": "Left"
+                                }
+                            }
+                        }
+                    }
+                },
                 "end": {
                     "name": "End of Script",
                     "opcode": "0xFF"
+                },
+                "fade": {
+                    "name": "Fade In/Out",
+                    "opcode": ["0xD8", "0xD9"],
+                    "assembly": {
+                        "fade": {
+                            "type": "property",
+                            "name": "Fade",
+                            "stringTable": {
+                                "string": {
+                                    "0xD8": "Fade In",
+                                    "0xD9": "Fade Out"
+                                }
+                            }
+                        }
+                    }
+                },
+                "figaro": {
+                    "name": "Figaro Castle Animation",
+                    "opcode": ["0xFD", "0xFE"],
+                    "assembly": {
+                        "animation": {
+                            "type": "property",
+                            "name": "Animation",
+                            "begin": 0,
+                            "stringTable": {
+                                "string": {
+                                    "0xFD": "Figaro Castle Submerging",
+                                    "0xFE": "Figaro Castle Emerging"
+                                }
+                            }
+                        }
+                    }
                 },
                 "jumpDirection": {
                     "name": "Jump Based on Facing Direction",
@@ -5655,11 +6170,99 @@
                             "stringTable": "mapProperties",
                             "link": "mapProperties[%i]"
                         },
+                        "setParent": {
+                            "type": "property",
+                            "name": "Set Parent Map",
+                            "begin": 2,
+                            "mask": "0x02",
+                            "bool": true
+                        },
+                        "z": {
+                            "type": "property",
+                            "name": "Z-Level",
+                            "begin": 2,
+                            "mask": "0x04",
+                            "invalid": "this.parent.map.value < 3",
+                            "stringTable": {
+                                "string": {
+                                    "0": "Lower",
+                                    "1": "Upper"
+                                }
+                            }
+                        },
+                        "title": {
+                            "type": "property",
+                            "name": "Show Map Title",
+                            "begin": 2,
+                            "mask": "0x08",
+                            "invalid": "this.parent.map.value < 3",
+                            "bool": true
+                        },
+                        "direction": {
+                            "type": "property",
+                            "name": "Facing Direction",
+                            "begin": 2,
+                            "mask": "0x30",
+                            "invalid": "this.parent.map.value < 3",
+                            "stringTable": "directions"
+                        },
+                        "xDest": {
+                            "type": "property",
+                            "name": "X Destination",
+                            "begin": 3
+                        },
+                        "yDest": {
+                            "type": "property",
+                            "name": "Y Destination",
+                            "begin": 4
+                        },
                         "vehicle": {
                             "type": "property",
                             "name": "Vehicle",
                             "begin": 5,
-                            "mask": "0x03"
+                            "mask": "0x03",
+                            "invalid": "(this.parent.map.value > 2) && (this.parent.map.value != 511)",
+                            "stringTable": "vehiclesWorld"
+                        },
+                        "noSizeUpdate": {
+                            "type": "property",
+                            "name": "No Size Update",
+                            "begin": 5,
+                            "mask": "0x20",
+                            "invalid": "this.parent.map.value < 3",
+                            "bool": true
+                        },
+                        "manualFade": {
+                            "type": "property",
+                            "name": "Manual Fade-In",
+                            "begin": 5,
+                            "mask": "0x40",
+                            "invalid": "this.parent.map.value < 3",
+                            "bool": true
+                        },
+                        "enableMapEvent": {
+                            "type": "property",
+                            "name": "Enable Map Event",
+                            "begin": 5,
+                            "mask": "0x80",
+                            "invalid": "this.parent.map.value < 3",
+                            "bool": true
+                        }
+                    }
+                },
+                "miniMap": {
+                    "name": "Show/Hide Mini-Map",
+                    "opcode": ["0xDD", "0xDF"],
+                    "assembly": {
+                        "fade": {
+                            "type": "property",
+                            "name": "Fade",
+                            "stringTable": {
+                                "string": {
+                                    "0xDD": "Hide Mini-Map",
+                                    "0xDF": "Show Mini-Map"
+                                }
+                            }
                         }
                     }
                 },
@@ -5678,6 +6281,7 @@
                             "type": "property",
                             "name": "Distance",
                             "begin": 0,
+                            "offset": 1,
                             "mask": "0x1C"
                         }
                     }
@@ -5721,6 +6325,30 @@
                                 "string": {
                                     "0xD8": "Fade In",
                                     "0xD9": "Fade Out"
+                                }
+                            }
+                        }
+                    }
+                },
+                "ship": {
+                    "name": "Change to Ship Sprite",
+                    "opcode": "0xFC"
+                },
+                "speed": {
+                    "name": "Change Movement Speed",
+                    "opcode": "0xC0-0xC5",
+                    "assembly": {
+                        "speed": {
+                            "type": "property",
+                            "name": "Speed",
+                            "begin": 0,
+                            "stringTable": {
+                                "string": {
+                                    "0xC0": "Slow ×2",
+                                    "0xC1": "Slow",
+                                    "0xC2": "Normal",
+                                    "0xC3": "Fast",
+                                    "0xC4": "Fast ×2"
                                 }
                             }
                         }
@@ -6016,10 +6644,61 @@
                 "0xFF": "e…"
             }
         },
+        "element": {
+            "name": "Element Icons",
+            "char": {
+                "0xD6": "\\holy",
+                "0xD8": "\\lightning",
+                "0xD9": "\\wind",
+                "0xDA": "\\earth",
+                "0xDB": "\\ice",
+                "0xDC": "\\fire",
+                "0xDD": "\\water",
+                "0xDE": "\\poison"
+            }
+        },
+        "fixedLength": {
+            "name": "Fixed Length",
+            "char": {
+                "0xFE": " ",
+                "0xFF": "\\pad"
+            }
+        },
+        "item": {
+            "name": "Item Icons",
+            "char": {
+                "0xD8": "\\dagger",
+                "0xD9": "\\sword",
+                "0xDA": "\\spear",
+                "0xDB": "\\katana",
+                "0xDC": "\\staff",
+                "0xDD": "\\brush",
+                "0xDE": "\\star",
+                "0xDF": "\\special",
+                "0xE0": "\\card",
+                "0xE1": "\\claw",
+                "0xE2": "\\shield",
+                "0xE3": "\\helm",
+                "0xE4": "\\armor",
+                "0xE5": "\\tool",
+                "0xE6": "\\scroll",
+                "0xE7": "\\relic",
+                "0xE8": "\\white",
+                "0xE9": "\\black",
+                "0xEA": "\\effect"
+            }
+        },
+        "nullTerminated": {
+            "name": "Null-Terminated",
+            "char": {
+                "0x00": "\\0",
+                "0xFE": "\\pad",
+                "0xFF": " "
+            }
+        },
         "text": {
             "name": "Text",
             "char": {
-                "0x00": "\\0",
                 "0x01": "\\n",
                 "0x02": "\\char[",
                 "0x05": "\\pause",
@@ -6117,57 +6796,6 @@
                 "0xD3": "“",
                 "0xD7": "×"
             }
-        },
-        "item": {
-            "name": "Item Icons",
-            "char": {
-                "0xD8": "\\dagger",
-                "0xD9": "\\sword",
-                "0xDA": "\\spear",
-                "0xDB": "\\katana",
-                "0xDC": "\\staff",
-                "0xDD": "\\brush",
-                "0xDE": "\\star",
-                "0xDF": "\\special",
-                "0xE0": "\\card",
-                "0xE1": "\\claw",
-                "0xE2": "\\shield",
-                "0xE3": "\\helm",
-                "0xE4": "\\armor",
-                "0xE5": "\\tool",
-                "0xE6": "\\scroll",
-                "0xE7": "\\relic",
-                "0xE8": "\\white",
-                "0xE9": "\\black",
-                "0xEA": "\\effect"
-            }
-        },
-        "element": {
-            "name": "Element Icons",
-            "char": {
-                "0xD6": "\\holy",
-                "0xD8": "\\lightning",
-                "0xD9": "\\wind",
-                "0xDA": "\\earth",
-                "0xDB": "\\ice",
-                "0xDC": "\\fire",
-                "0xDD": "\\water",
-                "0xDE": "\\poison"
-            }
-        },
-        "fixedLength": {
-            "name": "Fixed Length",
-            "char": {
-                "0xFE": " ",
-                "0xFF": "\\pad"
-            }
-        },
-        "nullTerminated": {
-            "name": "Null-Terminated",
-            "char": {
-                "0xFE": "\\pad",
-                "0xFF": " "
-            }
         }
     },
     "textEncoding": {
@@ -6178,20 +6806,20 @@
                 "dte"
             ]
         },
-        "smallText": {
-            "name": "Small Text",
-            "charTable": [
-                "text",
-                "item",
-                "fixedLength"
-            ]
-        },
         "nullTerminated": {
             "name": "Null-Terminated",
             "charTable": [
                 "text",
                 "element",
                 "nullTerminated"
+            ]
+        },
+        "smallText": {
+            "name": "Small Text",
+            "charTable": [
+                "text",
+                "item",
+                "fixedLength"
             ]
         }
     },
@@ -6277,10 +6905,10 @@
                 "70": "Timers are Shown in Battle",
                 "71": "Eaten by Zone Eater",
                 "72": "Doom Gaze is Defeated",
-                "73": "<characterNames[11].text> is available",
-                "75": "<characterNames[3].text> Can't Leave After Battle",
-                "76": "<characterNames[1].text> is a Merchant",
-                "77": "<characterNames[1].text> is a Green Soldier",
+                "73": "<characterNames[11]> is available",
+                "75": "<characterNames[3]> Can't Leave After Battle",
+                "76": "<characterNames[1]> is a Merchant",
+                "77": "<characterNames[1]> is a Green Soldier",
                 "80-96": "Doom Gaze's HP",
                 "96-104": "Cursed Shield Battle Counter"
             }
@@ -6299,7 +6927,7 @@
             "length": 16,
             "default": "Character %i",
             "string": {
-                "0-14": "<characterNames[%i].text>"
+                "0-14": "<characterNames[%i]>"
             }
         },
         "eventObjects": {
@@ -6307,7 +6935,7 @@
             "length": 52,
             "default": "Object %i",
             "string": {
-                "0-14": "<stringTable.eventCharacters[%i]>",
+                "0-16": "<stringTable.eventCharacters[%i]>",
                 "16-48": "NPC %i",
                 "48": "Camera",
                 "49": "Party Character 1",
@@ -6781,20 +7409,20 @@
                 "365": "Jidoor / Bought Golem",
                 "366": "Cave in the Veldt / Switch",
                 "367": "Learned Airship Controls",
-                "416": "<characterNames[0].text>",
-                "417": "<characterNames[1].text>",
-                "418": "<characterNames[2].text>",
-                "419": "<characterNames[3].text>",
-                "420": "<characterNames[4].text>",
-                "421": "<characterNames[5].text>",
-                "422": "<characterNames[6].text>",
-                "423": "<characterNames[7].text>",
-                "424": "<characterNames[8].text>",
-                "425": "<characterNames[9].text>",
-                "426": "<characterNames[10].text>",
-                "427": "<characterNames[11].text>",
-                "428": "<characterNames[12].text>",
-                "429": "<characterNames[13].text>",
+                "416": "<characterNames[0]>",
+                "417": "<characterNames[1]>",
+                "418": "<characterNames[2]>",
+                "419": "<characterNames[3]>",
+                "420": "<characterNames[4]>",
+                "421": "<characterNames[5]>",
+                "422": "<characterNames[6]>",
+                "423": "<characterNames[7]>",
+                "424": "<characterNames[8]>",
+                "425": "<characterNames[9]>",
+                "426": "<characterNames[10]>",
+                "427": "<characterNames[11]>",
+                "428": "<characterNames[12]>",
+                "429": "<characterNames[13]>",
                 "430": "Character 14",
                 "431": "Character 15",
                 "432": "Party is facing up",
@@ -6817,26 +7445,26 @@
                 "461": "Disable Random Battles",
                 "462": "Enable Party Switching",
                 "463": "Map Event is Running",
-                "464": "<rareItemNames[0].text>",
-                "465": "<rareItemNames[1].text>",
-                "466": "<rareItemDescriptions[2].text>",
-                "467": "<rareItemDescriptions[3].text>",
-                "468": "<rareItemDescriptions[4].text>",
-                "469": "<rareItemDescriptions[5].text>",
-                "470": "<rareItemNames[6].text>",
-                "471": "<rareItemNames[7].text>",
-                "472": "<rareItemNames[8].text>",
-                "473": "<rareItemNames[9].text>",
-                "474": "<rareItemNames[10].text>",
-                "475": "<rareItemNames[11].text>",
-                "476": "<rareItemNames[12].text>",
-                "477": "<rareItemNames[13].text>",
-                "478": "<rareItemNames[14].text>",
-                "479": "<rareItemNames[15].text>",
-                "480": "<rareItemNames[16].text>",
-                "481": "<rareItemNames[17].text>",
-                "482": "<rareItemNames[18].text>",
-                "483": "<rareItemNames[19].text>",
+                "464": "<rareItemNames[0]>",
+                "465": "<rareItemNames[1]>",
+                "466": "<rareItemDescriptions[2]>",
+                "467": "<rareItemDescriptions[3]>",
+                "468": "<rareItemDescriptions[4]>",
+                "469": "<rareItemDescriptions[5]>",
+                "470": "<rareItemNames[6]>",
+                "471": "<rareItemNames[7]>",
+                "472": "<rareItemNames[8]>",
+                "473": "<rareItemNames[9]>",
+                "474": "<rareItemNames[10]>",
+                "475": "<rareItemNames[11]>",
+                "476": "<rareItemNames[12]>",
+                "477": "<rareItemNames[13]>",
+                "478": "<rareItemNames[14]>",
+                "479": "<rareItemNames[15]>",
+                "480": "<rareItemNames[16]>",
+                "481": "<rareItemNames[17]>",
+                "482": "<rareItemNames[18]>",
+                "483": "<rareItemNames[19]>",
                 "496": "Local Control 1",
                 "497": "Local Control 2",
                 "498": "Local Control 3",
@@ -7730,6 +8358,14 @@
                 "1": "Chocobo",
                 "2": "Magitek Armor",
                 "3": "Raft"
+            }
+        },
+        "vehiclesWorld": {
+            "name": "World Map Vehicles",
+            "string": {
+                "0": "None",
+                "1": "Airship",
+                "2": "Chocobo"
             }
         }
     }

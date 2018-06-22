@@ -545,6 +545,7 @@ FF5Map.prototype.loadMap = function(m) {
     this.mapCanvas.height = this.ppu.height;
 
     this.invalidateMap();
+    this.selectedTrigger = null;
     this.loadTriggers();
     this.scroll();
     
@@ -603,6 +604,7 @@ FF5Map.prototype.loadWorldMap = function(m) {
     this.mapCanvas.height = this.ppu.height;
     
     this.invalidateMap();
+    this.selectedTrigger = null;
     this.loadTriggers();
     this.scroll();
 
@@ -686,10 +688,6 @@ FF5Map.prototype.drawMap = function() {
 FF5Map.prototype.loadTriggers = function() {
 
     var i;
-//    for (i = 0; i < this.triggers.length; i++) {
-//        this.observer.stopObserving(this.triggers[i]);
-//    }
-    
     this.triggers = [];
     this.selectedTrigger = null;
     

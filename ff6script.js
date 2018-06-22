@@ -90,19 +90,18 @@ FF6Script.initScript = function(script) {
     
     // add references for each map's events
     var triggers, m, t, offset, label;
-    for (m = 0; m < script.rom.mapProperties.array.length; m++) {
         
-        // event triggers
+    // event triggers
+    for (m = 0; m < script.rom.eventTriggers.array.length; m++) {
         triggers = script.rom.eventTriggers.item(m);
         for (t = 0; t < triggers.array.length; t++) {
             offset = triggers.item(t).scriptPointer.value;
             script.addPlaceholder(triggers.item(t).scriptPointer, offset, (m < 3) ? "world" : "event");
         }
-        
-        // world maps don't have npcs or startup events
-        if (m < 3) continue;
-
-        // npcs
+    }
+    
+    // npcs
+    for (m = 3; m < script.rom.npcProperties.array.length; m++) {
         triggers = script.rom.npcProperties.item(m);
         for (t = 0; t < triggers.array.length; t++) {
             var npc = triggers.item(t);
@@ -110,19 +109,24 @@ FF6Script.initScript = function(script) {
             offset = triggers.item(t).scriptPointer.value;
             script.addPlaceholder(triggers.item(t).scriptPointer, offset, "event");
         }
-        
-        // startup event
-        offset = script.rom.mapStartupEvents.item(m).scriptPointer.value;
-        label = script.rom.stringTable.mapProperties.formattedString(m);
-        script.addPlaceholder(script.rom.mapStartupEvents.item(m).scriptPointer, offset, "event", label);
     }
-
+    
+    // startup event
+    for (m = 3; m < script.rom.mapProperties.array.length; m++) {
+        offset = script.rom.mapProperties.item(m).scriptPointer.value;
+        label = script.rom.stringTable.mapProperties.formattedString(m);
+        script.addPlaceholder(script.rom.mapProperties.item(m).scriptPointer, offset, "event", label);
+    }
+    
     // add references for vehicle events
     for (var e = 0; e < script.rom.vehicleEvents.array.length; e++) {
         offset = script.rom.vehicleEvents.item(e).scriptPointer.value;
         label = script.rom.stringTable.vehicleEvents.formattedString(e);
         script.addPlaceholder(script.rom.vehicleEvents.item(e).scriptPointer, offset, "vehicle", label);
     }
+
+    // add references for ff6 advance events
+    
 }
 
 FF6Script.didDisassemble = function(command, data) {

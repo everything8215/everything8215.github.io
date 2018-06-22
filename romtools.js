@@ -77,7 +77,9 @@ ROMObject.prototype.copy = function(parent) {
 }
 
 ROMObject.prototype.addObserver = function(object, callback, args) {
-    if (this.observers.indexOf(object) !== -1) return;
+    for (var o = 0; o < this.observers.length; o++) {
+        if (this.observers[o].object === object) return;
+    }
     this.observers.push({object: object, callback: callback, args: args});
 }
 
@@ -627,6 +629,9 @@ ROM.prototype.assemble = function(data) {
     this.updateReferences();
     
     ROMData.prototype.assemble.call(this, data);
+    
+    this.fixChecksum();
+    data = this.data;
 }
 
 ROM.prototype.log = function(text) {
@@ -695,6 +700,48 @@ ROM.prototype.unmapRange = function(range) {
     var begin = this.unmapAddress(range.begin);
     var end = this.unmapAddress(range.end);
     return new ROMRange(begin, end);
+}
+
+ROM.prototype.fixChecksum = function() {
+    if (!this.isSFC || !this.snesHeader) return;
+    
+    this.snesHeader.checksum.value = 0;
+    this.snesHeader.checksumInverse.value = 0xFFFF;
+    
+    var checksum = ROM.checksum(this.data);
+    this.snesHeader.checksum.value = checksum;
+    this.snesHeader.checksumInverse.value = checksum ^ 0xFFFF;
+    
+    this.snesHeader.assemble(this.data);
+}
+
+ROM.checksum = function(data) {
+
+    function calcSum(data) {
+        var sum = 0;
+        for (var i = 0; i < data.length; i++) sum += data[i];
+        return sum & 0xFFFF;
+    }
+    
+    function mirrorSum(data, mask) {
+        while (!(data.length & mask)) mask >>= 1;
+        
+        var part1 = calcSum(data.slice(0, mask));
+        var part2 = 0;
+        
+        var nextLength = data.length - mask;
+        if (nextLength) {
+            part2 = mirrorSum(data.slice(mask), nextLength, mask >> 1);
+            
+            while (nextLength < mask) {
+                nextLength += nextLength;
+                part2 += part2;
+            }
+        }
+        return (part1 + part2) & 0xFFFF;
+    }
+    
+    return mirrorSum(data, 0x800000);
 }
 
 ROM.crc32Table = [
@@ -781,33 +828,35 @@ ROM.dataFormat = {
         decode: GFX.decodeSNES4bpp
     },
     "interlace": {
-        encode: function(data, word, stride, block) {
+        encode: function(data, word, layers, stride) {
             var src = data;
             var s = 0;
             var dest = new Uint8Array(data.length);
             var d = 0;
+            var step = word * layers; // 2
+            var block = word * stride * layers; // 512
             while (s < src.length) {
-                var d1 = d;
-                while (d1 < stride) {
-                    var d2 = d1;
-                    while (d2 < block) {
-                        dest.set(src.slice(s, s + word), d2);
-                        d2 += word;
-                        s += stride;
+                var s1 = s;
+                while (s1 < step) {
+                    var s2 = s1;
+                    while (s2 < block) {
+                        dest.set(src.slice(s2, s2 + word), d);
+                        d += word;
+                        s2 += step;
                     }
-                    d1 += word;
+                    s1 += word;
                 }
-                d += block;
+                s += block;
             }
             
             return dest;
         },
-        decode: function(data, word, stride, block) {
-            
+        decode: function(data, word, layers, stride) {
             var src = data;
             var s = 0;
             var dest = new Uint8Array(data.length);
             var d = 0;
+            var block = word * stride * layers; // 512
             while (s < src.length) {
                 var s1 = s;
                 while (s1 < stride) {
@@ -887,16 +936,17 @@ ROM.dataFormat = {
             var b, l;
 
             while (s < src.length) {
-                b = src[s++];
+                b = src[s];
                 l = 1;
                 while (b === src[s + l]) l++;
                 if (l > 2) {
                     l = Math.min(l, 255);
                     dest[d++] = b | 0x80;
-                    dest[d++] = l;
+                    dest[d++] = l - 1;
                     s += l;
                 } else {
                     dest[d++] = b;
+                    s++;
                 }
             }
             return dest.slice(0, d);
@@ -1327,6 +1377,11 @@ ROM.prototype.showProperties = function(object) {
         heading.innerHTML = object.name.replace("%i", object.i);
     }
 
+    if (object.appendHTML) {
+        object.appendHTML(properties);
+        return;
+    }
+    
     // return if object has no properties
     if (!object.assembly) return;
     var keys = Object.keys(object.assembly);
@@ -1335,11 +1390,8 @@ ROM.prototype.showProperties = function(object) {
     // show properties
     for (var i = 0; i < keys.length; i++) {
         var key = keys[i];
-        if (!object[key].html) continue;
-//        var property = object[key];
-        var html = object[key].html();
-        if (!html) continue;
-        properties.appendChild(html);
+        if (!object[key].appendHTML) continue;
+        object[key].appendHTML(properties);
     }
 }
 
@@ -1425,6 +1477,8 @@ ROM.prototype.redo = function() {
 
 ROM.prototype.doAction = function(action, undo) {
     
+    if (undo === undefined) this.redoStack = [];
+    
     this.pushAction(action, undo);
     if (action instanceof ROMAction) {
         action.execute(undo);
@@ -1457,7 +1511,7 @@ ROM.prototype.beginAction = function() {
 
 ROM.prototype.endAction = function() {
     if (this.action) this.undoStack.push(this.action);
-    this.redoStack = [];
+//    this.redoStack = [];
     this.action = null;
 }
 
@@ -1768,6 +1822,7 @@ ROMProperty.prototype.setValue = function(value) {
     function updateExternal() {
         var external = assembly.rom.parseLink(assembly.external.replace("%i", assembly.parent.i));
         assembly.assemble(external.data);
+        external.notifyObservers();
     }
     function redo() {
         assembly.value = value;
@@ -1788,7 +1843,7 @@ ROMProperty.prototype.setValue = function(value) {
     this.rom.doAction(action);
 }
 
-ROMProperty.prototype.html = function() {
+ROMProperty.prototype.appendHTML = function(parent) {
     
     if (this.hidden || this.invalid) return null;
     var property = this;
@@ -1829,7 +1884,7 @@ ROMProperty.prototype.html = function() {
     if (this.bool) {
         // property with a single boolean checkbox
         var input = document.createElement('input');
-        controlDiv.append(input);
+        controlDiv.appendChild(input);
         input.id = id;
         input.type = "checkbox";
         input.checked = this.value;
@@ -1987,7 +2042,7 @@ ROMProperty.prototype.html = function() {
     } else {
         // property with a number only
         var input = document.createElement('input');
-        controlDiv.append(input);
+        controlDiv.appendChild(input);
         input.id = id;
         input.disabled = this.disabled;
         input.type = "number";
@@ -2043,7 +2098,7 @@ ROMProperty.prototype.html = function() {
         }
     }
 
-    return propertyDiv;
+    parent.appendChild(propertyDiv);
 }
 
 // ROMArray
@@ -2064,7 +2119,6 @@ function ROMArray(rom, definition, parent) {
     // determine if elements are strictly sequential or shared
     this.isSequential = (definition.isSequential === true);
     this.autoBank = (definition.autoBank === true);
-//    this.bitwise = (definition.bitwise === true);
     this.terminator = definition.terminator;
     
     // create the prototype assembly
@@ -2098,7 +2152,6 @@ Object.defineProperty(ROMArray.prototype, "definition", { get: function() {
     if (definition.array === {}) delete definition.array;
     if (this.isSequential) definition.isSequential = true;
     if (this.autoBank) definition.autoBank = true;
-//    if (this.bitwise) definition.bitwise = true;
     if (this.terminator !== undefined) definition.terminator = this.terminator;
     
     definition.assembly = this.assembly.definition;
@@ -2137,11 +2190,6 @@ ROMArray.prototype.updateReferences = function() {
 }
 
 ROMArray.prototype.assemble = function(data) {
-
-//    if (this.bitwise) {
-//        this.assembleBitwise();
-//        return;
-//    }
 
     var length = 0;
     var i, assembly, pointer;
@@ -2210,33 +2258,7 @@ ROMArray.prototype.assemble = function(data) {
     ROMAssembly.prototype.assemble.call(this, data);
 }
 
-//ROMArray.prototype.assembleBitwise = function() {
-//    var bits = this.assembly.range.length;
-//    if (!bits) return;
-//    
-//    this.data = new Uint8Array(Math.ceil(this.array.length * bits / 8));
-//    
-//    var b, i;
-//    for (b = 0, i = 0; i < this.array.length; b += bits, i++) {
-//        var assembly = this.array[i];
-//        var assemblyData = new Uint8Array(1);
-//        assembly.assemble(assemblyData);
-//        this.data[Math.floor(b / 8)] |= assemblyData[0] << (b % 8);
-//    }
-//    
-//    ROMAssembly.prototype.assemble.call(this, data);
-//}
-
 ROMArray.prototype.disassemble = function(data) {
-
-//    if (this.key === "mapBattleProbability") {
-//        this.rom.log("poo");
-//    }
-//    
-//    if (this.bitwise) {
-//        this.disassembleBitwise();
-//        return;
-//    }
 
     ROMAssembly.prototype.disassemble.call(this, data);
     
@@ -2348,31 +2370,6 @@ ROMArray.prototype.disassemble = function(data) {
         this.array[i] = assembly;
     }
 }
-
-//ROMArray.prototype.disassembleBitwise = function() {
-//    ROMAssembly.prototype.disassemble.call(this, data);
-//    
-//    var definition = this.assembly.definition;
-//    var bits = this.assembly.range.length;
-//    if (!bits) return;
-//    var mask;
-//    if (bits === 1) mask = 1;
-//    else if (bits === 2) mask = 3;
-//    else if (bits === 4) mask = 15;
-//
-//    var b, i;
-//    for (b = 0, i = 0; b < (this.data.length * 8); b += bits, i++) {
-//        var assembly = ROMObject.create(this.rom, definition, this);
-//        assembly.i = i;
-//        var begin = Math.floor(b / 8);
-//        var assemblyByte = data[begin];
-//        assemblyByte >>= (b % 8);
-//        assemblyByte &= mask;
-//        var assemblyData = new Uint8Array([assemblyByte]);
-//        assembly.disassemble(assemblyData);
-//        this.array[i] = assembly;
-//    }
-//}
 
 ROMArray.prototype.blankAssembly = function() {
     var assembly = ROMObject.create(this.rom, this.assembly.definition, this);
@@ -3372,14 +3369,25 @@ Object.defineProperty(ROMText.prototype, "definition", { get: function() {
     return definition
 }});
 
+ROMText.prototype.assemble = function(data) {
+    
+    if (data && this.external) {
+        var external = this.rom.parseLink(this.external.replace("%i", this.parent.i));
+        data = external.data;
+    }
+
+    ROMAssembly.prototype.assemble.call(this, data);
+}
+
 ROMText.prototype.disassemble = function(data) {
     
     if (this.external) {
         var external = this.rom.parseLink(this.external.replace("%i", this.parent.i));
         data = external.data;
-        if (this.range.length === 0) this.range = new ROMRange(0, data.length);
     }
 
+    if (this.range.length === 0) this.range = new ROMRange(0, data.length);
+    
     ROMAssembly.prototype.disassemble.call(this, data);
     
     var encoding = this.rom.textEncoding[this.encoding];
@@ -3390,7 +3398,7 @@ ROMText.prototype.disassemble = function(data) {
     }
 }
 
-ROMText.prototype.html = function() {
+ROMText.prototype.appendHTML = function(parent) {
     
     if (this.hidden || this.invalid) return null;
     
@@ -3410,53 +3418,66 @@ ROMText.prototype.html = function() {
     var controlDiv = document.createElement('div');
     propertyDiv.appendChild(controlDiv);
     controlDiv.classList.add("property-control-div");
-    
+        
     // create a text box
-    var input = document.createElement('input');
-    controlDiv.append(input);
+    var input = document.createElement('textarea');
+    controlDiv.appendChild(input);
     input.id = id;
-    input.type = "text";
     input.value = this.text;
     input.disabled = this.disabled;
     input.classList.add("property-control");
+    input.classList.add("property-text");
     var text = this;
     input.onchange = function() {
         text.setText(this.value);
         document.getElementById(this.id).focus();
     };
-    
-    return propertyDiv;
+
+    parent.appendChild(propertyDiv);
+
+    // calculate the required height
+    var height = input.scrollHeight;
+    input.style.height = height + "px";
 }
 
 ROMText.prototype.setText = function(text) {
     
+    // validate the text
+    var encoding = this.rom.textEncoding[this.encoding];
+    if (!encoding) return; // TODO: add default encoding
+    var data = encoding.encode(text);
+    text = encoding.decode(data);
+
     // return if the value didn't change
     var oldText = this.text;
-    if (text === oldText) {
+    var oldData = this.data;
+    if (data === oldData) {
         this.notifyObservers();
         return;
     }
-
+    
     // functions to undo/redo
     var assembly = this;
     function updateExternal() {
         var external = assembly.rom.parseLink(assembly.external.replace("%i", assembly.parent.i));
         assembly.assemble(external.data);
+        external.notifyObservers();
     }
     function redo() {
         assembly.text = text;
+        assembly.data = data;
         assembly.notifyObservers();
         if (assembly.external) updateExternal();
     }
     function undo() {
         assembly.text = oldText;
+        assembly.data = oldData;
         assembly.notifyObservers();
         if (assembly.external) updateExternal();
     }
         
     // perform an action to change the value
-    var description = "Set " + this.name;
-    var action = new ROMAction(this, undo, redo, description);
+    var action = new ROMAction(this, undo, redo, "Set " + this.name);
     this.rom.doAction(action);
 }
 
@@ -3553,6 +3574,64 @@ ROMTextEncoding.prototype.decode = function(data) {
     return text;
 }
 
+ROMTextEncoding.prototype.encode = function(text) {
+    var data = [];
+    var i = 0;
+    var keys = Object.keys(this.encodingTable);
+    
+    while (i < text.length) {
+        var remainingText = text.substring(i);
+        var matches = keys.filter(function(s) {
+            return remainingText.startsWith(s);
+        });
+        
+        if (matches.length === 0) {
+            this.rom.log("Invalid character: " + remainingText[0]);
+            i++;
+            continue;
+        }
+        
+        var match = matches.reduce(function (a, b) {
+            return a.length > b.length ? a : b;
+        });
+        
+        // end of string
+        if (match === "\\0") break;
+        
+        var value = this.encodingTable[match];
+        i += match.length;
+        
+        if (match.endsWith("[")) {
+            var end = text.indexOf("]", i);
+            parameter = text.substring(i, end);
+            var n = Number(parameter);
+            if (!isNumber(n) || n > 0xFF) {
+                this.rom.log("Invalid parameter: " + parameter);
+                n = 0;
+                end = i;
+            }
+            i = end + 1;
+            value <<= 8;
+            value |= n;
+        }
+        
+        if (value > 0xFF) {
+            data.push(value >> 8);
+            data.push(value & 0xFF);
+        } else {
+            data.push(value);
+        }
+    }
+    
+    var terminator = this.encodingTable["\\0"];
+    if (isNumber(terminator) && data[data.length - 1] !== terminator) {
+        data.push(terminator);
+    }
+    
+    return Uint8Array.from(data);
+}
+
+
 ROMTextEncoding.prototype.textLength = function(data) {
     var i = 0;
     var b1, b2, c;
@@ -3620,6 +3699,7 @@ function ROMStringTable(rom, definition, parent) {
     
     this.string = [];
     this.fString = [];
+    this.observer = new ROMObserver(rom, this, null);
     var i = 0;
     
     // convert index strings to numbers
@@ -3670,11 +3750,23 @@ ROMStringTable.prototype.formattedString = function(i, maxLength) {
     for (var l = 0; l < links.length; l++) {
         var link = links[l];
         var object = this.rom.parseLink(link.substring(1, link.length - 1));
-        s = s.replace(link, object.toString());
+        this.observer.startObserving(object, this.reset);
+        if (object instanceof ROMText) {
+            s = s.replace(link, object.formattedText);
+        } else if (isString(object)) {
+            s = s.replace(link, object);
+        } else {
+            s = s.replace(link, "Invalid Link");
+        }
     }
     if (maxLength && s.length > maxLength) s = s.substring(0, maxLength) + "…";
     this.fString[i] = s;
     return s;
+}
+
+ROMStringTable.prototype.reset = function() {
+    this.observer.stopObservingAll();
+    this.fString = [];
 }
 
 // ROMRange

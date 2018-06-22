@@ -176,7 +176,7 @@ GFX.encodeLinear2bpp = function(data) {
 GFX.decodeSNES4bpp = function(data) {
     
     // 16-bit source, 8-bit destination
-    var src = new Uint16Array(data.buffer, data.byteOffset, data.byteLength / 2);
+    var src = new Uint16Array(data.buffer, data.byteOffset, Math.floor(data.byteLength / 2));
     var dest = new Uint8Array(data.byteLength * 2);
     
     var s = 0;
@@ -208,7 +208,7 @@ GFX.decodeSNES3bpp = function(data) {
     // 16-bit/8-bit source, 8-bit destination
     var src16 = new Uint16Array(data.buffer, data.byteOffset, data.byteLength / 2);
     var src8 = new Uint8Array(data.buffer, data.byteOffset, data.byteLength);
-    var dest = new Uint8Array(data.byteLength * 8 / 3);
+    var dest = new Uint8Array(Math.ceil(data.byteLength * 8 / 3));
 
     var s16 = 0;
     var s8 = 16;
@@ -239,7 +239,7 @@ GFX.decodeSNES3bpp = function(data) {
 GFX.decodeSNES2bpp = function(data) {
     
     // 16-bit source, 8-bit destination
-    var src = new Uint16Array(data.buffer, data.byteOffset, data.byteLength / 2);
+    var src = new Uint16Array(data.buffer, data.byteOffset, Math.floor(data.byteLength / 2));
     var dest = new Uint8Array(data.byteLength * 4);
     
     var s = 0;
@@ -267,7 +267,7 @@ GFX.colors31 = [0, 8, 16, 25, 33, 41, 49, 58, 66, 74, 82, 90, 99, 107, 115, 123,
 GFX.decodeBGR555 = function(data) {
     
     // 16-bit source, 8-bit destination
-    var src = new Uint16Array(data.buffer, data.byteOffset, data.byteLength / 2);
+    var src = new Uint16Array(data.buffer, data.byteOffset, Math.floor(data.byteLength / 2));
     var dest = new Uint8Array(data.byteLength * 2);
 
     var s = 0;
@@ -281,14 +281,14 @@ GFX.decodeBGR555 = function(data) {
         dest[d++] = GFX.colors31[bgr555 & 0x1F];
         dest[d++] = 0xFF;
     }
-    return new Uint32Array(dest.buffer, dest.byteOffset, dest.byteLength / 4);
+    return new Uint32Array(dest.buffer, dest.byteOffset, Math.ceil(dest.byteLength / 4));
 }
 
 GFX.render = function(dest, gfx, pal, ppl) {
     
     // 32-bit destination, 32-bit palette
     dest = new Uint32Array(dest.buffer, dest.byteOffset);
-    pal = new Uint32Array(pal.buffer, pal.byteOffset, pal.byteLength / 4);
+    pal = new Uint32Array(pal.buffer, pal.byteOffset, Math.ceil(pal.byteLength / 4));
 
     var g = 0;
     var d = 0;

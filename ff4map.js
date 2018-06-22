@@ -731,16 +731,13 @@ FF4Map.prototype.drawMap = function() {
 
 FF4Map.prototype.reloadTriggers = function() {
     this.loadTriggers();
-    this.drawMap();    
+    this.drawMap();
 }
 
 FF4Map.prototype.loadTriggers = function() {
 
-    // stop observing triggers
     var i;
-    
     this.triggers = [];
-//    this.selectedTrigger = null;
 
     // load triggers
     var triggers = this.rom.mapTriggers.item(this.m);
@@ -767,7 +764,6 @@ FF4Map.prototype.loadTriggers = function() {
             }
         }
         this.triggers.push(triggers.item(i));
-//        this.observer.startObserving(triggers.item(i), this.drawMap);
     }
 
     // load npcs
@@ -883,19 +879,9 @@ FF4Map.prototype.loadTriggers = function() {
             npc.i = n;
         }
         this.triggers.push(npc);
-//        this.observer.startObserving(npc, this.reloadNPC(npc));
     }
     this.observer.startObserving(npcProperties, this.reloadTriggers);
 }
-
-//FF4Map.prototype.reloadNPC = function(npc) {
-//    var map = this;
-//    return function() {
-//        map.observer.stopObserving(npc)
-//        map.observer.startObserving(npc, this.reloadNPC(npc));
-//        map.drawMap();
-//    }
-//}
 
 FF4Map.prototype.insertTrigger = function(type) {
     
@@ -904,24 +890,60 @@ FF4Map.prototype.insertTrigger = function(type) {
     var triggers = this.rom.mapTriggers.item(this.m);
     if (this.isWorld) triggers = this.rom.worldTriggers.item(this.m - 0xFB);
 
-//    var triggers = this.rom[type].item(this.m);
     var trigger = triggers.blankAssembly();
-        
+
     this.rom.beginAction();
     trigger.x.setValue(this.clickedCol);
     trigger.y.setValue(this.clickedRow);
     if (type === "treasureProperties") {
         trigger.map.setValue(0xFE);
+        
+        // treasures have to come first
+        var i = 0;
+        while (triggers.item(i).map.value === 0xFE) i++;
+        triggers.insertAssembly(trigger, i);
+//        this.logTreasures();
+        this.updateTreasures();
+//        this.logTreasures();
+        
     } else if (type === "eventTriggers") {
         trigger.map.setValue(0xFF);
+        triggers.insertAssembly(trigger);
+    } else {
+        triggers.insertAssembly(trigger);
     }
-    triggers.insertAssembly(trigger);
     this.rom.endAction();
     
     this.observer.startObserving(trigger, this.reloadTriggers);
     this.selectedTrigger = trigger;
     this.rom.select(trigger);
 }
+
+FF4Map.prototype.updateTreasures = function() {
+    var t = 0;
+    for (var m = 0; m < this.rom.mapProperties.array.length; m++) {
+        if (m === 256) t = 0; // reset to zero for underground/moon treasures
+        this.rom.mapProperties.item(m).treasure.setValue(t);
+        var triggers = this.rom.mapTriggers.item(m);
+        triggers.array.forEach(function(trigger) {
+            if (trigger.map.value === 0xFE) t++;
+        });
+    }
+}
+
+//FF4Map.prototype.logTreasures = function() {
+//    for (var m = 0; m < this.rom.mapProperties.array.length; m++) {
+//        if (m === 256) t = 0; // reset to zero for underground/moon treasures
+//        var t = this.rom.mapProperties.item(m).treasure.value;
+//        var name = this.rom.stringTable["mapProperties"].string[m];
+//        var triggers = this.rom.mapTriggers.item(m);
+//        triggers.array.forEach(function(trigger) {
+//            if (trigger.map.value !== 0xFE) return;
+//            console.log(t + ": " + name);
+//            t++;
+//        });
+//    }
+//}
 
 FF4Map.prototype.insertNPC = function() {
     this.closeMenu();

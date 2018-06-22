@@ -730,9 +730,6 @@ FF6Map.prototype.drawMap = function() {
 }
 
 FF6Map.prototype.reloadTriggers = function() {
-    for (var t = 0; t < this.triggers.length; t++) {
-        this.observer.stopObserving(this.triggers[t]);
-    }
     this.loadTriggers();
     this.drawMap();
 }
@@ -740,7 +737,6 @@ FF6Map.prototype.reloadTriggers = function() {
 FF6Map.prototype.loadTriggers = function() {
 
     var i;
-    
     this.triggers = [];
     
     var triggers = this.rom.eventTriggers.item(this.m);
