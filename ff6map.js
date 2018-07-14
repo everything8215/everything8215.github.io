@@ -6,10 +6,28 @@
 function FF6Map(rom) {
     
     this.rom = rom;
+    this.name = "FF6Map";
     this.tileset = new FF6MapTileset(rom, this);
-    this.scrollDiv = document.getElementById("map-scroll");
-    this.canvas = document.getElementById("map");
-    this.cursorCanvas = document.getElementById("map-cursor");
+    
+    this.div = document.createElement('div');
+    this.div.id = 'map-edit';
+    
+    this.scrollDiv = document.createElement('div');
+    this.scrollDiv.classList.add('no-select');
+    this.div.appendChild(this.scrollDiv);
+    
+    this.canvas = document.createElement('canvas');
+    this.canvas.id = "map";
+    this.canvas.width = 256;
+    this.canvas.height = 256;
+    this.scrollDiv.appendChild(this.canvas);
+    
+    this.cursorCanvas = document.createElement('canvas');
+    this.cursorCanvas.id = "map-cursor";
+    this.cursorCanvas.width = 16;
+    this.cursorCanvas.height = 16;
+    this.scrollDiv.appendChild(this.cursorCanvas);
+    
     this.mapCanvas = document.createElement('canvas');
     this.mapCanvas.width = 256;
     this.mapCanvas.height = 256;
@@ -24,9 +42,11 @@ function FF6Map(rom) {
     this.l = 0; // selected layer
     this.zoom = 1.0; // zoom multiplier
     this.selection = new Uint8Array([0x73, 0, 0, 1, 1, 0]);
-    this.clickedCol = null;
-    this.clickedRow = null;
-    this.clickButton = null;
+    this.clickPoint = null;
+    this.triggerPoint = null;
+//    this.clickedCol = null;
+//    this.clickedRow = null;
+//    this.clickButton = null;
     this.isDragging = false;
     this.layer = [new FF6MapLayer(rom, FF6MapLayer.Type.layer1),
                   new FF6MapLayer(rom, FF6MapLayer.Type.layer2),
@@ -58,15 +78,16 @@ function FF6Map(rom) {
     this.showLayer2 = document.getElementById("showLayer2").checked;
     this.showLayer3 = document.getElementById("showLayer3").checked;
     this.showTriggers = document.getElementById("showTriggers").checked;
+    document.getElementById("zoom").onchange = function() { map.changeZoom(); };
 }
 
 FF6Map.prototype.changeZoom = function() {
     
     // save the old scroll location
-    var x = this.scrollDiv.parentElement.scrollLeft;
-    var y = this.scrollDiv.parentElement.scrollTop;
-    var w = this.scrollDiv.parentElement.clientWidth;
-    var h = this.scrollDiv.parentElement.clientHeight;
+    var x = this.div.scrollLeft;
+    var y = this.div.scrollTop;
+    var w = this.div.clientWidth;
+    var h = this.div.clientHeight;
     x = (x + w / 2) / this.zoom;
     y = (y + h / 2) / this.zoom;
     
@@ -75,9 +96,9 @@ FF6Map.prototype.changeZoom = function() {
     var zoomValue = document.getElementById("zoom-value");
     zoomValue.innerHTML = (this.zoom * 100).toString() + "%";
     
-    this.scrollDiv.parentElement.scrollLeft = x * this.zoom - (w >> 1);
-    this.scrollDiv.parentElement.scrollTop = y * this.zoom - (h >> 1);
-        
+    this.div.scrollLeft = x * this.zoom - (w >> 1);
+    this.div.scrollTop = y * this.zoom - (h >> 1);
+
     this.scrollDiv.style.width = (this.ppu.width * this.zoom).toString() + "px";
     this.scrollDiv.style.height = (this.ppu.height * this.zoom).toString() + "px";
 
@@ -89,10 +110,10 @@ FF6Map.prototype.scroll = function() {
     this.closeMenu();
 
     // get the visible dimensions
-    var x = this.scrollDiv.parentElement.scrollLeft;
-    var y = this.scrollDiv.parentElement.scrollTop;
-    var w = this.scrollDiv.parentElement.clientWidth;
-    var h = this.scrollDiv.parentElement.clientHeight;
+    var x = this.div.scrollLeft;
+    var y = this.div.scrollTop;
+    var w = this.div.clientWidth;
+    var h = this.div.clientHeight;
 
     var margin = Math.max(w, h) >> 2;
     this.mapRect.r = Math.min(x + w + margin, this.ppu.width * this.zoom);
@@ -111,13 +132,18 @@ FF6Map.prototype.scroll = function() {
 FF6Map.prototype.mouseDown = function(e) {
     
     this.closeMenu();
-    this.clickedCol = ((e.offsetX / this.zoom + this.ppu.layers[this.l].x) % this.ppu.width) >> 4;
-    this.clickedRow = ((e.offsetY / this.zoom + this.ppu.layers[this.l].y) % this.ppu.height) >> 4;
-    this.clickButton = e.button;
+    this.clickPoint = {
+        x: ((e.offsetX / this.zoom + this.ppu.layers[this.l].x) % this.ppu.width) >> 4,
+        y: ((e.offsetY / this.zoom + this.ppu.layers[this.l].y) % this.ppu.height) >> 4,
+        button: e.button
+    };
+//    this.clickedCol = ((e.offsetX / this.zoom + this.ppu.layers[this.l].x) % this.ppu.width) >> 4;
+//    this.clickedRow = ((e.offsetY / this.zoom + this.ppu.layers[this.l].y) % this.ppu.height) >> 4;
+//    this.clickButton = e.button;
     
     // update the selection position
-    this.selection[1] = this.clickedCol;
-    this.selection[2] = this.clickedRow;
+    this.selection[1] = this.clickPoint.x;
+    this.selection[2] = this.clickPoint.y;
 
     if (this.l === 3) {
         var triggers = this.triggersAt(e.offsetX, e.offsetY);
@@ -127,18 +153,30 @@ FF6Map.prototype.mouseDown = function(e) {
             this.selectedTrigger = triggers[(index + 1) % triggers.length];
             rom.select(this.selectedTrigger);
             this.isDragging = true;
+            this.triggerPoint = {
+                x: this.selectedTrigger.x.value,
+                y: this.selectedTrigger.y.value
+            };
         } else if (triggers.length !== 0) {
             // select the first trigger
             this.selectedTrigger = triggers[0];
             rom.select(this.selectedTrigger);
             this.isDragging = true;
+            this.triggerPoint = {
+                x: this.selectedTrigger.x.value,
+                y: this.selectedTrigger.y.value
+            };
         } else {
             // clear trigger selection selection and select map properties
             this.selectedTrigger = null;
-            rom.select(this.mapProperties);
+            if (this.m < 3) {
+                this.selectWorldBattle(this.clickPoint.x, this.clickPoint.y) 
+            } else {
+                rom.select(this.mapProperties);
+            }
             this.isDragging = false;
         }
-    } else if (this.clickButton === 2) {
+    } else if (this.clickPoint && this.clickPoint.button === 2) {
         this.selectTiles();
         this.isDragging = true;
     } else {
@@ -150,36 +188,6 @@ FF6Map.prototype.mouseDown = function(e) {
     }
     
     this.drawCursor();
-}
-
-FF6Map.prototype.mouseUp = function(e) {
-    
-    if (this.l === 3 && this.selectedTrigger && this.isDragging) {
-        // save the new trigger position
-        var col = this.selectedTrigger.x.value;
-        var row = this.selectedTrigger.y.value;
-        
-        if (col != this.clickedCol || row !== this.clickedRow) {
-            // move the trigger back to its old position
-            this.selectedTrigger.x.value = this.clickedCol;
-            this.selectedTrigger.y.value = this.clickedRow;
-
-            // set the new trigger position (and trigger undo)
-            this.observer.stopObserving(this.selectedTrigger);
-            this.rom.beginAction();
-            this.selectedTrigger.x.setValue(col);
-            this.selectedTrigger.y.setValue(row);
-            this.rom.endAction();
-            this.observer.startObserving(this.selectedTrigger, this.drawMap);
-        }
-    } else if (this.rom.action && this.isDragging) {
-        this.rom.doAction(new ROMAction(this.selectedLayer, null, this.selectedLayer.decodeLayout, "Decode Layout"));
-        this.rom.pushAction(new ROMAction(this, null, this.drawMap, "Redraw Map"));
-        this.rom.endAction();
-    }
-    
-    this.isDragging = false;
-    this.clickButton = null;
 }
 
 FF6Map.prototype.mouseMove = function(e) {
@@ -211,7 +219,7 @@ FF6Map.prototype.mouseMove = function(e) {
             this.invalidateMap(this.rectForTrigger(this.selectedTrigger).scale(1 / this.zoom));
             this.drawMap();
         }
-    } else if (this.clickButton === 2) {
+    } else if (this.clickPoint && this.clickPoint.button === 2) {
         this.selectTiles();
     } else {
         this.setTiles();
@@ -219,6 +227,37 @@ FF6Map.prototype.mouseMove = function(e) {
 
     // update the cursor
     this.drawCursor();
+}
+
+FF6Map.prototype.mouseUp = function(e) {
+    
+    if (this.l === 3 && this.selectedTrigger && this.isDragging) {
+        // save the new trigger position
+        var col = this.selectedTrigger.x.value;
+        var row = this.selectedTrigger.y.value;
+        
+        if (col != this.clickPoint.x || row !== this.clickPoint.y) {
+            // move the trigger back to its old position
+            this.selectedTrigger.x.value = this.triggerPoint.x;
+            this.selectedTrigger.y.value = this.triggerPoint.y;
+
+            // set the new trigger position (and trigger undo)
+            this.observer.stopObserving(this.selectedTrigger);
+            this.rom.beginAction();
+            this.selectedTrigger.x.setValue(col);
+            this.selectedTrigger.y.setValue(row);
+            this.rom.endAction();
+            this.observer.startObserving(this.selectedTrigger, this.drawMap);
+        }
+    } else if (this.rom.action && this.isDragging) {
+        this.rom.doAction(new ROMAction(this.selectedLayer, null, this.selectedLayer.decodeLayout, "Decode Layout"));
+        this.rom.pushAction(new ROMAction(this, null, this.drawMap, "Redraw Map"));
+        this.rom.endAction();
+    }
+    
+    this.isDragging = false;
+//    this.clickPoint.button = null;
+//    this.clickButton = null;
 }
 
 FF6Map.prototype.mouseEnter = function(e) {
@@ -239,39 +278,41 @@ FF6Map.prototype.mouseLeave = function(e) {
     this.mouseUp(e);
 }
 
-FF6Map.menuItems = [
-    {label: "Insert Entrance Trigger (Single-Tile)", onclick: function() {map.insertTrigger('entranceTriggersSingle')}, world: true},
-    {label: "Insert Entrance Trigger (Multi-Tile)", onclick: function() {map.insertTrigger('entranceTriggersMulti')}},
-    {label: "Insert Event Trigger", onclick: function() {map.insertTrigger('eventTriggers')}, world: true},
-    {label: "Insert Treasure", onclick: function() {map.insertTrigger('treasureProperties')}},
-    {label: "Insert NPC", onclick: function() {map.insertTrigger('npcProperties')}},
-    {label: "Delete Trigger", onclick: function() {map.deleteTrigger()}, world: true}
-];
-
 FF6Map.prototype.updateMenu = function() {
     this.menu.innerHTML = "";
-    for (var i = 0; i < FF6Map.menuItems.length; i++) {
+    
+    var self = this;
+    function appendMenuItem(label, onclick) {
         var li = document.createElement('li');
-        var item = FF6Map.menuItems[i];
         li.classList.add("menu-item");
-        if (item.label === "Delete Trigger" && !this.selectedTrigger) {
-            li.classList.add("menu-item-disabled");
-        } else if (this.m < 3 && !item.world) {
-            li.classList.add("menu-item-disabled");
+        li.innerHTML = label;
+        if (onclick) {
+            li.onclick = onclick;
         } else {
-            li.onclick = item.onclick;
+            li.classList.add("menu-item-disabled");
         }
-        li.innerHTML = item.label;
-        this.menu.appendChild(li);
+        self.menu.appendChild(li);
     }
+    
+    appendMenuItem("Insert Entrance Trigger (Single-Tile)", function() {self.insertTrigger('entranceTriggersSingle')});
+    appendMenuItem("Insert Entrance Trigger (Multi-Tile)", this.m < 3 ? null : function() {self.insertTrigger('entranceTriggersMulti')});
+    appendMenuItem("Insert Event Trigger", function() {self.insertTrigger('eventTriggers')});
+    appendMenuItem("Insert Treasure", this.m < 3 ? null : function() {self.insertTrigger('treasureProperties')});
+    appendMenuItem("Insert NPC", this.m < 3 ? null : function() {self.insertTrigger('npcProperties')});
+    appendMenuItem("Delete Trigger", !this.selectedTrigger ? null : function() {self.deleteTrigger()});
 }
 
 FF6Map.prototype.openMenu = function(e) {
     if (this.l !== 3) return; // no menu unless editing triggers
     this.updateMenu();
     
-    this.clickedCol = ((e.offsetX / this.zoom + this.ppu.layers[this.l].x) % this.ppu.width) >> 4;
-    this.clickedRow = ((e.offsetY / this.zoom + this.ppu.layers[this.l].y) % this.ppu.height) >> 4;
+    this.clickPoint = {
+        x: ((e.offsetX / this.zoom + this.ppu.layers[this.l].x) % this.ppu.width) >> 4,
+        y: ((e.offsetY / this.zoom + this.ppu.layers[this.l].y) % this.ppu.height) >> 4,
+        button: e.button
+    };
+//    this.clickedCol = ((e.offsetX / this.zoom + this.ppu.layers[this.l].x) % this.ppu.width) >> 4;
+//    this.clickedRow = ((e.offsetY / this.zoom + this.ppu.layers[this.l].y) % this.ppu.height) >> 4;
 
     this.menu.classList.add("menu-active");
     this.menu.style.left = e.x + "px";
@@ -284,7 +325,8 @@ FF6Map.prototype.closeMenu = function() {
  
 FF6Map.prototype.setTiles = function() {
     // return if not dragging
-    if (!isNumber(this.clickedCol) || !isNumber(this.clickedRow)) return;
+    if (!this.clickPoint) return;
+//    if (!isNumber(this.clickPoint) || !isNumber(this.clickedRow)) return;
 
     var col = this.selection[1];
     var row = this.selection[2];
@@ -305,14 +347,15 @@ FF6Map.prototype.setTiles = function() {
 
 FF6Map.prototype.selectTiles = function() {
     // return if not dragging
-    if (!isNumber(this.clickedCol) || !isNumber(this.clickedRow)) return;
+    if (!this.clickPoint) return;
+//    if (!isNumber(this.clickedCol) || !isNumber(this.clickedRow)) return;
     
     var col = this.selection[1];
     var row = this.selection[2];
-    var cols = Math.abs(col - this.clickedCol) + 1;
-    var rows = Math.abs(row - this.clickedRow) + 1;
-    col = Math.min(col, this.clickedCol);
-    row = Math.min(row, this.clickedRow);
+    var cols = Math.abs(col - this.clickPoint.x) + 1;
+    var rows = Math.abs(row - this.clickPoint.y) + 1;
+    col = Math.min(col, this.clickPoint.x);
+    row = Math.min(row, this.clickPoint.y);
 
     this.selection = this.selectedLayer.getLayout(col, row, cols, rows);
     this.selection[2] |= this.l << 6;
@@ -358,6 +401,17 @@ FF6Map.prototype.selectLayer = function(l) {
     
     this.showCursor = (this.l === 3);
     this.drawCursor();
+}
+
+FF6Map.prototype.selectWorldBattle = function(x, y) {
+    if (this.m > 1) return;
+    
+    x >>= 5;
+    y >>= 5;
+    
+    var sector = x | (y << 3) | (this.m << 6);
+    var battleGroup = this.rom.worldBattleGroup.item(sector);
+    this.rom.select(battleGroup);
 }
 
 FF6Map.prototype.changeLayer = function(id) {
@@ -415,11 +469,15 @@ FF6Map.prototype.drawCursor = function() {
         }
 
         switch (this.selectedTrigger.key) {
-            case "eventTriggers": c = "rgba(0, 0, 255, 1.0)"; break;
+            case "eventTriggers":
+            case "eventTriggersAdvance":
+                c = "rgba(0, 0, 255, 1.0)"; break;
             case "entranceTriggersSingle": c = "rgba(255, 0, 0, 1.0)"; break;
             case "entranceTriggersMulti": c = "rgba(0, 128, 0, 1.0)"; break;
             case "treasureProperties": c = "rgba(255, 255, 0, 1.0)"; break;
-            case "npcProperties": c = "rgba(128, 128, 128, 1.0)"; break;
+            case "npcProperties":
+            case "npcPropertiesAdvance":
+                c = "rgba(128, 128, 128, 1.0)"; break;
         }
     }
     
@@ -452,6 +510,12 @@ FF6Map.prototype.drawCursor = function() {
     ctx.strokeRect(x, y, w, h);
 }
 
+FF6Map.prototype.selectObject = function(object) {
+    document.getElementById("tileset-div").classList.remove('hidden');
+    document.getElementById("tileset-layers").classList.remove('hidden');
+    this.loadMap(object.i);
+}
+
 FF6Map.prototype.loadMap = function(m) {
     
     var layerButtons = document.getElementsByClassName("toolbox-button");
@@ -474,7 +538,7 @@ FF6Map.prototype.loadMap = function(m) {
     // get map properties
     var map = this.mapProperties;
     if (!map) return;
-
+    
     // load graphics
     var gfx = new Uint8Array(0x10000);
     gfx.set(this.rom.mapGraphics.item(map.gfx1.value).data, 0x0000);
@@ -740,56 +804,89 @@ FF6Map.prototype.loadTriggers = function() {
     this.triggers = [];
     
     var triggers = this.rom.eventTriggers.item(this.m);
-    this.observer.startObserving(triggers, this.reloadTriggers);
-    for (i = 0; i < triggers.array.length; i++) {
-        this.triggers.push(triggers.item(i));
+    if (triggers) {
+        this.observer.startObserving(triggers, this.reloadTriggers);
+        for (i = 0; i < triggers.array.length; i++) {
+            this.triggers.push(triggers.item(i));
+        }
     }
+    
+    if (this.rom.isGBA) {
+        var triggers = this.rom.eventTriggersAdvance;
+        for (i = 0; i < triggers.array.length; i++) {
+            var trigger = triggers.item(i);
+            if (trigger.map.value !== this.m) continue;
+            this.observer.startObserving(trigger, this.reloadTriggers);
+            this.triggers.push(trigger);
+        }
+    }
+    
     triggers = this.rom.entranceTriggersSingle.item(this.m);
-    this.observer.startObserving(triggers, this.reloadTriggers);
-    for (i = 0; i < triggers.array.length; i++) {
-        this.triggers.push(triggers.item(i));
+    if (triggers) {
+        this.observer.startObserving(triggers, this.reloadTriggers);
+        for (i = 0; i < triggers.array.length; i++) {
+            this.triggers.push(triggers.item(i));
+        }
     }
     
     // return if a world map
     if (this.m < 3) return;
     
     triggers = this.rom.entranceTriggersMulti.item(this.m);
-    this.observer.startObserving(triggers, this.reloadTriggers);
-    for (i = 0; i < triggers.array.length; i++) {
-        this.triggers.push(triggers.item(i));
-    }
-    triggers = this.rom.treasureProperties.item(this.m);
-    this.observer.startObserving(triggers, this.reloadTriggers);
-    for (i = 0; i < triggers.array.length; i++) {
-        this.triggers.push(triggers.item(i));
-    }
-    triggers = this.rom.npcProperties.item(this.m);
-    this.observer.startObserving(triggers, this.reloadTriggers);
-    for (i = 0; i < triggers.array.length; i++) {
-        
-        var npc = triggers.item(i);
-        if (npc.vehicle.value === 0 && npc.special.value) {
-            // special npc
-            npc.scriptPointer.invalid = true;
-            npc.showRider.invalid = true;
-            npc.special.invalid = true;
-            npc.vehicle.invalid = true;
-            npc.reaction.invalid = true;
-            npc.name = "Special NPC Properties";
-        } else {
-            // normal npc
-            npc.vramAddress.invalid = true;
-            npc.hFlip.invalid = true;
-            npc.offset.invalid = true;
-            npc.master.invalid = true;
-            npc.offsetDirection.invalid = true;
-            npc.slave.invalid = true;
-            npc.special.invalid = true;
-            npc.is32x32.invalid = true;
-            npc.name = "NPC Properties";
+    if (triggers) {
+        this.observer.startObserving(triggers, this.reloadTriggers);
+        for (i = 0; i < triggers.array.length; i++) {
+            this.triggers.push(triggers.item(i));
         }
-        
-        this.triggers.push(triggers.item(i));
+    }
+    
+    triggers = this.rom.treasureProperties.item(this.m);
+    if (triggers) {
+        this.observer.startObserving(triggers, this.reloadTriggers);
+        for (i = 0; i < triggers.array.length; i++) {
+            this.triggers.push(triggers.item(i));
+        }
+    }
+    
+    triggers = this.rom.npcProperties.item(this.m);
+    if (triggers) {
+        this.observer.startObserving(triggers, this.reloadTriggers);
+        for (i = 0; i < triggers.array.length; i++) {
+
+            var npc = triggers.item(i);
+            if (npc.vehicle.value === 0 && npc.special.value) {
+                // special npc
+                npc.scriptPointer.invalid = true;
+                npc.showRider.invalid = true;
+                npc.special.invalid = true;
+                npc.vehicle.invalid = true;
+                npc.reaction.invalid = true;
+                npc.name = "Special NPC Properties";
+            } else {
+                // normal npc
+                npc.vramAddress.invalid = true;
+                npc.hFlip.invalid = true;
+                npc.offset.invalid = true;
+                npc.master.invalid = true;
+                npc.offsetDirection.invalid = true;
+                npc.slave.invalid = true;
+                npc.special.invalid = true;
+                npc.is32x32.invalid = true;
+                npc.name = "NPC Properties";
+            }
+
+            this.triggers.push(triggers.item(i));
+        }
+    }
+    
+    if (this.rom.isGBA) {
+        var triggers = this.rom.npcPropertiesAdvance;
+        for (i = 0; i < triggers.array.length; i++) {
+            var trigger = triggers.item(i);
+            if (trigger.map.value !== this.m) continue;
+            this.observer.startObserving(trigger, this.reloadTriggers);
+            this.triggers.push(trigger);
+        }
     }
 }
 
@@ -801,8 +898,8 @@ FF6Map.prototype.insertTrigger = function(type) {
         
     this.rom.beginAction();
     triggers.insertAssembly(trigger);
-    trigger.x.setValue(this.clickedCol);
-    trigger.y.setValue(this.clickedRow);
+    trigger.x.setValue(this.clickPoint.x);
+    trigger.y.setValue(this.clickPoint.y);
     this.rom.endAction();
     
     this.observer.startObserving(trigger, this.reloadTriggers);
@@ -869,6 +966,7 @@ FF6Map.prototype.drawTriggers = function() {
         var c = "purple";
         switch (trigger.key) {
             case "eventTriggers":
+            case "eventTriggersAdvance":
                 c = "rgba(0, 0, 255, 0.5)";
                 break;
             case "entranceTriggersSingle":
@@ -886,6 +984,7 @@ FF6Map.prototype.drawTriggers = function() {
                 c = "rgba(255, 255, 0, 0.5)";
                 break;
             case "npcProperties":
+            case "npcPropertiesAdvance":
                 c = "rgba(128, 128, 128, 0.5)";
                 break;
         }
@@ -894,7 +993,7 @@ FF6Map.prototype.drawTriggers = function() {
     
     // draw npcs (sort by y-coordinate and sprite priority)
     var npcs = this.triggers.filter(function(trigger) {
-        return (trigger.key === "npcProperties");
+        return (trigger.key.startsWith("npcProperties"));
     });
     npcs = npcs.sort(function(trigger1, trigger2) {
         var y1 = trigger1.y.value;
@@ -1032,24 +1131,23 @@ FF6Map.prototype.drawNPC = function(npc) {
     var tileLayout = this.rom.mapSpriteLayouts.item(frameIndex & 0x3F);
 
     // get a pointer to the sprite graphics
-    var gfxPointerLo = this.rom.mapSpritePointersLo.item(npc.graphics.value).pointer.value;
-    var gfxPointerHi = this.rom.mapSpritePointersHi.item(npc.graphics.value).pointer.value;
-    var gfxPointer = gfxPointerLo | (gfxPointerHi << 16);
-    gfxPointer &= 0x00FFFFFF;
-    if (this.rom.isSFC) {
-        gfxPointer -= this.rom.unmapAddress(this.rom.mapSpriteGraphics.range.begin);
-    } else {
-        gfxPointer -= 0xF60000;
-    }
+//    var gfxPointerLo = this.rom.mapSpritePointersLo.item(npc.graphics.value).pointer.value;
+//    var gfxPointerHi = this.rom.mapSpritePointersHi.item(npc.graphics.value).pointer.value;
+//    var gfxPointer = gfxPointerLo | (gfxPointerHi << 16);
+//    gfxPointer &= 0x00FFFFFF;
+//    if (this.rom.isSFC) {
+//        gfxPointer -= this.rom.unmapAddress(this.rom.mapSpriteGraphics.range.begin);
+//    } else {
+//        gfxPointer -= 0xF60000;
+//    }
 
     // decode graphics
     var p = npc.palette.value << 9;
     var gfx = new Uint8Array(0x8000);
     var tileData = new Uint16Array(tileCount);
     for (var t = 0; t < tileCount; t++) {
-        var tileOffset = gfxPointer + (special ? t * 0x20 : tileLayout["tile" + (t + 1)].value);
-        tileOffset *= 2;
-        var rawGraphics = this.rom.mapSpriteGraphics.data.subarray(tileOffset, tileOffset + 0x40);
+        var tileOffset = (special ? t * 0x20 : tileLayout["tile" + (t + 1)].value) * 2;
+        var rawGraphics = this.rom.mapSpriteGraphics.item(npc.graphics.value).data.subarray(tileOffset, tileOffset + 0x40);
         gfx.set(rawGraphics, t * 0x40);
         if (hFlip) {
             tileData[t ^ (is32x32 ? 3 : 1)] = t | p | 0x4000;
@@ -1452,28 +1550,29 @@ FF6MapTileset.prototype.selectLayer = function(l) {
     this.ppu.layers[1].main = false;
     this.ppu.layers[2].main = false;
     
+    if (this.map.l === 3) {
+        // hide the canvas is the trigger layer is selected
+        this.canvas.style.display = "none";
+        this.cursorCanvas.style.display = "none";
+        this.canvas.parentElement.style.height = "0px";
+        return;
+    }
+    
     // render the image on the canvas
     this.canvas.height = 256;
     this.canvas.width = 256;
     this.cursorCanvas.height = 256;
     this.cursorCanvas.width = 256;
+    this.canvas.style.display = "block";
+    this.cursorCanvas.style.display = "block";
+    this.canvas.parentElement.style.height = "256px";
+
     var ctx = this.canvas.getContext('2d');
-    if (this.map.l === 3) {
-        this.canvas.style.display = "none";
-        this.cursorCanvas.style.display = "none";
-        this.canvas.parentElement.style.height = "0px";
-    } else {
-        this.canvas.style.display = "block";
-        this.cursorCanvas.style.display = "block";
-        this.canvas.parentElement.style.height = "256px";
-        var imageData = ctx.createImageData(this.ppu.width, this.ppu.height);
-        this.ppu.layers[this.map.l].main = true;
-        this.ppu.renderPPU(imageData.data);
-        ctx.putImageData(imageData, 0, 0);
-    }
-    
+    var imageData = ctx.createImageData(this.ppu.width, this.ppu.height);
+    this.ppu.layers[this.map.l].main = true;
+    this.ppu.renderPPU(imageData.data);
+    ctx.putImageData(imageData, 0, 0);
     this.drawCursor();
-    this.map.selection = new Uint8Array(this.selection);
 }
 
 FF6MapTileset.prototype.drawCursor = function() {

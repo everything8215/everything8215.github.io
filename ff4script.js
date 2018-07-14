@@ -59,6 +59,7 @@ FF4Script.description = function(command) {
         i = script.command.indexOf(command) - i;
         desc = "NPC Dialog " + i + ":<br/>"
         
+        var map = command.rom.editors["FF4Map"];
         var dialog = command.rom.mapDialog.item(map.m).item(command.dialog.value);
         if (dialog) {
             return desc + dialog.htmlText;
@@ -92,6 +93,7 @@ FF4Script.description = function(command) {
             }
 
         case "mapDialog":
+            var map = command.rom.editors["FF4Map"];
             var m = map.m;
             
 //            var script = command.parent;
@@ -154,6 +156,7 @@ FF4Script.description = function(command) {
                 // map dialog event
                 var d = command.event.value - 39;
                 desc = "Display Map Dialog " + d + ": <br/>";
+                var map = command.rom.editors["FF4Map"];
                 var dialog = command.rom.mapDialog.item(map.m).item(d);
                 if (dialog) {
                     return desc + dialog.htmlText;
@@ -188,6 +191,7 @@ FF4Script.string = function(command, key, stringKey) {
 }
 
 FF4Script.fixSwitch = function(switchProperty) {
+    var map = switchProperty.rom.editors["FF4Map"];
     if (map.m > 256 && switchProperty.offset !== 256) {
         switchProperty.offset = 256;
         switchProperty.value += 256;

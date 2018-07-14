@@ -6,6 +6,7 @@
     "crc32": "0xD708F5AB",
     "system": "gba",
     "mode": "gba",
+    "pointerLength": 4,
     "assembly": {
         "attackProperties": {
             "type": "array",
@@ -34,6 +35,422 @@
                 }
             }
         },
+        "battleBackgroundGraphics": {
+            "type": "array",
+            "name": "Battle Background Graphics",
+            "range": "0x085DA9DF-0x085F5013",
+            "array": {
+                "length": 75
+            },
+            "assembly": {
+                "format": ["linear4bpp", "ff6-lzss"]
+            },
+            "pointerTable": {
+                "range": "0x085D1650-0x085D1731",
+                "pointerLength": 3,
+                "offset": "0x085D0000"
+            }
+        },
+        "battleBackgroundLayout": {
+            "type": "array",
+            "name": "Battle Background Layout",
+            "range": "0x085D1928-0x085DA9DF",
+            "array": {
+                "length": 49
+            },
+            "assembly": {
+                "format": "ff6-lzss"
+            },
+            "pointerTable": {
+                "range": "0x085D1848-0x085D18AA",
+                "pointerLength": 2,
+                "offset": "0x085D0000"
+            }
+        },
+        "battleBackgroundPalette": {
+            "type": "array",
+            "name": "Battle Background Palette",
+            "range": "0x085D0150-0x085D1650",
+            "array": {
+                "length": 56
+            },
+            "assembly": {
+                "length": 96,
+                "format": "bgr555"
+            }
+        },
+        "battleBackgroundProperties": {
+            "type": "array",
+            "name": "Battle Background Properties",
+            "range": "0x085D0000-0x085D0150",
+            "array": {
+                "length": 56
+            },
+            "assembly": {
+                "type": "data",
+                "assembly": {
+                    "graphics1": {
+                        "type": "property",
+                        "name": "Graphics 1",
+                        "begin": 0
+                    },
+                    "graphics2": {
+                        "type": "property",
+                        "name": "Graphics 2",
+                        "begin": 1
+                    },
+                    "graphics3": {
+                        "type": "property",
+                        "name": "Graphics 3",
+                        "begin": 2
+                    },
+                    "layout1": {
+                        "type": "property",
+                        "name": "Layout",
+                        "begin": 3
+                    },
+                    "layout2": {
+                        "type": "property",
+                        "name": "Layout 2",
+                        "begin": 4,
+                        "hidden": true
+                    },
+                    "palette": {
+                        "type": "property",
+                        "name": "Palette",
+                        "begin": 5,
+                        "mask": "0x7F"
+                    },
+                    "wavy": {
+                        "type": "property",
+                        "name": "Wavy Effect",
+                        "begin": 5,
+                        "mask": "0x80",
+                        "bool": true
+                    }
+                },
+                "length": 6
+            }
+        },
+        "battleGroupsEvent": {
+            "type": "array",
+            "name": "Event Battle Groups",
+            "range": "0x087FF88E-0x087FFC8E",
+            "array": {
+                "length": 256
+            },
+            "assembly": {
+                "type": "data",
+                "assembly": {
+                    "battle1": {
+                        "type": "property",
+                        "name": "Battle 1",
+                        "begin": 0,
+                        "mask": "0x03FF",
+                        "link": "battleProperties[%i]"
+                    },
+                    "random1": {
+                        "type": "property",
+                        "name": "Random 1",
+                        "begin": 1,
+                        "mask": "0x80",
+                        "bool": true
+                    },
+                    "battle2": {
+                        "type": "property",
+                        "name": "Battle 2",
+                        "begin": 2,
+                        "mask": "0x03FF",
+                        "link": "battleProperties[%i]"
+                    },
+                    "random2": {
+                        "type": "property",
+                        "name": "Random 2",
+                        "begin": 3,
+                        "mask": "0x80",
+                        "bool": true
+                    }
+                },
+                "length": 4
+            }
+        },
+        "battleGroupsRandom": {
+            "type": "array",
+            "name": "Random Battle Groups",
+            "range": "0x08711190-0x08711990",
+            "array": {
+                "length": 256
+            },
+            "assembly": {
+                "type": "data",
+                "assembly": {
+                    "battle1": {
+                        "type": "property",
+                        "name": "Battle 1",
+                        "begin": 0,
+                        "mask": "0x03FF",
+                        "link": "battleProperties[%i]"
+                    },
+                    "random1": {
+                        "type": "property",
+                        "name": "Random 1",
+                        "begin": 1,
+                        "mask": "0x80",
+                        "bool": true
+                    },
+                    "battle2": {
+                        "type": "property",
+                        "name": "Battle 2",
+                        "begin": 2,
+                        "mask": "0x03FF",
+                        "link": "battleProperties[%i]"
+                    },
+                    "random2": {
+                        "type": "property",
+                        "name": "Random 2",
+                        "begin": 3,
+                        "mask": "0x80",
+                        "bool": true
+                    },
+                    "battle3": {
+                        "type": "property",
+                        "name": "Battle 3",
+                        "begin": 4,
+                        "mask": "0x03FF",
+                        "link": "battleProperties[%i]"
+                    },
+                    "random3": {
+                        "type": "property",
+                        "name": "Random 3",
+                        "begin": 5,
+                        "mask": "0x80",
+                        "bool": true
+                    },
+                    "battle4": {
+                        "type": "property",
+                        "name": "Battle 4",
+                        "begin": 6,
+                        "mask": "0x03FF",
+                        "link": "battleProperties[%i]"
+                    },
+                    "random4": {
+                        "type": "property",
+                        "name": "Random 4",
+                        "begin": 7,
+                        "mask": "0x80",
+                        "bool": true
+                    }
+                },
+                "length": 8
+            }
+        },
+        "battleProperties": {
+            "type": "array",
+            "name": "Battle Properties",
+            "range": "0x0861C33C-0x0861E907",
+            "array": {
+                "length": 645
+            },
+            "assembly": {
+                "type": "data",
+                "editor": "FF6Battle",
+                "assembly": {
+                    "monster1": {
+                        "type": "property",
+                        "name": "Monster 1",
+                        "begin": 2,
+                        "stringTable": "monsterName",
+                        "link": "monsterProperties[%i]"
+                    },
+                    "monster1MSB": {
+                        "type": "property",
+                        "name": "Monster 1 MSB",
+                        "begin": 14,
+                        "mask": "0x01",
+                        "bool": true
+                    },
+                    "monster2": {
+                        "type": "property",
+                        "name": "Monster 2",
+                        "begin": 3,
+                        "stringTable": "monsterName",
+                        "link": "monsterProperties[%i]"
+                    },
+                    "monster2MSB": {
+                        "type": "property",
+                        "name": "Monster 2 MSB",
+                        "begin": 14,
+                        "mask": "0x02",
+                        "bool": true
+                    },
+                    "monster3": {
+                        "type": "property",
+                        "name": "Monster 3",
+                        "begin": 4,
+                        "stringTable": "monsterName",
+                        "link": "monsterProperties[%i]"
+                    },
+                    "monster3MSB": {
+                        "type": "property",
+                        "name": "Monster 3 MSB",
+                        "begin": 14,
+                        "mask": "0x04",
+                        "bool": true
+                    },
+                    "monster4": {
+                        "type": "property",
+                        "name": "Monster 4",
+                        "begin": 5,
+                        "stringTable": "monsterName",
+                        "link": "monsterProperties[%i]"
+                    },
+                    "monster4MSB": {
+                        "type": "property",
+                        "name": "Monster 4 MSB",
+                        "begin": 14,
+                        "mask": "0x08",
+                        "bool": true
+                    },
+                    "monster5": {
+                        "type": "property",
+                        "name": "Monster 5",
+                        "begin": 6,
+                        "stringTable": "monsterName",
+                        "link": "monsterProperties[%i]"
+                    },
+                    "monster5MSB": {
+                        "type": "property",
+                        "name": "Monster 5 MSB",
+                        "begin": 14,
+                        "mask": "0x10",
+                        "bool": true
+                    },
+                    "monster6": {
+                        "type": "property",
+                        "name": "Monster 6",
+                        "begin": 7,
+                        "stringTable": "monsterName",
+                        "link": "monsterProperties[%i]"
+                    },
+                    "monster6MSB": {
+                        "type": "property",
+                        "name": "Monster 6 MSB",
+                        "begin": 14,
+                        "mask": "0x20",
+                        "bool": true
+                    },
+                    "monster1X": {
+                        "type": "property",
+                        "name": "Monster 1 X",
+                        "begin": 8,
+                        "mask": "0xF0",
+                        "multiplier": 8,
+                        "hidden": true
+                    },
+                    "monster1Y": {
+                        "type": "property",
+                        "name": "Monster 1 Y",
+                        "begin": 8,
+                        "mask": "0x0F",
+                        "multiplier": 8,
+                        "hidden": true
+                    },
+                    "monster2X": {
+                        "type": "property",
+                        "name": "Monster 2 X",
+                        "begin": 9,
+                        "mask": "0xF0",
+                        "multiplier": 8,
+                        "hidden": true
+                    },
+                    "monster2Y": {
+                        "type": "property",
+                        "name": "Monster 2 Y",
+                        "begin": 9,
+                        "mask": "0x0F",
+                        "multiplier": 8,
+                        "hidden": true
+                    },
+                    "monster3X": {
+                        "type": "property",
+                        "name": "Monster 3 X",
+                        "begin": 10,
+                        "mask": "0xF0",
+                        "multiplier": 8,
+                        "hidden": true
+                    },
+                    "monster3Y": {
+                        "type": "property",
+                        "name": "Monster 3 Y",
+                        "begin": 10,
+                        "mask": "0x0F",
+                        "multiplier": 8,
+                        "hidden": true
+                    },
+                    "monster4X": {
+                        "type": "property",
+                        "name": "Monster 4 X",
+                        "begin": 11,
+                        "mask": "0xF0",
+                        "multiplier": 8,
+                        "hidden": true
+                    },
+                    "monster4Y": {
+                        "type": "property",
+                        "name": "Monster 4 Y",
+                        "begin": 11,
+                        "mask": "0x0F",
+                        "multiplier": 8,
+                        "hidden": true
+                    },
+                    "monster5X": {
+                        "type": "property",
+                        "name": "Monster 5 X",
+                        "begin": 12,
+                        "mask": "0xF0",
+                        "multiplier": 8,
+                        "hidden": true
+                    },
+                    "monster5Y": {
+                        "type": "property",
+                        "name": "Monster 5 Y",
+                        "begin": 12,
+                        "mask": "0x0F",
+                        "multiplier": 8,
+                        "hidden": true
+                    },
+                    "monster6X": {
+                        "type": "property",
+                        "name": "Monster 6 X",
+                        "begin": 13,
+                        "mask": "0xF0",
+                        "multiplier": 8,
+                        "hidden": true
+                    },
+                    "monster6Y": {
+                        "type": "property",
+                        "name": "Monster 6 Y",
+                        "begin": 13,
+                        "mask": "0x0F",
+                        "multiplier": 8,
+                        "hidden": true
+                    }
+                },
+                "length": 15
+            }
+        },
+        "battlePropertiesAux": {
+            "type": "array",
+            "name": "Auxiliary Battle Properties",
+            "range": "0x0861B928-0x0861C33C",
+            "array": {
+                "length": 645
+            },
+            "assembly": {
+                "type": "assembly",
+                "length": 4
+            }
+        },
         "characterNames": {
             "type": "array",
             "name": "Character Names",
@@ -48,7 +465,6 @@
             },
             "pointerTable": {
                 "range": "0x08165970-0x08165A70",
-                "pointerLength": 4,
                 "offset": "0x081654F8"
             },
             "stringTable": {
@@ -70,7 +486,6 @@
             },
             "pointerTable": {
                 "range": "0x08174464-0x0817775C",
-                "pointerLength": 4,
                 "offset": "0x08174454"
             },
             "stringTable": {
@@ -92,6 +507,14 @@
                 "assembly": {
                     "type": "data",
                     "assembly": {
+                        "map": {
+                            "type": "property",
+                            "name": "Map",
+                            "begin": 3,
+                            "mask": "0x01FF",
+                            "stringTable": "mapProperties",
+                            "link": "mapProperties[%i]"
+                        },
                         "x": {
                             "type": "property",
                             "name": "X Position",
@@ -117,14 +540,6 @@
                             "begin": 2,
                             "mask": "0x80",
                             "bool": true
-                        },
-                        "map": {
-                            "type": "property",
-                            "name": "Map",
-                            "begin": 3,
-                            "mask": "0x01FF",
-                            "stringTable": "mapProperties",
-                            "link": "mapProperties[%i]"
                         },
                         "setParent": {
                             "type": "property",
@@ -175,6 +590,7 @@
             },
             "pointerTable": {
                 "range": "0x085FD5D2-0x085FD9D4",
+                "pointerLength": 2,
                 "offset": "0x085FD5D2"
             }
         },
@@ -260,6 +676,7 @@
             },
             "pointerTable": {
                 "range": "0x08735A82-0x08735E84",
+                "pointerLength": 2,
                 "offset": "0x08735A82"
             }
         },
@@ -272,7 +689,6 @@
             },
             "pointerTable": {
                 "range": "0x08167298-0x08167318",
-                "pointerLength": 4,
                 "offset": "0x081654F8"
             }
         },
@@ -285,7 +701,6 @@
             },
             "pointerTable": {
                 "range": "0x08166374-0x081663E0",
-                "pointerLength": 4,
                 "offset": "0x081654F8"
             },
             "stringTable": {
@@ -303,7 +718,6 @@
             },
             "pointerTable": {
                 "range": "0x08166C2C-0x08166C70",
-                "pointerLength": 4,
                 "offset": "0x081654F8"
             }
         },
@@ -332,7 +746,6 @@
             },
             "pointerTable": {
                 "range": "0x08167398-0x081673DC",
-                "pointerLength": 4,
                 "offset": "0x081654F8"
             },
             "stringTable": {
@@ -365,7 +778,6 @@
             },
             "pointerTable": {
                 "range": "0x0816604C-0x081660B8",
-                "pointerLength": 4,
                 "offset": "0x081654F8"
             },
             "stringTable": {
@@ -490,7 +902,14 @@
             "range": "0x087A0000-0x087DDA63",
             "encoding": "event",
             "label": {
-                "0x087A0000": "No Event"
+                "No Event": "0x087A0000",
+                "Return": "0x087A5EA9",
+                "Return (World)": "0x087A5EAA",
+                "Blackjack Book": {
+                    "offset": "0x087AA6B6",
+                    "encoding": "vehicle"
+                },
+                "Return (GBA)": "0x087D1361"
             }
         },
         "eventTriggers": {
@@ -531,7 +950,61 @@
             },
             "pointerTable": {
                 "range": "0x085F5EF0-0x085F6232",
+                "pointerLength": 2,
                 "offset": "0x085F5EF0"
+            }
+        },
+        "eventTriggersAdvance": {
+            "type": "array",
+            "name": "Event Triggers (GBA)",
+            "range": "0x080303AC-0x08030DEC",
+            "isSequential": true,
+            "array": {
+                "length": 328
+            },
+            "assembly": {
+                "type": "data",
+                "length": 8,
+                "assembly": {
+                    "map": {
+                        "type": "property",
+                        "name": "Map",
+                        "begin": 0,
+                        "mask": "0xFFFF"
+                    },
+                    "x": {
+                        "type": "property",
+                        "name": "X Position",
+                        "begin": 2,
+                        "hidden": true
+                    },
+                    "y": {
+                        "type": "property",
+                        "name": "Y Position",
+                        "begin": 3,
+                        "hidden": true
+                    },
+                    "scriptPointer": {
+                        "type": "property",
+                        "name": "Script Pointer",
+                        "begin": 4,
+                        "mask": "0xFFFFFF",
+                        "script": "eventScript"
+                    }
+                }
+            }
+        },
+        "initialRage": {
+            "type": "array",
+            "name": "Initial Rage",
+            "range": "0x0862AC8C-0x0862ACAC",
+            "format": "linear1bpp",
+            "array": {
+                "length": 256
+            },
+            "assembly": {
+                "type": "assembly",
+                "length": 1
             }
         },
         "itemDescriptions": {
@@ -547,7 +1020,6 @@
             },
             "pointerTable": {
                 "range": "0x08166CEC-0x08167128",
-                "pointerLength": 4,
                 "offset": "0x081654F8"
             }
         },
@@ -564,7 +1036,6 @@
             },
             "pointerTable": {
                 "range": "0x08165AF0-0x08165F2C",
-                "pointerLength": 4,
                 "offset": "0x081654F8"
             },
             "stringTable": {
@@ -582,6 +1053,22 @@
             "range": "0x08540000-0x08548000",
             "format": "linear4bpp"
         },
+        "mapAnimationGraphicsLayer3": {
+            "type": "array",
+            "name": "Map Animation Graphics (Layer 3)",
+            "range": "0x08759000-0x0875B888",
+            "array": {
+                "length": 6
+            },
+            "assembly": {
+                "format": ["linear4bpp", "ff6-lzss"]
+            },
+            "pointerTable": {
+                "range": "0x0875B888-0x0875B89D",
+                "pointerLength": 3,
+                "offset": "0x08759000"
+            }
+        },
         "mapAnimationProperties": {
             "type": "array",
             "name": "Map Animation Properties",
@@ -591,9 +1078,9 @@
             },
             "assembly": {
                 "type": "array",
-                "array": {},
                 "assembly": {
                     "type": "data",
+                    "length": 10,
                     "assembly": {
                         "speed": {
                             "type": "property",
@@ -625,29 +1112,13 @@
                             "begin": 8,
                             "mask": "0xFFFF"
                         }
-                    },
-                    "length": 10
+                    }
                 }
             },
             "pointerTable": {
                 "range": "0x08000158-0x08000182",
-                "offset": "0x08000182"
-            }
-        },
-        "mapAnimationGraphicsLayer3": {
-            "type": "array",
-            "name": "Map Animation Graphics (Layer 3)",
-            "range": "0x08759000-0x0875B888",
-            "array": {
-                "length": 6
-            },
-            "assembly": {
-                "format": ["linear4bpp", "ff6-lzss"]
-            },
-            "pointerTable": {
-                "range": "0x0875B888-0x0875B89D",
-                "pointerLength": 3,
-                "offset": "0x08759000"
+                "offset": "0x08000182",
+                "pointerLength": 2
             }
         },
         "mapAnimationPropertiesLayer3": {
@@ -724,7 +1195,8 @@
             },
             "pointerTable": {
                 "range": "0x08000722-0x08000730",
-                "offset": "0x08000730"
+                "offset": "0x08000730",
+                "pointerLength": 2
             }
         },
         "mapBattleGroups": {
@@ -1012,6 +1484,7 @@
             },
             "assembly": {
                 "type": "data",
+                "editor": "FF6Map",
                 "assembly": {
                     "title": {
                         "type": "property",
@@ -1195,28 +1668,28 @@
                         "name": "Layer 2 H-Size",
                         "begin": 23,
                         "mask": "0x0C",
-                        "stringTable": "mapProperties.assembly.hSize1"
+                        "stringTable": "mapProperties.assembly.assembly.hSize1"
                     },
                     "vSize2": {
                         "type": "property",
                         "name": "Layer 2 V-Size",
                         "begin": 23,
                         "mask": "0x03",
-                        "stringTable": "mapProperties.assembly.vSize1"
+                        "stringTable": "mapProperties.assembly.assembly.vSize1"
                     },
                     "hSize3": {
                         "type": "property",
                         "name": "Layer 3 H-Size",
                         "begin": 24,
                         "mask": "0xC0",
-                        "stringTable": "mapProperties.assembly.hSize1"
+                        "stringTable": "mapProperties.assembly.assembly.hSize1"
                     },
                     "vSize3": {
                         "type": "property",
                         "name": "Layer 3 V-Size",
                         "begin": 24,
                         "mask": "0x30",
-                        "stringTable": "mapProperties.assembly.vSize1"
+                        "stringTable": "mapProperties.assembly.assembly.vSize1"
                     },
                     "palette": {
                         "type": "property",
@@ -1296,7 +1769,8 @@
                         "name": "Battle Group",
                         "begin": 0,
                         "mask": "0xFF",
-                        "external": "mapBattleGroups[%i]"
+                        "external": "mapBattleGroups[%i]",
+                        "link": "battleGroupsRandom[%i]"
                     },
                     "battleProbability": {
                         "type": "property",
@@ -1543,6 +2017,7 @@
 					"0x00C4": "Maranda: Lola's House",
 					"0x00C5": "Kohlingen: Rachel's House",
 					"0x00C6": "Jidoor: Exterior",
+					"0x00C7": "Empty (Holy Dragon)",
 					"0x00C8": "Jidoor: Auction House",
 					"0x00C9": "Jidoor: Item Shop",
 					"0x00CA": "Jidoor: Relic Shop",
@@ -1565,8 +2040,14 @@
 					"0x00DB": "Esper World: Interior",
 					"0x00DC": "South Figaro: Docks (Unused)",
 					"0x00DD": "Zozo: Exterior",
+					"0x00DE": "Empty (Gilgamesh Battle)",
+					"0x00DF": "Empty (The End)",
 					"0x00E1": "Zozo: Interior",
 					"0x00E2": "Zozo: Ramuh's Room",
+					"0x00E3": "Falcon: Exterior (Dragon's Den)",
+					"0x00E4": "Albrook: Docks (Leviathan Battle)",
+					"0x00E5": "Soul Shrine: Entrance",
+					"0x00E6": "Soul Shrine",
 					"0x00E7": "Opera House: Theater (WoR)",
 					"0x00E8": "Opera House: Backstage (Before Opera)",
 					"0x00E9": "Opera House: Stage (Fight Scene)",
@@ -1736,16 +2217,41 @@
 					"0x019B": "Kefka's Tower: Final Switch Room",
 					"0x019C": "Kefka's Tower: Behind Poltergeist",
 					"0x019D": "Colosseum",
+					"0x019F": "Dragon's Den: Entrance",
+					"0x01A0": "Dragon's Den: Earth Labyrinth",
+					"0x01A1": "Dragon's Den: Burning Labyrinth",
+					"0x01A2": "Dragon's Den: Flame Labyrinth",
+					"0x01A3": "Dragon's Den: Inner Eye Labyrinth",
+					"0x01A4": "Dragon Temple",
+					"0x01A5": "Dragon Temple: Cloister",
+					"0x01A6": "Dragon Temple: Treasure Room",
+					"0x01A7": "Grand Cavern: Save Point",
+					"0x01A8": "Grand Cavern",
+					"0x01A9": "Kaiser's Breath",
+					"0x01AA": "Cloister of Trials",
+					"0x01AB": "Shrine of Serenity",
+					"0x01AC": "Kaiser's Lair",
+					"0x01AD": "Shrine of Repose",
+					"0x01AE": "Holy Palace",
+					"0x01AF": "Gigantaur Desert",
+                    
                     "0x01FE": "Previous Map",
                     "0x01FF": "Parent Map"
                 }
             }
         },
         "mapSpriteGraphics": {
-            "type": "assembly",
+            "type": "array",
             "name": "Map Sprite Graphics",
             "range": "0x08760000-0x08793000",
-            "format": "linear4bpp"
+            "array": {
+                "length": 165
+            },
+            "assembly": {
+                "type": "assembly",
+                "format": "linear4bpp"
+            },
+            "pointerTable": "mapSpritePointers"
         },
         "mapSpriteLayouts": {
             "type": "array",
@@ -1845,10 +2351,11 @@
                 }
             }
         },
-        "mapSpritePointersHi": {
+        "mapSpritePointers": {
             "type": "array",
-            "name": "Map Sprite Graphics Pointers (High Word)",
-            "range": "0x084E6A20-0x084E6B6A",
+            "name": "Map Sprite Graphics Pointers",
+            "range": "0x084E68D6-0x084E6B6A",
+            "format": "interlace(2,2,165)",
             "array": {
                 "length": 165
             },
@@ -1859,30 +2366,11 @@
                         "type": "property",
                         "name": "Pointer",
                         "begin": 0,
-                        "mask": "0xFFFF"
+                        "mask": "0xFFFFFF",
+                        "offset": "0x07800000"
                     }
                 },
-                "length": 2
-            }
-        },
-        "mapSpritePointersLo": {
-            "type": "array",
-            "name": "Map Sprite Graphics Pointers (Low Word)",
-            "range": "0x084E68D6-0x084E6A20",
-            "array": {
-                "length": 165
-            },
-            "assembly": {
-                "type": "data",
-                "assembly": {
-                    "pointer": {
-                        "type": "property",
-                        "name": "Pointer",
-                        "begin": 0,
-                        "mask": "0xFFFF"
-                    }
-                },
-                "length": 2
+                "length": 4
             }
         },
         "mapStartupEvents": {
@@ -2031,7 +2519,6 @@
             },
             "pointerTable": {
                 "range": "0x081799F0-0x08179B18",
-                "pointerLength": 4,
                 "offset": "0x08174454"
             },
             "stringTable": {
@@ -2041,6 +2528,574 @@
                 "string": {
                     "0": "No Title"
                 }
+            }
+        },
+        "monsterAttack": {
+            "type": "array",
+            "name": "Monster Attack",
+            "range": "0x0871C238-0x0871C3B8",
+            "array": {
+                "length": 384
+            },
+            "assembly": {
+                "type": "assembly",
+                "length": 1
+            }
+        },
+        "monsterAttackName": {
+            "type": "array",
+            "name": "Monster Attack Name",
+            "range": "0x081B8797-0x081B9587",
+            "array": {
+                "length": 423
+            },
+            "pointerTable": {
+                "range": "0x0817775C-0x08177DF8",
+                "offset": "0x08174454"
+            },
+            "stringTable": {
+                "name": "Monster Attack Name",
+                "length": 423,
+                "default": "<monsterProperties[%i].attackName>"
+            }
+        },
+        "monsterAttackControl": {
+            "type": "array",
+            "name": "Monster Control Attack",
+            "range": "0x08726B86-0x08727222",
+            "array": {
+                "length": 423
+            },
+            "assembly": {
+                "type": "assembly",
+                "length": 4
+            }
+        },
+        "monsterAttackRage": {
+            "type": "array",
+            "name": "Monster Rage Attack",
+            "range": "0x085FCE18-0x085FD018",
+            "array": {
+                "length": 256
+            },
+            "assembly": {
+                "type": "assembly",
+                "length": 2
+            }
+        },
+        "monsterAttackSketch": {
+            "type": "array",
+            "name": "Monster Sketch Attack",
+            "range": "0x085F78EE-0x085F7C3C",
+            "array": {
+                "length": 423
+            },
+            "assembly": {
+                "type": "assembly",
+                "length": 2
+            }
+        },
+        "monsterColosseumType": {
+            "type": "array",
+            "name": "Monster Colosseum Type",
+            "range": "0x0879E08E-0x0879E18E",
+            "array": {
+                "length": 256
+            },
+            "assembly": {
+                "type": "assembly",
+                "length": 1
+            }
+        },
+        "monsterGraphics": {
+            "type": "array",
+            "name": "Monster Graphics",
+            "range": "0x0858FF64-0x085CF9A4",
+            "assembly": {
+                "type": "assembly",
+                "format": "linear4bpp"
+            },
+            "array": {
+                "length": 459
+            },
+            "pointerTable": "monsterGraphicsProperties",
+            "pointerKey": "graphicsPointer"
+        },
+        "monsterGraphicsMap": {
+            "type": "array",
+            "name": "Monster Graphics Map",
+            "range": "0x086EAA90-0x086EB5B0",
+            "array": {
+                "length": 459
+            },
+            "pointerTable": "monsterGraphicsProperties",
+            "pointerKey": "mapPointer"
+        },
+        "monsterGraphicsProperties": {
+            "type": "array",
+            "name": "Monster Graphics Properties",
+            "range": "0x086E7004-0x086E7AD0",
+            "array": {
+                "length": 459
+            },
+            "assembly": {
+                "type": "data",
+                "length": 6,
+                "assembly": {
+                    "graphicsPointer": {
+                        "type": "property",
+                        "name": "Graphics Pointer",
+                        "mask": "0xFFFF",
+                        "multiplier": 16,
+                        "offset": "0x0858FF64"
+                    },
+                    "palette": {
+                        "type": "property",
+                        "name": "Palette",
+                        "mask": "0xFFF0",
+                        "begin": 2
+                    },
+                    "mapPointer": {
+                        "type": "property",
+                        "name": "Graphics Map Pointer",
+                        "begin": 4,
+                        "mask": "0xFFF8",
+                        "multiplier": 8,
+                        "offset": "0x086EAA90"
+                    },
+                    "largeMap": {
+                        "type": "property",
+                        "name": "Large Graphics Map",
+                        "mask": "0x01",
+                        "begin": 2,
+                        "bool": true
+                    }
+                }
+            }
+        },
+        "monsterItems": {
+            "type": "array",
+            "name": "Monster Items",
+            "range": "0x0871BB9C-0x0871C238",
+            "array": {
+                "length": 423
+            },
+            "assembly": {
+                "type": "assembly",
+                "length": 4
+            }
+        },
+        "monsterName": {
+            "type": "array",
+            "name": "Monster Name",
+            "range": "0x0816B02B-0x0816BFD6",
+            "array": {
+                "length": 423
+            },
+            "pointerTable": {
+                "range": "0x08166544-0x08166BE0",
+                "offset": "0x081654F8"
+            },
+            "stringTable": {
+                "name": "Monster Name",
+                "length": 423,
+                "default": "<monsterProperties[%i].monsterName>"
+            }
+        },
+        "monsterPalette": {
+            "type": "array",
+            "name": "Monster Palette",
+            "range": "0x086E7AD0-0x086EAA90",
+            "array": {
+                "length": 764
+            },
+            "assembly": {
+                "length": 16,
+                "format": "bgr555"
+            }
+        },
+        "monsterProperties": {
+            "type": "array",
+            "name": "Monster Properties",
+            "range": "0x0873798A-0x0873AE6B",
+            "array": {
+                "length": 423
+            },
+            "assembly": {
+                "type": "data",
+                "length": 32,
+                "assembly": {
+                    "monsterName": {
+                        "type": "text",
+                        "name": "Name",
+                        "external": "monsterName[%i]",
+                        "encoding": "menu"
+                    },
+                    "level": {
+                        "type": "property",
+                        "name": "Level",
+                        "begin": 16
+                    },
+                    "speed": {
+                        "type": "property",
+                        "name": "Speed",
+                        "begin": 0
+                    },
+                    "attackPower": {
+                        "type": "property",
+                        "name": "Attack Power",
+                        "begin": 1
+                    },
+                    "hitRate": {
+                        "type": "property",
+                        "name": "Hit Rate",
+                        "begin": 2
+                    },
+                    "evade": {
+                        "type": "property",
+                        "name": "Evade",
+                        "begin": 3
+                    },
+                    "magicBlock": {
+                        "type": "property",
+                        "name": "Magic Block",
+                        "begin": 4
+                    },
+                    "defense": {
+                        "type": "property",
+                        "name": "Defense",
+                        "begin": 5
+                    },
+                    "magicDefense": {
+                        "type": "property",
+                        "name": "Magic Defense",
+                        "begin": 6
+                    },
+                    "magicPower": {
+                        "type": "property",
+                        "name": "Magic Power",
+                        "begin": 7
+                    },
+                    "hp": {
+                        "type": "property",
+                        "name": "HP",
+                        "begin": 8,
+                        "mask": "0xFFFF"
+                    },
+                    "mp": {
+                        "type": "property",
+                        "name": "MP",
+                        "begin": 10,
+                        "mask": "0xFFFF"
+                    },
+                    "experience": {
+                        "type": "property",
+                        "name": "Experience",
+                        "begin": 12,
+                        "mask": "0xFFFF"
+                    },
+                    "gp": {
+                        "type": "property",
+                        "name": "GP",
+                        "begin": 14,
+                        "mask": "0xFFFF"
+                    },
+                    "flags": {
+                        "type": "property",
+                        "name": "Flags",
+                        "begin": 18,
+                        "mask": "0xFFFF",
+                        "flag": true,
+                        "stringTable": {
+                            "string": {
+                                "0": "Dies at Zero MP",
+                                "2": "Hide Name",
+                                "4": "Human",
+                                "6": "Imp Critical",
+                                "7": "Undead",
+                                "8": "Harder to Run",
+                                "9": "First Strike",
+                                "10": "Can't Suplex",
+                                "11": "Can't Run",
+                                "12": "Can't Scan",
+                                "13": "Can't Sketch",
+                                "14": "Special Event",
+                                "15": "Can't Control"
+                            }
+                        }
+                    },
+                    "special": {
+                        "type": "property",
+                        "name": "Special",
+                        "begin": 30,
+                        "mask": "0x82",
+                        "flag": true,
+                        "stringTable": {
+                            "string": {
+                                "0": "Speck",
+                                "6": "Piranha"
+                            }
+                        }
+                    },
+                    "fightAnimation": {
+                        "type": "property",
+                        "name": "Fight Animation",
+                        "begin": 26,
+                        "stringTable": "itemNames"
+                    },
+                    "attackName": {
+                        "type": "text",
+                        "name": "Attack Name",
+                        "external": "monsterAttackName[%i]",
+                        "encoding": "battle"
+                    },
+                    "attackAnimation": {
+                        "type": "property",
+                        "name": "Attack Animation",
+                        "external": "monsterAttack[%i]"
+                    },
+                    "attackEffect": {
+                        "type": "property",
+                        "name": "Attack Effect",
+                        "begin": 31,
+                        "mask": "0x3F",
+                        "stringTable": {
+                            "length": 51,
+                            "string": {
+                                "0-8": "Inflict <stringTable.statusNames[7-%i]>",
+                                "8-16": "Inflict <stringTable.statusNames[23-%i]>",
+                                "16-24": "Inflict <stringTable.statusNames[39-%i]>",
+                                "24-32": "Inflict <stringTable.statusNames[55-%i]>",
+                                "32": "1.5× Damage",
+                                "33": "2.0× Damage",
+                                "34": "2.5× Damage",
+                                "35": "3.0× Damage",
+                                "36": "3.5× Damage",
+                                "37": "4.0× Damage",
+                                "38": "4.5× Damage",
+                                "39": "5.0× Damage",
+                                "40": "5.5× Damage",
+                                "41": "6.0× Damage",
+                                "42": "6.5× Damage",
+                                "43": "7.0× Damage",
+                                "44": "7.5× Damage",
+                                "45": "8.0× Damage",
+                                "46": "8.5× Damage",
+                                "47": "9.0× Damage",
+                                "48": "Drain HP",
+                                "49": "Drain MP",
+                                "50": "Remove <stringTable.statusNames[16]>"
+                            }
+                        }
+                    },
+                    "attackFlags": {
+                        "type": "property",
+                        "name": "Attack Flags",
+                        "begin": 31,
+                        "mask": "0xC0",
+                        "flag": true,
+                        "stringTable": {
+                            "string": {
+                                "0": "No Damage",
+                                "1": "Can't Miss"
+                            }
+                        }
+                    },
+                    "sketch1": {
+                        "type": "property",
+                        "name": "Sketch Attack 1",
+                        "external": "monsterAttackSketch[%i]",
+                        "begin": 0
+                    },
+                    "sketch2": {
+                        "type": "property",
+                        "name": "Sketch Attack 2",
+                        "external": "monsterAttackSketch[%i]",
+                        "begin": 1
+                    },
+                    "control1": {
+                        "type": "property",
+                        "name": "Control Attack 1",
+                        "external": "monsterAttackControl[%i]",
+                        "begin": 0
+                    },
+                    "control2": {
+                        "type": "property",
+                        "name": "Control Attack 2",
+                        "external": "monsterAttackControl[%i]",
+                        "begin": 1
+                    },
+                    "control3": {
+                        "type": "property",
+                        "name": "Control Attack 3",
+                        "external": "monsterAttackControl[%i]",
+                        "begin": 2
+                    },
+                    "control4": {
+                        "type": "property",
+                        "name": "Control Attack 4",
+                        "external": "monsterAttackControl[%i]",
+                        "begin": 3
+                    },
+                    "rage1": {
+                        "type": "property",
+                        "name": "Rage Attack 1",
+                        "external": "monsterAttackRage[%i]",
+                        "begin": 0,
+                        "invalid": "this.parent.i > 0xFF"
+                    },
+                    "rage2": {
+                        "type": "property",
+                        "name": "Rage Attack 2",
+                        "external": "monsterAttackRage[%i]",
+                        "begin": 1,
+                        "invalid": "this.parent.i > 0xFF"
+                    },
+                    "initialRage": {
+                        "type": "property",
+                        "name": "Rage Known",
+                        "external": "initialRage[%i]",
+                        "mask": "0x01",
+                        "bool": true,
+                        "invalid": "this.parent.i > 0xFF"
+                    },
+                    "statusImmunity": {
+                        "type": "property",
+                        "name": "Immune",
+                        "begin": 20,
+                        "mask": "0xFFFFFF",
+                        "flag": true,
+                        "stringTable": {
+                            "string": {
+                                "0-8": "<stringTable.statusNames[7-%i]>",
+                                "8-16": "<stringTable.statusNames[23-%i]>",
+                                "16": "Flying",
+                                "17-24": "<stringTable.statusNames[39-%i]>"
+                            }
+                        }
+                    },
+                    "statusSet": {
+                        "type": "property",
+                        "name": "Set",
+                        "begin": 27,
+                        "mask": "0xFFFFFF",
+                        "flag": true,
+                        "stringTable": "monsterProperties.assembly.assembly.statusImmunity"
+                    },
+                    "elementAbsorb": {
+                        "type": "property",
+                        "name": "Absorb",
+                        "begin": 23,
+                        "mask": "0xFF",
+                        "flag": true,
+                        "stringTable": "element"
+                    },
+                    "elementNull": {
+                        "type": "property",
+                        "name": "Nullify",
+                        "begin": 24,
+                        "mask": "0xFF",
+                        "flag": true,
+                        "stringTable": "element"
+                    },
+                    "elementWeak": {
+                        "type": "property",
+                        "name": "Weak",
+                        "begin": 25,
+                        "mask": "0xFF",
+                        "flag": true,
+                        "stringTable": "element"
+                    },
+                    "rareSteal": {
+                        "type": "property",
+                        "name": "Rare Steal",
+                        "begin": 0,
+                        "external": "monsterItems[%i]",
+                        "stringTable": "itemNames"
+                    },
+                    "commonSteal": {
+                        "type": "property",
+                        "name": "Common Steal",
+                        "begin": 1,
+                        "external": "monsterItems[%i]",
+                        "stringTable": "itemNames"
+                    },
+                    "rareDrop": {
+                        "type": "property",
+                        "name": "Rare Drop",
+                        "begin": 2,
+                        "external": "monsterItems[%i]",
+                        "stringTable": "itemNames"
+                    },
+                    "commonDrop": {
+                        "type": "property",
+                        "name": "Common Drop",
+                        "begin": 3,
+                        "external": "monsterItems[%i]",
+                        "stringTable": "itemNames"
+                    },
+                    "morphItems": {
+                        "type": "property",
+                        "name": "Morph Items",
+                        "begin": 17,
+                        "mask": "0x1F"
+                    },
+                    "morphRate": {
+                        "type": "property",
+                        "name": "Morph Rate",
+                        "begin": 17,
+                        "mask": "0xE0",
+                        "stringTable": {
+                            "string": {
+                                "0": "255/256 (99.6%)",
+                                "1": "3/4 (75%)",
+                                "2": "1/2 (50%)",
+                                "3": "1/4 (25%)",
+                                "4": "1/8 (12.5%)",
+                                "5": "1/16 (6.25%)",
+                                "6": "1/32 (3.125%)",
+                                "7": "0 (0%)"
+                            }
+                        }
+                    },
+                    "verticalOffset": {
+                        "type": "property",
+                        "name": "Vertical Offset",
+                        "begin": 0,
+                        "mask": "0xFF",
+                        "external": "monsterVerticalOffset[%i]"
+                    },
+                    "colosseumType": {
+                        "type": "property",
+                        "name": "Colosseum Type",
+                        "begin": 0,
+                        "mask": "0xFF",
+                        "external": "monsterColosseumType[%i]",
+                        "invalid": "this.parent.i > 0xFF",
+                        "stringTable": {
+                            "string": {
+                                "0": "Ceiling (top)",
+                                "1": "Ground (+0)",
+                                "2": "Floating (+8)",
+                                "3": "Buried (-8)",
+                                "4": "Flying (+40)"
+                            }
+                        }
+                    }
+                }
+            },
+            "stringTable": "monsterName"
+        },
+        "monsterVerticalOffset": {
+            "type": "array",
+            "name": "Monster Vertical Offset",
+            "range": "0x085FC120-0x085FC2C7",
+            "array": {
+                "length": 423
+            },
+            "assembly": {
+                "type": "assembly",
+                "length": 1
             }
         },
         "npcProperties": {
@@ -2325,7 +3380,292 @@
             },
             "pointerTable": {
                 "range": "0x0871D34C-0x0871D68E",
+                "pointerLength": 2,
                 "offset": "0x0871D34C"
+            }
+        },
+        "npcPropertiesAdvance": {
+            "type": "array",
+            "name": "NPC Properties (GBA)",
+            "range": "0x08030DEC-0x08031238",
+            "isSequential": true,
+            "array": {
+                "length": 100
+            },
+            "assembly": {
+                "type": "data",
+                "length": 11,
+                "assembly": {
+                    "map": {
+                        "type": "property",
+                        "name": "Map",
+                        "begin": 0,
+                        "mask": "0xFFFF"
+                    },
+                    "scriptPointer": {
+                        "type": "property",
+                        "name": "Script Pointer",
+                        "begin": 2,
+                        "mask": "0x03FFFF",
+                        "script": "eventScript"
+                    },
+                    "vramAddress": {
+                        "type": "property",
+                        "name": "VRAM Address",
+                        "begin": 2,
+                        "mask": "0x7F"
+                    },
+                    "hFlip": {
+                        "type": "property",
+                        "name": "Horizontal Flip",
+                        "begin": 2,
+                        "mask": "0x80",
+                        "bool": true
+                    },
+                    "offset": {
+                        "type": "property",
+                        "name": "Offset",
+                        "begin": 3,
+                        "mask": "0xE0"
+                    },
+                    "master": {
+                        "type": "property",
+                        "name": "Master NPC Index",
+                        "begin": 3,
+                        "mask": "0x1F"
+                    },
+                    "offsetDirection": {
+                        "type": "property",
+                        "name": "Offset Direction",
+                        "begin": 4,
+                        "mask": "0x01",
+                        "stringTable": {
+                            "string": {
+                                "0": "Right",
+                                "1": "Down"
+                            }
+                        }
+                    },
+                    "slave": {
+                        "type": "property",
+                        "name": "Slave NPC",
+                        "begin": 4,
+                        "mask": "0x02",
+                        "bool": true
+                    },
+                    "palette": {
+                        "type": "property",
+                        "name": "Palette",
+                        "begin": 4,
+                        "mask": "0x1C",
+                        "stringTable": "mapSpritePalettes"
+                    },
+                    "layer2": {
+                        "type": "property",
+                        "name": "Scrolling Layer",
+                        "begin": 4,
+                        "mask": "0x20",
+                        "stringTable": {
+                            "string": {
+                                "0": "Layer 1",
+                                "1": "Layer 2"
+                            }
+                        }
+                    },
+                    "switch": {
+                        "type": "property",
+                        "name": "Switch",
+                        "begin": 4,
+                        "mask": "0xFFC0",
+                        "stringTable": "npcSwitches"
+                    },
+                    "x": {
+                        "type": "property",
+                        "name": "X Position",
+                        "begin": 6,
+                        "mask": "0x7F",
+                        "hidden": true
+                    },
+                    "vehicle": {
+                        "type": "property",
+                        "name": "Vehicle",
+                        "begin": 9,
+                        "mask": "0xC0",
+                        "stringTable": {
+                            "string": {
+                                "0": "None",
+                                "1": "Chocobo",
+                                "2": "Magitek Armor",
+                                "3": "Raft"
+                            }
+                        },
+                        "disabled": "this.parent.animation.value !== 0"
+                    },
+                    "showRider": {
+                        "type": "property",
+                        "name": "Show Rider",
+                        "begin": 6,
+                        "mask": "0x80",
+                        "bool": true,
+                        "hidden": "this.parent.vehicle.value === 0"
+                    },
+                    "special": {
+                        "type": "property",
+                        "name": "Special Graphics",
+                        "begin": 6,
+                        "mask": "0x80",
+                        "bool": true
+                    },
+                    "y": {
+                        "type": "property",
+                        "name": "Y Position",
+                        "begin": 7,
+                        "mask": "0x3F",
+                        "hidden": true
+                    },
+                    "speed": {
+                        "type": "property",
+                        "name": "Speed",
+                        "begin": 7,
+                        "mask": "0xC0",
+                        "stringTable": {
+                            "string": {
+                                "0": "Very Slow",
+                                "1": "Slow",
+                                "2": "Normal",
+                                "3": "Fast"
+                            }
+                        }
+                    },
+                    "graphics": {
+                        "type": "property",
+                        "name": "Graphics",
+                        "begin": 8,
+                        "stringTable": "mapSprites"
+                    },
+                    "movement": {
+                        "type": "property",
+                        "name": "Movement",
+                        "begin": 9,
+                        "mask": "0x0F",
+                        "stringTable": {
+                            "string": {
+                                "0": "None",
+                                "1": "Script",
+                                "2": "User",
+                                "3": "Random"
+                            }
+                        }
+                    },
+                    "spritePriority": {
+                        "type": "property",
+                        "name": "Sprite Priority",
+                        "begin": 9,
+                        "mask": "0x30",
+                        "stringTable": {
+                            "string": {
+                                "0": "Normal",
+                                "1": "High",
+                                "2": "Low",
+                                "3": "Low"
+                            }
+                        }
+                    },
+                    "direction": {
+                        "type": "property",
+                        "name": "Facing Direction",
+                        "begin": 10,
+                        "mask": "0x03",
+                        "stringTable": "directions",
+                        "disabled": "this.parent.animation.value !== 0"
+                    },
+                    "reaction": {
+                        "type": "property",
+                        "name": "Reaction",
+                        "begin": 10,
+                        "mask": "0x04",
+                        "stringTable": {
+                            "string": {
+                                "0": "Face Party",
+                                "1": "None"
+                            }
+                        }
+                    },
+                    "is32x32": {
+                        "type": "property",
+                        "name": "Size",
+                        "begin": 10,
+                        "mask": "0x04",
+                        "stringTable": {
+                            "string": {
+                                "0": "16×16",
+                                "1": "32×32"
+                            }
+                        }
+                    },
+                    "layerPriority": {
+                        "type": "property",
+                        "name": "Layer Priority",
+                        "begin": 10,
+                        "mask": "0x18",
+                        "stringTable": {
+                            "string": {
+                                "0": "Default",
+                                "1": "Top Sprite Only",
+                                "2": "Foreground",
+                                "3": "Background"
+                            }
+                        }
+                    },
+                    "animation": {
+                        "type": "property",
+                        "name": "Animation",
+                        "begin": 10,
+                        "mask": "0xE0",
+                        "stringTable": {
+                            "string": {
+                                "0": "Normal",
+                                "1": "None",
+                                "2": "Special",
+                                "3": "Knocked Out",
+                                "4": "None",
+                                "5": "None",
+                                "6": "None",
+                                "7": "None"
+                            }
+                        }
+                    },
+                    "animationType": {
+                        "type": "property",
+                        "name": "Animation Type",
+                        "begin": 10,
+                        "mask": "0x03",
+                        "stringTable": {
+                            "string": {
+                                "0": "One Frame",
+                                "1": "Flip Horizontally",
+                                "2": "Two Frames",
+                                "3": "Four Frames"                                    
+                            }
+                        },
+                        "disabled": "this.parent.animation.value === 0"
+                    },
+                    "animationSpeed": {
+                        "type": "property",
+                        "name": "Animation Speed",
+                        "begin": 9,
+                        "mask": "0xC0",
+                        "stringTable": {
+                            "string": {
+                                "0": "Fastest",
+                                "1": "Fast",
+                                "2": "Medium",
+                                "3": "Slow"                                    
+                            }
+                        },
+                        "disabled": "this.parent.animation.value === 0"
+                    }
+                }
             }
         },
         "rareItemDescriptions": {
@@ -2341,7 +3681,6 @@
             },
             "pointerTable": {
                 "range": "0x08167240-0x08167298",
-                "pointerLength": 4,
                 "offset": "0x081654F8"
             }
         },
@@ -2363,7 +3702,6 @@
             },
             "pointerTable": {
                 "range": "0x08166BE0-0x08166C2C",
-                "pointerLength": 4,
                 "offset": "0x081654F8"
             }
         },
@@ -2568,7 +3906,6 @@
             },
             "pointerTable": {
                 "range": "0x08165F74-0x0816604C",
-                "pointerLength": 4,
                 "offset": "0x081654F8"
             },
             "stringTable": {
@@ -2593,7 +3930,6 @@
             },
             "pointerTable": {
                 "range": "0x08167318-0x08167398",
-                "pointerLength": 4,
                 "offset": "0x081654F8"
             },
             "stringTable": {
@@ -2620,7 +3956,7 @@
             "range": "0x0862B61C-0x0862BC34",
             "isSequential": true,
             "array": {
-                "length": 415
+                "length": 432
             },
             "assembly": {
                 "type": "array",
@@ -2665,6 +4001,7 @@
                             "type": "property",
                             "name": "Battle",
                             "begin": 4,
+                            "link": "battleGroupsEvent[%i]",
                             "invalid": "this.parent.treasureType.value !== 2"
                         },
                         "item": {
@@ -2687,6 +4024,7 @@
             },
             "pointerTable": {
                 "range": "0x0862B2BC-0x0862B61C",
+                "pointerLength": 2,
                 "offset": "0x0862B61C"
             }
         },
@@ -2728,6 +4066,71 @@
                     "5": "Gogo's Lair",
                     "6": "Doom Gaze (World)"
                 }
+            }
+        },
+        "worldBattleGroup": {
+            "type": "array",
+            "name": "World Map Battle Group",
+            "range": "0x08712A70-0x08712C70",
+            "array": {
+                "length": 128
+            },
+            "assembly": {
+                "type": "data",
+                "length": 4,
+                "assembly": {
+                    "grass": {
+                        "type": "property",
+                        "name": "Field (Grass)",
+                        "begin": 0,
+                        "link": "battleGroupsRandom[%i]"
+                    },
+                    "forest": {
+                        "type": "property",
+                        "name": "Forest",
+                        "begin": 1,
+                        "link": "battleGroupsRandom[%i]"
+                    },
+                    "desert": {
+                        "type": "property",
+                        "name": "Desert",
+                        "begin": 2,
+                        "link": "battleGroupsRandom[%i]"
+                    },
+                    "dirt": {
+                        "type": "property",
+                        "name": "Field (Dirt)",
+                        "begin": 3,
+                        "link": "battleGroupsRandom[%i]"
+                    },
+                    "probability": {
+                        "type": "property",
+                        "name": "Probability",
+                        "external": "worldBattleProbability[%i]",
+                        "mask": "0x03",
+                        "stringTable": {
+                            "string": {
+                                "0": "Normal",
+                                "1": "Low",
+                                "2": "High",
+                                "3": "None"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "worldBattleProbability": {
+            "type": "array",
+            "name": "World Map Battle Probability",
+            "range": "0x087378FA-0x0873797A",
+            "format": "linear2bpp",
+            "array": {
+                "length": 128
+            },
+            "assembly": {
+                "type": "assembly",
+                "length": 1
             }
         },
         "worldLayout1": {
@@ -2916,6 +4319,80 @@
             "name": "Event Script",
             "delegate": "FF6Script",
             "command": {
+                "advanceSave": {
+                    "name": "Save Game",
+                    "category": "FF6 Advance",
+                    "length": 1,
+                    "opcode": "0x66"
+                },
+                "advanceGameClear": {
+                    "name": "Game Clear",
+                    "category": "FF6 Advance",
+                    "length": 1,
+                    "opcode": "0x67"
+                },
+                "advanceLayerPriority": {
+                    "name": "Change Layer Priority",
+                    "category": "FF6 Advance",
+                    "length": 2,
+                    "opcode": "0x68",
+                    "assembly": {
+                        "type": {
+                            "type": "property",
+                            "name": "Priority",
+                            "begin": 0
+                        }
+                    }
+                },
+                "advanceBattle": {
+                    "name": "Battle",
+                    "category": "FF6 Advance",
+                    "length": 5,
+                    "opcode": "0x69",
+                    "assembly": {
+                        "battle": {
+                            "type": "property",
+                            "name": "Battle",
+                            "begin": 3,
+                            "mask": "0xFFFF",
+                            "link": "battleProperties[%i]"
+                        },
+                        "background": {
+                            "type": "property",
+                            "name": "Background",
+                            "begin": 2,
+                            "mask": "0x3F",
+                            "stringTable": "battleBackground"
+                        }
+                    }
+                },
+                "advanceItem": {
+                    "name": "Give Item",
+                    "category": "FF6 Advance",
+                    "length": 3,
+                    "opcode": "0x83",
+                    "assembly": {
+                        "item": {
+                            "type": "property",
+                            "name": "Item",
+                            "begin": 1,
+                            "mask": "0xFFFF"
+                        }
+                    }
+                },
+                "advanceSwitch": {
+                    "name": "Change Switch",
+                    "category": "FF6 Advance",
+                    "length": 2,
+                    "opcode": ["0xE5", "0xE6"],
+                    "assembly": {
+                        "switch": {
+                            "type": "property",
+                            "name": "Switch",
+                            "begin": 1
+                        }
+                    }
+                },
                 "battle": {
                     "name": "Event Battle",
                     "category": "Battle",
@@ -2936,7 +4413,8 @@
                         "battle": {
                             "type": "property",
                             "name": "Battle",
-                            "begin": 1
+                            "begin": 1,
+                            "link": "battleGroupsEvent[%i]"
                         },
                         "background": {
                             "type": "property",
@@ -3591,7 +5069,7 @@
                             "name": "State 2",
                             "begin": 3,
                             "mask": "0x8000",
-                            "stringTable": "eventScript.event.jumpSwitch.state1",
+                            "stringTable": "eventScript.event.jumpSwitch.assembly.state1",
                             "invalid": "this.parent.count.value < 2"
                         },
                         "switch3": {
@@ -3607,7 +5085,7 @@
                             "name": "State 3",
                             "begin": 5,
                             "mask": "0x8000",
-                            "stringTable": "eventScript.event.jumpSwitch.state1",
+                            "stringTable": "eventScript.event.jumpSwitch.assembly.state1",
                             "invalid": "this.parent.count.value < 3"
                         },
                         "switch4": {
@@ -3623,7 +5101,7 @@
                             "name": "State 4",
                             "begin": 7,
                             "mask": "0x8000",
-                            "stringTable": "eventScript.event.jumpSwitch.state1",
+                            "stringTable": "eventScript.event.jumpSwitch.assembly.state1",
                             "invalid": "this.parent.count.value < 4"
                         },
                         "switch5": {
@@ -3639,7 +5117,7 @@
                             "name": "State 5",
                             "begin": 9,
                             "mask": "0x8000",
-                            "stringTable": "eventScript.event.jumpSwitch.state1",
+                            "stringTable": "eventScript.event.jumpSwitch.assembly.state1",
                             "invalid": "this.parent.count.value < 5"
                         },
                         "switch6": {
@@ -3655,7 +5133,7 @@
                             "name": "State 6",
                             "begin": 11,
                             "mask": "0x8000",
-                            "stringTable": "eventScript.event.jumpSwitch.state1",
+                            "stringTable": "eventScript.event.jumpSwitch.assembly.state1",
                             "invalid": "this.parent.count.value < 6"
                         },
                         "switch7": {
@@ -3671,7 +5149,7 @@
                             "name": "State 7",
                             "begin": 13,
                             "mask": "0x8000",
-                            "stringTable": "eventScript.event.jumpSwitch.state1",
+                            "stringTable": "eventScript.event.jumpSwitch.assembly.state1",
                             "invalid": "this.parent.count.value < 7"
                         },
                         "switch8": {
@@ -3687,7 +5165,7 @@
                             "name": "State 8",
                             "begin": 15,
                             "mask": "0x8000",
-                            "stringTable": "eventScript.event.jumpSwitch.state1",
+                            "stringTable": "eventScript.event.jumpSwitch.assembly.state1",
                             "invalid": "this.parent.count.value < 8"
                         }
                     }
@@ -5411,7 +6889,12 @@
                             "name": "State 1",
                             "begin": 1,
                             "mask": "0x8000",
-                            "stringTable": "eventScript.event.jumpSwitch.state1"
+                            "stringTable": {
+                                "string": {
+                                    "0": "Off",
+                                    "1": "On"
+                                }
+                            }
                         },
                         "switch2": {
                             "type": "property",
@@ -5426,7 +6909,7 @@
                             "name": "State 2",
                             "begin": 3,
                             "mask": "0x8000",
-                            "stringTable": "eventScript.event.jumpSwitch.state1",
+                            "stringTable": "eventScript.event.jumpSwitch.assembly.state1",
                             "invalid": "this.parent.count.value < 2"
                         },
                         "switch3": {
@@ -5442,7 +6925,7 @@
                             "name": "State 3",
                             "begin": 5,
                             "mask": "0x8000",
-                            "stringTable": "eventScript.event.jumpSwitch.state1",
+                            "stringTable": "eventScript.event.jumpSwitch.assembly.state1",
                             "invalid": "this.parent.count.value < 3"
                         },
                         "switch4": {
@@ -5458,7 +6941,7 @@
                             "name": "State 4",
                             "begin": 7,
                             "mask": "0x8000",
-                            "stringTable": "eventScript.event.jumpSwitch.state1",
+                            "stringTable": "eventScript.event.jumpSwitch.assembly.state1",
                             "invalid": "this.parent.count.value < 4"
                         },
                         "switch5": {
@@ -5474,7 +6957,7 @@
                             "name": "State 5",
                             "begin": 9,
                             "mask": "0x8000",
-                            "stringTable": "eventScript.event.jumpSwitch.state1",
+                            "stringTable": "eventScript.event.jumpSwitch.assembly.state1",
                             "invalid": "this.parent.count.value < 5"
                         },
                         "switch6": {
@@ -5490,7 +6973,7 @@
                             "name": "State 6",
                             "begin": 11,
                             "mask": "0x8000",
-                            "stringTable": "eventScript.event.jumpSwitch.state1",
+                            "stringTable": "eventScript.event.jumpSwitch.assembly.state1",
                             "invalid": "this.parent.count.value < 6"
                         },
                         "switch7": {
@@ -5506,7 +6989,7 @@
                             "name": "State 7",
                             "begin": 13,
                             "mask": "0x8000",
-                            "stringTable": "eventScript.event.jumpSwitch.state1",
+                            "stringTable": "eventScript.event.jumpSwitch.assembly.state1",
                             "invalid": "this.parent.count.value < 7"
                         },
                         "switch8": {
@@ -5522,7 +7005,7 @@
                             "name": "State 8",
                             "begin": 15,
                             "mask": "0x8000",
-                            "stringTable": "eventScript.event.jumpSwitch.state1",
+                            "stringTable": "eventScript.event.jumpSwitch.assembly.state1",
                             "invalid": "this.parent.count.value < 8"
                         }
                     }
@@ -5955,7 +7438,12 @@
                             "name": "State 1",
                             "begin": 1,
                             "mask": "0x8000",
-                            "stringTable": "eventScript.event.jumpSwitch.state1"
+                            "stringTable": {
+                                "string": {
+                                    "0": "Off",
+                                    "1": "On"
+                                }
+                            }
                         },
                         "switch2": {
                             "type": "property",
@@ -5970,7 +7458,7 @@
                             "name": "State 2",
                             "begin": 3,
                             "mask": "0x8000",
-                            "stringTable": "eventScript.event.jumpSwitch.state1",
+                            "stringTable": "eventScript.event.jumpSwitch.assembly.state1",
                             "invalid": "this.parent.count.value < 2"
                         },
                         "switch3": {
@@ -5986,7 +7474,7 @@
                             "name": "State 3",
                             "begin": 5,
                             "mask": "0x8000",
-                            "stringTable": "eventScript.event.jumpSwitch.state1",
+                            "stringTable": "eventScript.event.jumpSwitch.assembly.state1",
                             "invalid": "this.parent.count.value < 3"
                         },
                         "switch4": {
@@ -6002,7 +7490,7 @@
                             "name": "State 4",
                             "begin": 7,
                             "mask": "0x8000",
-                            "stringTable": "eventScript.event.jumpSwitch.state1",
+                            "stringTable": "eventScript.event.jumpSwitch.assembly.state1",
                             "invalid": "this.parent.count.value < 4"
                         },
                         "switch5": {
@@ -6018,7 +7506,7 @@
                             "name": "State 5",
                             "begin": 9,
                             "mask": "0x8000",
-                            "stringTable": "eventScript.event.jumpSwitch.state1",
+                            "stringTable": "eventScript.event.jumpSwitch.assembly.state1",
                             "invalid": "this.parent.count.value < 5"
                         },
                         "switch6": {
@@ -6034,7 +7522,7 @@
                             "name": "State 6",
                             "begin": 11,
                             "mask": "0x8000",
-                            "stringTable": "eventScript.event.jumpSwitch.state1",
+                            "stringTable": "eventScript.event.jumpSwitch.assembly.state1",
                             "invalid": "this.parent.count.value < 6"
                         },
                         "switch7": {
@@ -6050,7 +7538,7 @@
                             "name": "State 7",
                             "begin": 13,
                             "mask": "0x8000",
-                            "stringTable": "eventScript.event.jumpSwitch.state1",
+                            "stringTable": "eventScript.event.jumpSwitch.assembly.state1",
                             "invalid": "this.parent.count.value < 7"
                         },
                         "switch8": {
@@ -6066,7 +7554,7 @@
                             "name": "State 8",
                             "begin": 15,
                             "mask": "0x8000",
-                            "stringTable": "eventScript.event.jumpSwitch.state1",
+                            "stringTable": "eventScript.event.jumpSwitch.assembly.state1",
                             "invalid": "this.parent.count.value < 8"
                         }
                     }
@@ -6814,6 +8302,19 @@
                 "1": "Right",
                 "2": "Down",
                 "3": "Left"
+            }
+        },
+        "element": {
+            "name": "Element",
+            "string": {
+                "0": "Fire",
+                "1": "Ice",
+                "2": "Lightning",
+                "3": "Poison",
+                "4": "Wind",
+                "5": "Holy",
+                "6": "Earth",
+                "7": "Water"
             }
         },
         "eventCharacters": {

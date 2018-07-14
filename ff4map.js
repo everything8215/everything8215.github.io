@@ -8,10 +8,28 @@
 function FF4Map(rom) {
     
     this.rom = rom;
+    this.name = "FF4Map";
     this.tileset = new FF4MapTileset(rom, this);
-    this.scrollDiv = document.getElementById("map-scroll");
-    this.canvas = document.getElementById("map");
-    this.cursorCanvas = document.getElementById("map-cursor");
+    
+    this.div = document.createElement('div');
+    this.div.id = 'map-edit';
+    
+    this.scrollDiv = document.createElement('div');
+    this.scrollDiv.classList.add('no-select');
+    this.div.appendChild(this.scrollDiv);
+    
+    this.canvas = document.createElement('canvas');
+    this.canvas.id = "map";
+    this.canvas.width = 256;
+    this.canvas.height = 256;
+    this.scrollDiv.appendChild(this.canvas);
+    
+    this.cursorCanvas = document.createElement('canvas');
+    this.cursorCanvas.id = "map-cursor";
+    this.cursorCanvas.width = 16;
+    this.cursorCanvas.height = 16;
+    this.scrollDiv.appendChild(this.cursorCanvas);
+
     this.mapCanvas = document.createElement('canvas');
     this.mapCanvas.width = 256;
     this.mapCanvas.height = 256;
@@ -38,11 +56,11 @@ function FF4Map(rom) {
     this.showCursor = false;
     this.selectedTrigger = null;
     this.isWorld = false;
-    this.observer = new ROMObserver(rom, this, {sub: true, link: true});
+    this.observer = new ROMObserver(rom, this, {sub: true, link: true, array: true});
     this.ppu = new GFX.PPU();
 
     var map = this;
-    this.scrollDiv.parentElement.onscroll = function() { map.scroll() };
+    this.div.onscroll = function() { map.scroll() };
 //    window.addEventListener("resize", map.scroll, false);
     this.scrollDiv.onmousedown = function(e) { map.mouseDown(e) };
     this.scrollDiv.onmouseup = function(e) { map.mouseUp(e) };
@@ -53,19 +71,21 @@ function FF4Map(rom) {
 
     document.getElementById("showLayer1").onchange = function() { map.changeLayer("showLayer1"); twoState(this); };
     document.getElementById("showLayer2").onchange = function() { map.changeLayer("showLayer2"); twoState(this); };
+    document.getElementById("showLayer3").onchange = null;
     document.getElementById("showTriggers").onchange = function() { map.changeLayer("showTriggers"); twoState(this); };
     this.showLayer1 = document.getElementById("showLayer1").checked;
     this.showLayer2 = document.getElementById("showLayer2").checked;
     this.showTriggers = document.getElementById("showTriggers").checked;
+    document.getElementById("zoom").onchange = function() { map.changeZoom(); };
 }
 
 FF4Map.prototype.changeZoom = function() {
     
     // save the old scroll location
-    var x = this.scrollDiv.parentElement.scrollLeft;
-    var y = this.scrollDiv.parentElement.scrollTop;
-    var w = this.scrollDiv.parentElement.clientWidth;
-    var h = this.scrollDiv.parentElement.clientHeight;
+    var x = this.div.scrollLeft;
+    var y = this.div.scrollTop;
+    var w = this.div.clientWidth;
+    var h = this.div.clientHeight;
     x = (x + w / 2) / this.zoom;
     y = (y + h / 2) / this.zoom;
     
@@ -74,8 +94,8 @@ FF4Map.prototype.changeZoom = function() {
     var zoomValue = document.getElementById("zoom-value");
     zoomValue.innerHTML = (this.zoom * 100).toString() + "%";
     
-    this.scrollDiv.parentElement.scrollLeft = x * this.zoom - (w >> 1);
-    this.scrollDiv.parentElement.scrollTop = y * this.zoom - (h >> 1);
+    this.div.scrollLeft = x * this.zoom - (w >> 1);
+    this.div.scrollTop = y * this.zoom - (h >> 1);
         
     this.scrollDiv.style.width = (this.ppu.width * this.zoom).toString() + "px";
     this.scrollDiv.style.height = (this.ppu.height * this.zoom).toString() + "px";
@@ -88,10 +108,10 @@ FF4Map.prototype.scroll = function() {
     this.closeMenu();
 
     // get the visible dimensions
-    var x = this.scrollDiv.parentElement.scrollLeft;
-    var y = this.scrollDiv.parentElement.scrollTop;
-    var w = this.scrollDiv.parentElement.clientWidth;
-    var h = this.scrollDiv.parentElement.clientHeight;
+    var x = this.div.scrollLeft;
+    var y = this.div.scrollTop;
+    var w = this.div.clientWidth;
+    var h = this.div.clientHeight;
 
     var margin = Math.max(w, h) >> 2;
     this.mapRect.r = Math.min(x + w + margin, this.ppu.width * this.zoom);
@@ -237,31 +257,54 @@ FF4Map.prototype.mouseLeave = function(e) {
     this.mouseUp(e);
 }
 
-FF4Map.menuItems = [
-    {label: "Insert Entrance Trigger", onclick: function() {map.insertTrigger()}},
-    {label: "Insert Event Trigger", onclick: function() {map.insertTrigger('eventTriggers')}},
-    {label: "Insert Treasure", onclick: function() {map.insertTrigger('treasureProperties')}},
-    {label: "Insert NPC", onclick: function() {map.insertNPC()}},
-    {label: "Delete Trigger", onclick: function() {map.deleteTrigger()}}
-];
-
 FF4Map.prototype.updateMenu = function() {
     this.menu.innerHTML = "";
-    for (var i = 0; i < FF4Map.menuItems.length; i++) {
+    
+    var self = this;
+    function appendMenuItem(label, onclick) {
         var li = document.createElement('li');
-        var item = FF4Map.menuItems[i];
         li.classList.add("menu-item");
-        if (item.label === "Delete Trigger" && !this.selectedTrigger) {
-            li.classList.add("menu-item-disabled");
-        } else if (item.label === "Insert Treasure" && this.isWorld) {
-            li.classList.add("menu-item-disabled");
+        li.innerHTML = label;
+        if (onclick) {
+            li.onclick = onclick;
         } else {
-            li.onclick = item.onclick;
+            li.classList.add("menu-item-disabled");
         }
-        li.innerHTML = item.label;
-        this.menu.appendChild(li);
+        self.menu.appendChild(li);
     }
+    
+    appendMenuItem("Insert Entrance Trigger", function() {self.insertTrigger()});
+    appendMenuItem("Insert Event Trigger", function() {self.insertTrigger('eventTriggers')});
+    appendMenuItem("Insert Treasure", this.isWorld ? null : function() {self.insertTrigger('treasureProperties')});
+    appendMenuItem("Insert NPC", this.isWorld ? null : function() {self.insertNPC()});
+    appendMenuItem("Delete Trigger", !this.selectedTrigger ? null : function() {self.deleteTrigger()});
 }
+
+//FF4Map.menuItems = [
+//    {label: "Insert Entrance Trigger", onclick: function() {map.insertTrigger()}},
+//    {label: "Insert Event Trigger", onclick: function() {map.insertTrigger('eventTriggers')}},
+//    {label: "Insert Treasure", onclick: function() {map.insertTrigger('treasureProperties')}},
+//    {label: "Insert NPC", onclick: function() {map.insertNPC()}},
+//    {label: "Delete Trigger", onclick: function() {map.deleteTrigger()}}
+//];
+//
+//FF4Map.prototype.updateMenu = function() {
+//    this.menu.innerHTML = "";
+//    for (var i = 0; i < FF4Map.menuItems.length; i++) {
+//        var li = document.createElement('li');
+//        var item = FF4Map.menuItems[i];
+//        li.classList.add("menu-item");
+//        if (item.label === "Delete Trigger" && !this.selectedTrigger) {
+//            li.classList.add("menu-item-disabled");
+//        } else if (item.label === "Insert Treasure" && this.isWorld) {
+//            li.classList.add("menu-item-disabled");
+//        } else {
+//            li.onclick = item.onclick;
+//        }
+//        li.innerHTML = item.label;
+//        this.menu.appendChild(li);
+//    }
+//}
 
 FF4Map.prototype.openMenu = function(e) {
     if (this.l !== 3) return; // no menu unless editing triggers
@@ -457,6 +500,12 @@ FF4Map.prototype.drawCursor = function() {
     x++; y++; w -= 2; h -= 2;
     ctx.strokeStyle = "black";
     ctx.strokeRect(x, y, w, h);
+}
+
+FF4Map.prototype.selectObject = function(object) {
+    document.getElementById("tileset-div").classList.remove('hidden');
+    document.getElementById("tileset-layers").classList.remove('hidden');
+    this.loadMap(object.i);
 }
 
 FF4Map.prototype.loadMap = function(m) {
@@ -763,124 +812,137 @@ FF4Map.prototype.loadTriggers = function() {
                 trigger.map.offset = 256;
             }
         }
-        this.triggers.push(triggers.item(i));
+        this.triggers.push(trigger);
     }
 
     // load npcs
     if (this.isWorld) return;
     var npcIndex = this.mapProperties.npc.value;
-    if (npcIndex === 0 && this.m) return;
+    if (npcIndex === 0 && this.m !== 0) return;
     var offset = 0;
     if (this.mapProperties.npcMSB.value || this.m >= 256) {
         npcIndex += 256;
         offset = 256;
     }
     var npcProperties = this.rom.npcProperties.item(npcIndex);
-    var npcDefinition = {
-        "type": "data",
-        "key": "npcProperties",
-        "name": "NPC %i",
-        "assembly": {
-            "switch": {
-                "type": "property",
-                "name": "NPC Switch",
-                "begin": 0,
-                "offset": offset,
-                "link": "npcPointers[%i]",
-                "stringTable": "npcSwitch"
-            },
-            "x": {
-                "type": "property",
-                "name": "X Position",
-                "begin": 1,
-                "hidden": true,
-                "mask": "0x3F"
-            },
-            "randomMovement": {
-                "type": "property",
-                "name": "Random Movement",
-                "begin": 1,
-                "mask": "0x80",
-                "bool": true
-            },
-            "y": {
-                "type": "property",
-                "name": "Y Position",
-                "begin": 2,
-                "hidden": true,
-                "mask": "0x3F"
-            },
-            "speed": {
-                "type": "property",
-                "name": "Speed",
-                "begin": 3,
-                "mask": "0xC0",
-                "stringTable": {
-                    "string": {
-                        "0": "Slow",
-                        "1": "Normal",
-                        "2": "Fast",
-                        "3": "Very Fast"
-                    }
-                }
-            },
-            "animated": {
-                "type": "property",
-                "name": "Animated",
-                "begin": 3,
-                "mask": "0x20",
-                "bool": true
-            },
-            "reaction": {
-                "type": "property",
-                "name": "Reaction",
-                "begin": 3,
-                "mask": "0x10",
-                "stringTable": {
-                    "string": {
-                        "0": "None",
-                        "1": "Face Party"
-                    }
-                }
-            },
-            "palette": {
-                "type": "property",
-                "name": "Palette",
-                "begin": 3,
-                "mask": "0x0C"
-            },
-            "direction": {
-                "type": "property",
-                "name": "Facing Direction",
-                "begin": 3,
-                "mask": "0x03",
-                "stringTable": {
-                    "string": {
-                        "0": "Up",
-                        "1": "Right",
-                        "2": "Down",
-                        "3": "Left"
-                    }
-                }
-            }
-        },
-        "length": 4
-    };
+    this.observer.startObserving(npcProperties, this.reloadTriggers);
     
-    for (var n = 0; npcProperties.data[n * 4]; n++) {
-        var key = "npc" + n.toString();
-        var npc = npcProperties.assembly[key];
-        if (!npc) {
-            // create the npc assembly
-            npcDefinition.begin = n * 4;
-            npc = ROMObject.create(this.rom, npcDefinition, npcProperties);
-            npcProperties.assembly[key] = npc;
-            npc.disassemble(npcProperties.data);
-            npc.i = n;
+    for (i = 0; i < npcProperties.array.length; i++) {
+        var npc = npcProperties.item(i);
+        if (npc.switch.offset !== offset) {
+            npc.switch.value += offset;
+            npc.switch.offset = offset;
+            npc.switch.min = offset + 1;
         }
         this.triggers.push(npc);
     }
-    this.observer.startObserving(npcProperties, this.reloadTriggers);
+    
+//    var npcDefinition = {
+//        "type": "data",
+//        "key": "npcProperties",
+//        "name": "NPC %i",
+//        "assembly": {
+//            "switch": {
+//                "type": "property",
+//                "name": "NPC Switch",
+//                "begin": 0,
+//                "offset": offset,
+//                "min": offset + 1,
+//                "link": "npcPointers[%i]",
+//                "stringTable": "npcSwitch"
+//            },
+//            "x": {
+//                "type": "property",
+//                "name": "X Position",
+//                "begin": 1,
+//                "hidden": true,
+//                "mask": "0x3F"
+//            },
+//            "randomMovement": {
+//                "type": "property",
+//                "name": "Random Movement",
+//                "begin": 1,
+//                "mask": "0x80",
+//                "bool": true
+//            },
+//            "y": {
+//                "type": "property",
+//                "name": "Y Position",
+//                "begin": 2,
+//                "hidden": true,
+//                "mask": "0x3F"
+//            },
+//            "speed": {
+//                "type": "property",
+//                "name": "Speed",
+//                "begin": 3,
+//                "mask": "0xC0",
+//                "stringTable": {
+//                    "string": {
+//                        "0": "Slow",
+//                        "1": "Normal",
+//                        "2": "Fast",
+//                        "3": "Very Fast"
+//                    }
+//                }
+//            },
+//            "animated": {
+//                "type": "property",
+//                "name": "Animated",
+//                "begin": 3,
+//                "mask": "0x20",
+//                "bool": true
+//            },
+//            "reaction": {
+//                "type": "property",
+//                "name": "Reaction",
+//                "begin": 3,
+//                "mask": "0x10",
+//                "stringTable": {
+//                    "string": {
+//                        "0": "None",
+//                        "1": "Face Party"
+//                    }
+//                }
+//            },
+//            "palette": {
+//                "type": "property",
+//                "name": "Palette",
+//                "begin": 3,
+//                "mask": "0x0C"
+//            },
+//            "direction": {
+//                "type": "property",
+//                "name": "Facing Direction",
+//                "begin": 3,
+//                "mask": "0x03",
+//                "stringTable": {
+//                    "string": {
+//                        "0": "Up",
+//                        "1": "Right",
+//                        "2": "Down",
+//                        "3": "Left"
+//                    }
+//                }
+//            }
+//        },
+//        "length": 4
+//    };
+//    
+//    for (var n = 0; npcProperties.data[n * 4] !== 0; n++) {
+//        var key = "npc" + n.toString();
+//        var npc = npcProperties.assembly[key];
+//        if (!npc) {
+//            // create the npc assembly
+//            npcDefinition.begin = n * 4;
+//            npc = ROMObject.create(this.rom, npcDefinition, npcProperties);
+//            npcProperties.assembly[key] = npc;
+//            npc.disassemble(npcProperties.data);
+//            npc.i = n;
+//        }
+//        this.triggers.push(npc);
+//    }
+//    this.observer.startObserving(npcProperties, this.reloadTriggers);
 }
 
 FF4Map.prototype.insertTrigger = function(type) {
@@ -947,6 +1009,24 @@ FF4Map.prototype.updateTreasures = function() {
 
 FF4Map.prototype.insertNPC = function() {
     this.closeMenu();
+    
+    // get the npc properties
+    if (this.isWorld) return;
+    var npcIndex = this.mapProperties.npc.value;
+    if (npcIndex === 0 && this.m !== 0) return;
+    var npcProperties = this.rom.npcProperties.item(npcIndex);
+
+    var npc = npcProperties.blankAssembly();
+
+    this.rom.beginAction();
+    npc.x.setValue(this.clickedCol);
+    npc.y.setValue(this.clickedRow);
+    npcProperties.insertAssembly(npc);
+    this.rom.endAction();
+    
+    this.observer.startObserving(npc, this.reloadTriggers);
+    this.selectedTrigger = npc;
+    this.rom.select(npc);
 }
 
 FF4Map.prototype.deleteTrigger = function() {
@@ -1099,7 +1179,7 @@ FF4Map.prototype.drawNPC = function(npc) {
     var h = 16;
 
     var index = npc.switch.value;
-    var g = this.rom.npcGraphicsProperties.item(index).graphics.value;
+    var g = this.rom.npcPointers.item(index).graphics.value;
     var direction = npc.direction.value;
     var p = npc.palette.value;
 

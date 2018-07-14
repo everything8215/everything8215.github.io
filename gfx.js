@@ -23,6 +23,7 @@ GFX.GraphicsFormat = {
     linear8bpp: "linear8bpp",
     linear4bpp: "linear4bpp",
     linear2bpp: "linear2bpp",
+    linear1bpp: "linear1bpp",
     nes2bpp: "nes2bpp",
     nes1bpp: "nes1bpp",
     snesMode7: "snesMode7",
@@ -169,6 +170,54 @@ GFX.encodeLinear2bpp = function(data) {
         a3 = (src[s++] || 0) & 0x03;
         a4 = (src[s++] || 0) & 0x03;
         dest[d++] = a1 | (a2 << 2) | (a3 << 4) | (a4 << 6);
+    }
+    return dest;
+}
+
+GFX.decodeLinear1bpp = function(data) {
+    
+    // 8-bit source, 8-bit destination
+    var src = new Uint8Array(data.buffer, data.byteOffset, data.byteLength);
+    var dest = new Uint8Array(data.byteLength * 8);
+    
+    var s = 0;
+    var d = 0;
+    var c;
+
+    while (s < src.length) {
+        c = src[s++];
+        dest[d++] = c & 1; c >>= 1;
+        dest[d++] = c & 1; c >>= 1;
+        dest[d++] = c & 1; c >>= 1;
+        dest[d++] = c & 1; c >>= 1;
+        dest[d++] = c & 1; c >>= 1;
+        dest[d++] = c & 1; c >>= 1;
+        dest[d++] = c & 1; c >>= 1;
+        dest[d++] = c & 1;
+    }
+    return dest;
+}
+
+GFX.encodeLinear1bpp = function(data) {
+    
+    // 8-bit source, 8-bit destination
+    var src = new Uint8Array(data.buffer, data.byteOffset, data.byteLength);
+    var dest = new Uint8Array(Math.ceil(data.byteLength / 8));
+    
+    var s = 0;
+    var d = 0;
+    var a;
+
+    while (s < src.length) {
+        a = src[s++] & 1;
+        a |= (src[s++] & 1) << 1;
+        a |= (src[s++] & 1) << 2;
+        a |= (src[s++] & 1) << 3;
+        a |= (src[s++] & 1) << 4;
+        a |= (src[s++] & 1) << 5;
+        a |= (src[s++] & 1) << 6;
+        a |= (src[s++] & 1) << 7;
+        dest[d++] = a;
     }
     return dest;
 }

@@ -7,154 +7,95 @@
     "system": "sfc",
     "mode": "hiROM",
     "assembly": {
-        "snesHeader": {
-            "type": "data",
-            "name": "SNES Header",
-            "range": "0xC0FFC0-0xC0FFE0",
-            "assembly": {
-                "gameTitle": {
-                    "type": "text",
-                    "name": "Game Title",
-                    "begin": 0,
-                    "length": 21
-                },
-                "checksumInverse": {
-                    "type": "property",
-                    "name": "Checksum Inverse",
-                    "begin": 28,
-                    "mask": "0xFFFF"
-                },
-                "checksum": {
-                    "type": "property",
-                    "name": "Checksum",
-                    "begin": 30,
-                    "mask": "0xFFFF"
-                }
-            }
-        },
-        "mapProperties": {
+        "entranceTriggers": {
             "type": "array",
-            "name": "Map Properties",
-            "range": "0xCE9C00-0xCED000",
+            "name": "Entrance Triggers",
+            "range": "0xCE3AC0-0xCE58D2",
+            "isSequential": true,
             "array": {
                 "length": 512
             },
             "assembly": {
-                "type": "data",
+                "type": "array",
                 "assembly": {
-                    "colorMath": {
-                        "type": "property",
-                        "name": "Color Math",
-                        "begin": 4,
-                        "mask": "0x3F"
+                    "type": "data",
+                    "assembly": {
+                        "x": {
+                            "type": "property",
+                            "name": "X Position",
+                            "begin": 0,
+                            "hidden": true
+                        },
+                        "y": {
+                            "type": "property",
+                            "name": "Y Position",
+                            "begin": 1,
+                            "hidden": true
+                        },
+                        "map": {
+                            "type": "property",
+                            "name": "Map",
+                            "begin": 2,
+                            "mask": "0x03FF",
+                            "stringTable": "mapProperties"
+                        },
+                        "xDest": {
+                            "type": "property",
+                            "name": "X Destination",
+                            "begin": 4
+                        },
+                        "yDest": {
+                            "type": "property",
+                            "name": "Y Destination",
+                            "begin": 5
+                        }
                     },
-                    "tileProperties": {
-                        "type": "property",
-                        "name": "Tile Properties",
-                        "begin": 5
-                    },
-                    "tileset": {
-                        "type": "property",
-                        "name": "Tileset",
-                        "begin": 8
-                    },
-                    "gfx1": {
-                        "type": "property",
-                        "name": "Graphics 1",
-                        "begin": 9,
-                        "mask": "0x3F"
-                    },
-                    "gfx2": {
-                        "type": "property",
-                        "name": "Graphics 2",
-                        "begin": 9,
-                        "mask": "0x0FC0"
-                    },
-                    "gfx3": {
-                        "type": "property",
-                        "name": "Graphics 3",
-                        "begin": 10,
-                        "mask": "0x03F0"
-                    },
-                    "gfxLayer3": {
-                        "type": "property",
-                        "name": "Layer 3 Graphics",
-                        "begin": 11,
-                        "mask": "0xFC"
-                    },
-                    "layout1": {
-                        "type": "property",
-                        "name": "Layer 1 Layout",
-                        "begin": 12,
-                        "mask": "0x03FF"
-                    },
-                    "layout2": {
-                        "type": "property",
-                        "name": "Layer 2 Layout",
-                        "begin": 13,
-                        "mask": "0x0FFC"
-                    },
-                    "layout3": {
-                        "type": "property",
-                        "name": "Layer 3 Layout",
-                        "begin": 14,
-                        "mask": "0x3FF0"
-                    },
-                    "palette": {
-                        "type": "property",
-                        "name": "Palette",
-                        "begin": 22
-                    }
-                },
-                "length": 26
-            },
-            "stringTable": {
-                "default": "Map %i",
-                "length": 512,
-                "string": {
-					"0x0000": "World 1",
-					"0x0001": "World 2",
-					"0x0002": "World 3",
-					"0x0003": "Underwater 2",
-					"0x0004": "Underwater 3",
-                    "0x0020": "Tule",
-                    "0x0028": "Torna Canal",
-                    "0x0033": "Carwen",
-                    "0x0040": "Walse",
-                    "0x0048": "Castle Tycoon",
-                    "0x0059": "Castle Walse",
-                    "0x0083": "Karnak Castle",
-                    "0x0093": "Karnak",
-                    "0x00AA": "Istory",
-                    "0x00B0": "Jachol",
-                    "0x00B8": "Crescent",
-                    "0x00C8": "Lix",
-                    "0x00F7": "Regole",
-                    "0x0109": "Castle of Bal",
-                    "0x0115": "Great Sea Trench",
-                    "0x0119": "Quelb",
-                    "0x0122": "Barrier Tower",
-                    "0x012B": "Surgate Castle",
-                    "0x015E": "Moore",
-                    "0x017A": "Pyramid of Moore",
-                    "0x01D2": "Mirage Town"
+                    "length": 6
                 }
-            }
-        },
-        "mapGraphics": {
-            "type": "array",
-            "name": "Map Graphics",
-            "range": "0xDC2E24-0xDF9B00",
-            "array": {
-                "length": 40
-            },
-            "assembly": {
-                "format": "snes4bpp"
             },
             "pointerTable": {
-                "range": "0xDC2D84-0xDC2E24",
-                "pointerLength": 4,
-                "offset": "0xDC2E24"
+                "range": "0xCE36C0-0xCE3AC0",
+                "offset": "0xCE36C0"
+            }
+        },
+        "eventTriggers": {
+            "type": "array",
+            "name": "Event Triggers",
+            "range": "0xCE2800-0xCE36C0",
+            "isSequential": true,
+            "array": {
+                "length": 512
+            },
+            "assembly": {
+                "type": "array",
+                "assembly": {
+                    "type": "data",
+                    "assembly": {
+                        "x": {
+                            "type": "property",
+                            "name": "X Position",
+                            "begin": 0,
+                            "hidden": true
+                        },
+                        "y": {
+                            "type": "property",
+                            "name": "Y Position",
+                            "begin": 1,
+                            "hidden": true
+                        },
+                        "event": {
+                            "type": "property",
+                            "name": "Event",
+                            "begin": 2,
+                            "mask": "0xFFFF"
+                        }
+                    },
+                    "length": 4
+                }
+            },
+            "pointerTable": {
+                "range": "0xCE2400-0xCE2800",
+                "offset": "0xCE2400"
             }
         },
         "mapAnimationGraphics": {
@@ -337,64 +278,6 @@
                 }
             }
         },
-        "mapGraphicsLayer3": {
-            "type": "array",
-            "name": "Map Graphics (Layer 3)",
-            "range": "0xDC0024-0xDC2D84",
-            "array": {
-                "length": 18
-            },
-            "assembly": {
-                "format": "snes2bpp"
-            },
-            "pointerTable": {
-                "range": "0xDC0000-0xDC0024",
-                "offset": "0xDC0024"
-            }
-        },
-        "mapPalettes": {
-            "type": "array",
-            "name": "Map Palettes",
-            "range": "0xC3BB00-0xC3E700",
-            "array": {
-                "length": 44
-            },
-            "assembly": {
-                "length": 256,
-                "format": "bgr555"
-            }
-        },
-        "mapTilesets": {
-            "type": "array",
-            "name": "Map Tilesets",
-            "range": "0xCF0038-0xCFCA90",
-            "array": {
-                "length": 28
-            },
-            "assembly": {
-                "format": "ff5-lzss"
-            },
-            "pointerTable": {
-                "range": "0xCF0000-0xCF0038",
-                "offset": "0xCF0000"
-            }
-        },
-        "mapLayouts": {
-            "type": "array",
-            "name": "Map Layouts",
-            "range": "0xCB0290-0xCDFA40",
-            "autoBank": true,
-            "array": {
-                "length": 324
-            },
-            "assembly": {
-                "format": "ff5-lzss"
-            },
-            "pointerTable": {
-                "range": "0xCB0000-0xCB0290",
-                "offset": "0xCB0000"
-            }
-        },
         "mapColorMath": {
             "type": "array",
             "name": "Map Color Math Properties",
@@ -535,6 +418,190 @@
                 "length": 3
             }
         },
+        "mapGraphics": {
+            "type": "array",
+            "name": "Map Graphics",
+            "range": "0xDC2E24-0xDF9B00",
+            "array": {
+                "length": 40
+            },
+            "assembly": {
+                "format": "snes4bpp"
+            },
+            "pointerTable": {
+                "range": "0xDC2D84-0xDC2E24",
+                "pointerLength": 4,
+                "offset": "0xDC2E24"
+            }
+        },
+        "mapGraphicsLayer3": {
+            "type": "array",
+            "name": "Map Graphics (Layer 3)",
+            "range": "0xDC0024-0xDC2D84",
+            "array": {
+                "length": 18
+            },
+            "assembly": {
+                "format": "snes2bpp"
+            },
+            "pointerTable": {
+                "range": "0xDC0000-0xDC0024",
+                "offset": "0xDC0024"
+            }
+        },
+        "mapLayouts": {
+            "type": "array",
+            "name": "Map Layouts",
+            "range": "0xCB0290-0xCDFA40",
+            "autoBank": true,
+            "array": {
+                "length": 324
+            },
+            "assembly": {
+                "format": "ff5-lzss"
+            },
+            "pointerTable": {
+                "range": "0xCB0000-0xCB0290",
+                "offset": "0xCB0000"
+            }
+        },
+        "mapPalettes": {
+            "type": "array",
+            "name": "Map Palettes",
+            "range": "0xC3BB00-0xC3E700",
+            "array": {
+                "length": 44
+            },
+            "assembly": {
+                "length": 256,
+                "format": "bgr555"
+            }
+        },
+        "mapProperties": {
+            "type": "array",
+            "name": "Map Properties",
+            "range": "0xCE9C00-0xCED000",
+            "array": {
+                "length": 512
+            },
+            "assembly": {
+                "type": "data",
+                "editor": "FF5Map",
+                "assembly": {
+                    "colorMath": {
+                        "type": "property",
+                        "name": "Color Math",
+                        "begin": 4,
+                        "mask": "0x3F"
+                    },
+                    "tileProperties": {
+                        "type": "property",
+                        "name": "Tile Properties",
+                        "begin": 5
+                    },
+                    "tileset": {
+                        "type": "property",
+                        "name": "Tileset",
+                        "begin": 8
+                    },
+                    "gfx1": {
+                        "type": "property",
+                        "name": "Graphics 1",
+                        "begin": 9,
+                        "mask": "0x3F"
+                    },
+                    "gfx2": {
+                        "type": "property",
+                        "name": "Graphics 2",
+                        "begin": 9,
+                        "mask": "0x0FC0"
+                    },
+                    "gfx3": {
+                        "type": "property",
+                        "name": "Graphics 3",
+                        "begin": 10,
+                        "mask": "0x03F0"
+                    },
+                    "gfxLayer3": {
+                        "type": "property",
+                        "name": "Layer 3 Graphics",
+                        "begin": 11,
+                        "mask": "0xFC"
+                    },
+                    "layout1": {
+                        "type": "property",
+                        "name": "Layer 1 Layout",
+                        "begin": 12,
+                        "mask": "0x03FF"
+                    },
+                    "layout2": {
+                        "type": "property",
+                        "name": "Layer 2 Layout",
+                        "begin": 13,
+                        "mask": "0x0FFC"
+                    },
+                    "layout3": {
+                        "type": "property",
+                        "name": "Layer 3 Layout",
+                        "begin": 14,
+                        "mask": "0x3FF0"
+                    },
+                    "palette": {
+                        "type": "property",
+                        "name": "Palette",
+                        "begin": 22
+                    }
+                },
+                "length": 26
+            },
+            "stringTable": {
+                "default": "Map %i",
+                "length": 512,
+                "string": {
+					"0x0000": "World 1",
+					"0x0001": "World 2",
+					"0x0002": "World 3",
+					"0x0003": "Underwater 2",
+					"0x0004": "Underwater 3",
+                    "0x0020": "Tule",
+                    "0x0028": "Torna Canal",
+                    "0x0033": "Carwen",
+                    "0x0040": "Walse",
+                    "0x0048": "Castle Tycoon",
+                    "0x0059": "Castle Walse",
+                    "0x0083": "Karnak Castle",
+                    "0x0093": "Karnak",
+                    "0x00AA": "Istory",
+                    "0x00B0": "Jachol",
+                    "0x00B8": "Crescent",
+                    "0x00C8": "Lix",
+                    "0x00F7": "Regole",
+                    "0x0109": "Castle of Bal",
+                    "0x0115": "Great Sea Trench",
+                    "0x0119": "Quelb",
+                    "0x0122": "Barrier Tower",
+                    "0x012B": "Surgate Castle",
+                    "0x015E": "Moore",
+                    "0x017A": "Pyramid of Moore",
+                    "0x01D2": "Mirage Town"
+                }
+            }
+        },
+        "mapTilesets": {
+            "type": "array",
+            "name": "Map Tilesets",
+            "range": "0xCF0038-0xCFCA90",
+            "array": {
+                "length": 28
+            },
+            "assembly": {
+                "format": "ff5-lzss"
+            },
+            "pointerTable": {
+                "range": "0xCF0000-0xCF0038",
+                "offset": "0xCF0000"
+            }
+        },
         "mapTreasures": {
             "type": "array",
             "name": "Map Treasures",
@@ -552,123 +619,6 @@
                     }
                 },
                 "length": 1
-            }
-        },
-        "treasureProperties": {
-            "type": "array",
-            "name": "Treasure Properties",
-            "range": "0xD13210-0xD13610",
-            "array": {
-                "length": 256
-            },
-            "assembly": {
-                "type": "data",
-                "assembly": {
-                    "x": {
-                        "type": "property",
-                        "name": "X Position",
-                        "begin": 0,
-                        "hidden": true
-                    },
-                    "y": {
-                        "type": "property",
-                        "name": "Y Position",
-                        "begin": 1,
-                        "hidden": true
-                    }
-                },
-                "length": 4
-            }
-        },
-        "eventTriggers": {
-            "type": "array",
-            "name": "Event Triggers",
-            "range": "0xCE2800-0xCE36C0",
-            "isSequential": true,
-            "array": {
-                "length": 512
-            },
-            "assembly": {
-                "type": "array",
-                "assembly": {
-                    "type": "data",
-                    "assembly": {
-                        "x": {
-                            "type": "property",
-                            "name": "X Position",
-                            "begin": 0,
-                            "hidden": true
-                        },
-                        "y": {
-                            "type": "property",
-                            "name": "Y Position",
-                            "begin": 1,
-                            "hidden": true
-                        },
-                        "event": {
-                            "type": "property",
-                            "name": "Event",
-                            "begin": 2,
-                            "mask": "0xFFFF"
-                        }
-                    },
-                    "length": 4
-                }
-            },
-            "pointerTable": {
-                "range": "0xCE2400-0xCE2800",
-                "offset": "0xCE2400"
-            }
-        },
-        "entranceTriggers": {
-            "type": "array",
-            "name": "Entrance Triggers",
-            "range": "0xCE3AC0-0xCE58D2",
-            "isSequential": true,
-            "array": {
-                "length": 512
-            },
-            "assembly": {
-                "type": "array",
-                "assembly": {
-                    "type": "data",
-                    "assembly": {
-                        "x": {
-                            "type": "property",
-                            "name": "X Position",
-                            "begin": 0,
-                            "hidden": true
-                        },
-                        "y": {
-                            "type": "property",
-                            "name": "Y Position",
-                            "begin": 1,
-                            "hidden": true
-                        },
-                        "map": {
-                            "type": "property",
-                            "name": "Map",
-                            "begin": 2,
-                            "mask": "0x03FF",
-                            "stringTable": "mapProperties"
-                        },
-                        "xDest": {
-                            "type": "property",
-                            "name": "X Destination",
-                            "begin": 4
-                        },
-                        "yDest": {
-                            "type": "property",
-                            "name": "Y Destination",
-                            "begin": 5
-                        }
-                    },
-                    "length": 6
-                }
-            },
-            "pointerTable": {
-                "range": "0xCE36C0-0xCE3AC0",
-                "offset": "0xCE36C0"
             }
         },
         "npcProperties": {
@@ -732,27 +682,55 @@
                 "offset": "0xCE59C0"
             }
         },
-        "worldPaletteAssignments": {
-            "type": "array",
-            "name": "World Palette Assignments",
-            "range": "0xCFF9C0-0xCFFCC0",
-            "array": {
-                "length": 3
-            },
+        "snesHeader": {
+            "type": "data",
+            "name": "SNES Header",
+            "range": "0xC0FFC0-0xC0FFE0",
             "assembly": {
-                "length": "0x0100"
+                "gameTitle": {
+                    "type": "text",
+                    "name": "Game Title",
+                    "begin": 0,
+                    "length": 21
+                },
+                "checksumInverse": {
+                    "type": "property",
+                    "name": "Checksum Inverse",
+                    "begin": 28,
+                    "mask": "0xFFFF"
+                },
+                "checksum": {
+                    "type": "property",
+                    "name": "Checksum",
+                    "begin": 30,
+                    "mask": "0xFFFF"
+                }
             }
         },
-        "worldPalettes": {
+        "treasureProperties": {
             "type": "array",
-            "name": "World Palettes",
-            "range": "0xCFFCC0-0xCFFFC0",
+            "name": "Treasure Properties",
+            "range": "0xD13210-0xD13610",
             "array": {
-                "length": 3
+                "length": 256
             },
             "assembly": {
-                "length": "0x0100",
-                "format": "bgr555"
+                "type": "data",
+                "assembly": {
+                    "x": {
+                        "type": "property",
+                        "name": "X Position",
+                        "begin": 0,
+                        "hidden": true
+                    },
+                    "y": {
+                        "type": "property",
+                        "name": "Y Position",
+                        "begin": 1,
+                        "hidden": true
+                    }
+                },
+                "length": 4
             }
         },
         "worldGraphics": {
@@ -767,15 +745,27 @@
                 "format": "linear4bpp"
             }
         },
-        "worldTilesets": {
+        "worldPalettes": {
             "type": "array",
-            "name": "World Tilesets",
-            "range": "0xCFF0C0-0xCFF9C0",
+            "name": "World Palettes",
+            "range": "0xCFFCC0-0xCFFFC0",
             "array": {
                 "length": 3
             },
             "assembly": {
-                "length": "0x0300"
+                "length": "0x0100",
+                "format": "bgr555"
+            }
+        },
+        "worldPaletteAssignments": {
+            "type": "array",
+            "name": "World Palette Assignments",
+            "range": "0xCFF9C0-0xCFFCC0",
+            "array": {
+                "length": 3
+            },
+            "assembly": {
+                "length": "0x0100"
             }
         },
         "worldLayouts": {
@@ -792,6 +782,17 @@
             "pointerTable": {
                 "range": "0xCFE000-0xCFEA00",
                 "offset": "0xC70000"
+            }
+        },
+        "worldTilesets": {
+            "type": "array",
+            "name": "World Tilesets",
+            "range": "0xCFF0C0-0xCFF9C0",
+            "array": {
+                "length": 3
+            },
+            "assembly": {
+                "length": "0x0300"
             }
         }
     }

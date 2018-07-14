@@ -6,10 +6,28 @@
 function FF5Map(rom) {
     
     this.rom = rom;
+    this.name = "FF5Map";
     this.tileset = new FF5MapTileset(rom, this);
-    this.scrollDiv = document.getElementById("map-scroll");
-    this.canvas = document.getElementById("map");
-    this.cursorCanvas = document.getElementById("map-cursor");
+    
+    this.div = document.createElement('div');
+    this.div.id = 'map-edit';
+    
+    this.scrollDiv = document.createElement('div');
+    this.scrollDiv.classList.add('no-select');
+    this.div.appendChild(this.scrollDiv);
+    
+    this.canvas = document.createElement('canvas');
+    this.canvas.id = "map";
+    this.canvas.width = 256;
+    this.canvas.height = 256;
+    this.scrollDiv.appendChild(this.canvas);
+    
+    this.cursorCanvas = document.createElement('canvas');
+    this.cursorCanvas.id = "map-cursor";
+    this.cursorCanvas.width = 16;
+    this.cursorCanvas.height = 16;
+    this.scrollDiv.appendChild(this.cursorCanvas);
+
     this.mapCanvas = document.createElement('canvas');
     this.mapCanvas.width = 256;
     this.mapCanvas.height = 256;
@@ -37,7 +55,7 @@ function FF5Map(rom) {
     this.ppu = new GFX.PPU();
 
     var map = this;
-    this.scrollDiv.parentElement.onscroll = function() { map.scroll() };
+    this.div.onscroll = function() { map.scroll() };
 //    window.addEventListener("resize", map.scroll, false);
     this.scrollDiv.onmousedown = function(e) { map.mouseDown(e) };
     this.scrollDiv.onmouseup = function(e) { map.mouseUp(e) };
@@ -58,17 +76,19 @@ function FF5Map(rom) {
     this.showLayer2 = document.getElementById("showLayer2").checked;
     this.showLayer3 = document.getElementById("showLayer3").checked;
     this.showTriggers = document.getElementById("showTriggers").checked;
+    document.getElementById("zoom").onchange = function() { map.changeZoom(); };
+
     this.showCursor = false;
-    this.observer = new ROMObserver(rom, this, {sub: true, link: true});
+    this.observer = new ROMObserver(rom, this, {sub: true, link: true, array: true});
 }
 
 FF5Map.prototype.changeZoom = function() {
     
     // save the old scroll location
-    var x = this.scrollDiv.parentElement.scrollLeft;
-    var y = this.scrollDiv.parentElement.scrollTop;
-    var w = this.scrollDiv.parentElement.clientWidth;
-    var h = this.scrollDiv.parentElement.clientHeight;
+    var x = this.div.scrollLeft;
+    var y = this.div.scrollTop;
+    var w = this.div.clientWidth;
+    var h = this.div.clientHeight;
     x = (x + w / 2) / this.zoom;
     y = (y + h / 2) / this.zoom;
     
@@ -77,8 +97,8 @@ FF5Map.prototype.changeZoom = function() {
     var zoomValue = document.getElementById("zoom-value");
     zoomValue.innerHTML = (this.zoom * 100).toString() + "%";
     
-    this.scrollDiv.parentElement.scrollLeft = x * this.zoom - (w >> 1);
-    this.scrollDiv.parentElement.scrollTop = y * this.zoom - (h >> 1);
+    this.div.scrollLeft = x * this.zoom - (w >> 1);
+    this.div.scrollTop = y * this.zoom - (h >> 1);
         
     this.scrollDiv.style.width = (this.ppu.width * this.zoom).toString() + "px";
     this.scrollDiv.style.height = (this.ppu.height * this.zoom).toString() + "px";
@@ -89,10 +109,10 @@ FF5Map.prototype.changeZoom = function() {
 FF5Map.prototype.scroll = function() {
     
     // get the visible dimensions
-    var x = this.scrollDiv.parentElement.scrollLeft;
-    var y = this.scrollDiv.parentElement.scrollTop;
-    var w = this.scrollDiv.parentElement.clientWidth;
-    var h = this.scrollDiv.parentElement.clientHeight;
+    var x = this.div.scrollLeft;
+    var y = this.div.scrollTop;
+    var w = this.div.clientWidth;
+    var h = this.div.clientHeight;
 
     var margin = Math.max(w, h) >> 2;
     this.mapRect.r = Math.min(x + w + margin, this.ppu.width * this.zoom);
@@ -380,6 +400,12 @@ FF5Map.prototype.drawCursor = function() {
     x++; y++; w -= 2; h -= 2;
     ctx.strokeStyle = "black";
     ctx.strokeRect(x, y, w, h);
+}
+
+FF5Map.prototype.selectObject = function(object) {
+    document.getElementById("tileset-div").classList.remove('hidden');
+    document.getElementById("tileset-layers").classList.remove('hidden');
+    this.loadMap(object.i);
 }
 
 FF5Map.prototype.loadMap = function(m) {
