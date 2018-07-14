@@ -2433,6 +2433,76 @@
                 "length": "0x0100"
             }
         },
+        "worldTileProperties": {
+            "type": "array",
+            "name": "World Map Tile Properties",
+            "range": "0x148A80-0x148D80",
+            "array": {
+                "length": 3
+            },
+            "assembly": {
+                "type": "array",
+                "array": {
+                    "length": 128
+                },
+                "length": 256,
+                "assembly": {
+                    "type": "data",
+                    "length": 2,
+                    "assembly": {
+                        "byte1": {
+                            "type": "property",
+                            "name": "Passability",
+                            "flag": true,
+                            "stringTable": {
+                                "string": {
+                                    "0": "Downstairs",
+                                    "1": "Chocobo/No Lava",
+                                    "2": "Black Chocobo (Fly)",
+                                    "3": "Black Chocobo (Land)",
+                                    "4": "Hovercraft",
+                                    "5": "Airship",
+                                    "6": "Upstairs",
+                                    "7": "Lunar Whale"
+                                }
+                            }
+                        },
+                        "byte2": {
+                            "type": "property",
+                            "name": "Flags",
+                            "flag": true,
+                            "begin": 1,
+                            "mask": "0xF8",
+                            "stringTable": {
+                                "string": {
+                                    "0": "Bottom of Sprite Hidden",
+                                    "1": "Airship Can Land",
+                                    "2": "?",
+                                    "3": "Enable Random Battles",
+                                    "4": "Trigger"
+                                }
+                            }
+                        },
+                        "battleBackground": {
+                            "type": "property",
+                            "name": "Background",
+                            "begin": 1,
+                            "mask": "0x07",
+                            "stringTable": {
+                                "string": {
+                                    "0": "Grass",
+                                    "1": "Beach",
+                                    "2": "Forest",
+                                    "3": "Desert",
+                                    "4": "Underground",
+                                    "5": "Moon"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "worldTilesets": {
             "type": "array",
             "name": "World Tilesets",
