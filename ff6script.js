@@ -78,7 +78,7 @@ FF6Script.description = function(command) {
 }
 
 FF6Script.string = function(command, key, stringKey) {
-    return command.rom.stringTable[stringKey].formattedString(command[key].value);
+    return command.rom.stringTable[stringKey].fString(command[key].value);
 }
 
 FF6Script.label = function(script, offset) {
@@ -87,6 +87,8 @@ FF6Script.label = function(script, offset) {
 }
 
 FF6Script.initScript = function(script) {
+    
+    if (script.key !== "eventScript") return;
     
     // add references for each map's events
     var triggers, m, t, offset, label;
@@ -114,14 +116,14 @@ FF6Script.initScript = function(script) {
     // startup event
     for (m = 3; m < script.rom.mapProperties.array.length; m++) {
         offset = script.rom.mapProperties.item(m).scriptPointer.value;
-        label = script.rom.stringTable.mapProperties.formattedString(m);
+        label = script.rom.stringTable.mapProperties.fString(m);
         script.addPlaceholder(script.rom.mapProperties.item(m).scriptPointer, offset, "event", label);
     }
     
     // add references for vehicle events
     for (var e = 0; e < script.rom.vehicleEvents.array.length; e++) {
         offset = script.rom.vehicleEvents.item(e).scriptPointer.value;
-        label = script.rom.stringTable.vehicleEvents.formattedString(e);
+        label = script.rom.stringTable.vehicleEvents.fString(e);
         script.addPlaceholder(script.rom.vehicleEvents.item(e).scriptPointer, offset, "vehicle", label);
     }
 
@@ -303,4 +305,32 @@ FF6Script.nextEncoding = function(command) {
         default:
             return command.encoding;
     }
+}
+
+var FF6MonsterScript = {};
+FF6MonsterScript.name = "FF6MonsterScript";
+
+FF6MonsterScript.initScript = function(script) {
+    // add references for monsters
+    for (var e = 0; e < script.rom.monsterScriptPointers.array.length; e++) {
+        var offset = script.rom.monsterScriptPointers.item(e).value;
+        var label = script.rom.stringTable.monsterName.fString(e);
+        script.addPlaceholder(null, offset, "monster", label);
+    }
+}
+
+FF6MonsterScript.description = function(command) {
+    switch (command.key) {
+        case "dialog":
+            var d = command.dialog.value;
+            var dialog = command.rom.monsterDialog.item(d);
+            if (dialog) {
+                return "Display Dialog:<br/>" + dialog.htmlText;
+            } else {
+                return "Display Dialog:<br/>Invalid Dialog Message";
+            }
+            
+        default: break;
+    }
+    return command.name;
 }

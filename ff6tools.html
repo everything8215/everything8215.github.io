@@ -32,7 +32,7 @@
 //
 //                    loadBuiltInDefinition();
 //                };
-//                localROM.open("get", "roms\\ff2u.sfc");
+//                localROM.open("get", "roms\\ff3u.sfc");
 //                localROM.responseType = "arraybuffer";
 //                localROM.send();
                 /////////////////////////////////////////
@@ -243,7 +243,11 @@
                 var data = new Uint8Array(rom.data.length);
                 rom.assemble(data);
                 var definition = JSON.stringify(rom.definition, null, 4);
-                
+
+                // update the script list since the script references will change
+                scriptList.update();
+
+                // create a zip file with the rom and the definition file
                 var zip = new JSZip();
                 zip.file(rom.name + '.' + rom.system, data);
                 zip.file(rom.name + '.json', definition);
@@ -252,43 +256,6 @@
                     // see FileSaver.js
                     saveAs(content, rom.name + ".zip");
                 });
-                
-//                var blob = new Blob([data.buffer]);
-//                
-//                // create a definition blob
-//                var definition = JSON.stringify(rom.definition, null, 4);
-//                var defBlob = new Blob([definition]);
-//                
-//                // Create a hidden link element
-//                var a = document.createElement("a");
-//                a.style = "display: none";
-//                document.body.appendChild(a);
-//                
-//                // Create a DOMString representing the blob and point the link element towards it
-//                var url = window.URL.createObjectURL(blob);
-//                a.href = url;
-//                a.download = rom.name + '.' + rom.system;
-//                
-//                // programatically click the link to trigger the download
-//                a.click();
-//                
-//                // release the reference to the file by revoking the Object URL
-//                window.URL.revokeObjectURL(url);
-//                document.body.removeChild(a);
-//                
-                // update the script list since the script references will change
-                scriptList.update();
-//
-//                // Create a DOMString representing the blob and point the link element towards it
-//                url = window.URL.createObjectURL(defBlob);
-//                a.href = url;
-//                a.download = rom.name + '.json';
-//                
-//                // programatically click the link to trigger the download
-//                a.click();
-//                
-//                // release the reference to the file by revoking the Object URL
-//                window.URL.revokeObjectURL(url);
             }
             
             function selectMap(m) {
@@ -401,7 +368,7 @@
                 span.innerHTML = m.toString();
                 span.classList.add("navListIndex");
                 li.appendChild(span);
-                li.innerHTML += mapNames.formattedString(m);
+                li.innerHTML += mapNames.fString(m);
                 return li;
             }
 

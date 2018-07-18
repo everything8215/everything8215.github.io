@@ -533,7 +533,11 @@ FF6Map.prototype.loadMap = function(m) {
         }
         this.mapProperties = this.rom.mapProperties.item(this.m);
         this.observer.startObserving(this.mapProperties, this.loadMap);
-    }    
+        
+        // set the default battle background
+        var battleEditor = this.rom.getEditor("FF6Battle");
+        if (battleEditor) battleEditor.bg = this.mapProperties.battleBackground.value;
+    }
 
     // get map properties
     var map = this.mapProperties;

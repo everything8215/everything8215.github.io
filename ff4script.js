@@ -25,14 +25,14 @@ FF4Script.initScript = function(script) {
         // add references for npcs
         for (e = 0; e < script.rom.npcPointers.array.length; e++) {
             offset = script.rom.npcPointers.item(e).scriptPointer.value;
-            label = script.rom.stringTable.npcSwitch.formattedString(e);
+            label = script.rom.stringTable.npcSwitch.fString(e);
             script.addPlaceholder(null, offset, "npc", label);
         }
     } else if (script.key === "eventScript") {
         // add references for events
         for (e = 1; e < script.rom.eventPointers.array.length; e++) {
             offset = script.rom.eventPointers.item(e).scriptPointer.value;
-            label = script.rom.stringTable.eventPointers.formattedString(e);
+            label = script.rom.stringTable.eventPointers.fString(e);
             script.addPlaceholder(null, offset, "event", label);
         }
     }
@@ -187,7 +187,7 @@ FF4Script.string = function(command, key, stringKey) {
     } else {
         stringTable = command.rom.stringTable[command[key].stringTable];
     }
-    return stringTable.formattedString(command[key].value);
+    return stringTable.fString(command[key].value);
 }
 
 FF4Script.fixSwitch = function(switchProperty) {

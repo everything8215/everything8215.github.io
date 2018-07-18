@@ -7,6 +7,30 @@
     "system": "sfc",
     "mode": "hiROM",
     "assembly": {
+        "attackNames": {
+            "type": "array",
+            "name": "Attack Names",
+            "range": "0xE6F7B9-0xE6FE8F",
+            "array": {
+                "length": 175
+            },
+            "assembly": {
+                "type": "text",
+                "encoding": "smallText",
+                "length": 10
+            },
+            "stringTable": {
+                "name": "Attack Names",
+                "length": 256,
+                "default": "<attackNames[%i-0x51]>",
+                "string": {
+                    "0x00-0x36": "<spellNames[%i]>",
+                    "0x36-0x51": "<esperNames[%i-0x36]> (<esperAttackNames[%i-0x36]>)",
+                    "0x55-0x5D": "<swdTechNames[%i-0x55]>",
+                    "0xFF": "Nothing"
+                }
+            }
+        },
         "attackProperties": {
             "type": "array",
             "name": "Attack Properties",
@@ -257,85 +281,122 @@
                         "type": "property",
                         "name": "Monster 1",
                         "begin": 2,
+                        "max": "0x01FF",
+                        "msb": "this.parent.monster1MSB",
+                        "format": "msb(14, 0x01, 2, 0x0100)",
                         "stringTable": "monsterName",
-                        "link": "monsterProperties[%i]"
+                        "link": "monsterProperties[%i]",
+                        "special": {
+                            "0x01FF": "Empty"
+                        }
                     },
                     "monster1MSB": {
                         "type": "property",
                         "name": "Monster 1 MSB",
                         "begin": 14,
                         "mask": "0x01",
-                        "bool": true
+                        "bool": true,
+                        "hidden": true
                     },
                     "monster2": {
                         "type": "property",
                         "name": "Monster 2",
                         "begin": 3,
+                        "max": "0x01FF",
+                        "msb": "this.parent.monster2MSB",
                         "stringTable": "monsterName",
-                        "link": "monsterProperties[%i]"
+                        "link": "monsterProperties[%i]",
+                        "special": {
+                            "0x01FF": "Empty"
+                        }
                     },
                     "monster2MSB": {
                         "type": "property",
                         "name": "Monster 2 MSB",
                         "begin": 14,
                         "mask": "0x02",
-                        "bool": true
+                        "bool": true,
+                        "hidden": true
                     },
                     "monster3": {
                         "type": "property",
                         "name": "Monster 3",
                         "begin": 4,
+                        "max": "0x01FF",
+                        "msb": "this.parent.monster3MSB",
                         "stringTable": "monsterName",
-                        "link": "monsterProperties[%i]"
+                        "link": "monsterProperties[%i]",
+                        "special": {
+                            "0x01FF": "Empty"
+                        }
                     },
                     "monster3MSB": {
                         "type": "property",
                         "name": "Monster 3 MSB",
                         "begin": 14,
                         "mask": "0x04",
-                        "bool": true
+                        "bool": true,
+                        "hidden": true
                     },
                     "monster4": {
                         "type": "property",
                         "name": "Monster 4",
                         "begin": 5,
+                        "max": "0x01FF",
+                        "msb": "this.parent.monster4MSB",
                         "stringTable": "monsterName",
-                        "link": "monsterProperties[%i]"
+                        "link": "monsterProperties[%i]",
+                        "special": {
+                            "0x01FF": "Empty"
+                        }
                     },
                     "monster4MSB": {
                         "type": "property",
                         "name": "Monster 4 MSB",
                         "begin": 14,
                         "mask": "0x08",
-                        "bool": true
+                        "bool": true,
+                        "hidden": true
                     },
                     "monster5": {
                         "type": "property",
                         "name": "Monster 5",
                         "begin": 6,
+                        "max": "0x01FF",
+                        "msb": "this.parent.monster5MSB",
                         "stringTable": "monsterName",
-                        "link": "monsterProperties[%i]"
+                        "link": "monsterProperties[%i]",
+                        "special": {
+                            "0x01FF": "Empty"
+                        }
                     },
                     "monster5MSB": {
                         "type": "property",
                         "name": "Monster 5 MSB",
                         "begin": 14,
                         "mask": "0x10",
-                        "bool": true
+                        "bool": true,
+                        "hidden": true
                     },
                     "monster6": {
                         "type": "property",
                         "name": "Monster 6",
                         "begin": 7,
+                        "max": "0x01FF",
+                        "msb": "this.parent.monster6MSB",
                         "stringTable": "monsterName",
-                        "link": "monsterProperties[%i]"
+                        "link": "monsterProperties[%i]",
+                        "special": {
+                            "0x01FF": "Empty"
+                        }
                     },
                     "monster6MSB": {
                         "type": "property",
                         "name": "Monster 6 MSB",
                         "begin": 14,
                         "mask": "0x20",
-                        "bool": true
+                        "bool": true,
+                        "hidden": true
                     },
                     "monster1X": {
                         "type": "property",
@@ -681,6 +742,11 @@
             "array": {
                 "length": 27
             },
+            "assembly": {
+                "type": "text",
+                "name": "Attack Desc.",
+                "encoding": "nullTerminated"
+            },
             "pointerTable": {
                 "range": "0xCFFE40-0xCFFE80",
                 "offset": "0xCF3940"
@@ -694,13 +760,15 @@
                 "length": 27
             },
             "assembly": {
-                "type": "assembly",
+                "type": "text",
+                "name": "Attack Name",
+                "encoding": "smallText",
                 "length": 10
             },
             "stringTable": {
                 "name": "Esper Attack Names",
                 "length": 27,
-                "default": "<esperProperties[%i].attackName>"
+                "default": "<esperAttackNames[%i]>"
             }
         },
         "esperBonusDescriptions": {
@@ -709,6 +777,11 @@
             "range": "0xEDFE00-0xEDFFA7",
             "array": {
                 "length": 17
+            },
+            "assembly": {
+                "type": "text",
+                "name": "Description",
+                "encoding": "nullTerminated"
             },
             "pointerTable": {
                 "range": "0xEDFFD0-0xEE0000",
@@ -733,9 +806,7 @@
                         "length": 9
                     },
                     "description": {
-                        "type": "text",
-                        "name": "Description",
-                        "encoding": "nullTerminated",
+                        "type": "assembly",
                         "external": "esperBonusDescriptions[%i]"
                     }
                 }
@@ -757,7 +828,8 @@
                 "length": 27
             },
             "assembly": {
-                "type": "assembly",
+                "type": "property",
+                "name": "Menu Order",
                 "length": 1
             }
         },
@@ -769,13 +841,15 @@
                 "length": 27
             },
             "assembly": {
-                "type": "assembly",
+                "type": "text",
+                "name": "Name",
+                "encoding": "smallText",
                 "length": 8
             },
             "stringTable": {
                 "name": "Esper Names",
                 "length": 27,
-                "default": "<esperProperties[%i].esperName>"
+                "default": "<esperNames[%i]>"
             }
         },
         "esperProperties": {
@@ -789,28 +863,19 @@
                 "type": "data",
                 "assembly": {
                     "esperName": {
-                        "type": "text",
-                        "name": "Name",
-                        "external": "esperNames[%i]",
-                        "encoding": "smallText",
-                        "length": 8
+                        "type": "assembly",
+                        "external": "esperNames[%i]"
                     },
                     "attackName": {
-                        "type": "text",
-                        "name": "Attack Name",
-                        "external": "esperAttackNames[%i]",
-                        "encoding": "smallText",
-                        "length": 10
+                        "type": "assembly",
+                        "external": "esperAttackNames[%i]"
                     },
                     "attackDescription": {
-                        "type": "text",
-                        "name": "Attack Desc.",
-                        "external": "esperAttackDescriptions[%i]",
-                        "encoding": "nullTerminated"
+                        "type": "assembly",
+                        "external": "esperAttackDescriptions[%i]"
                     },
                     "menuOrder": {
-                        "type": "property",
-                        "name": "Menu Order",
+                        "type": "assembly",
                         "external": "esperMenuOrder[%i]"
                     },
                     "spell1": {
@@ -989,7 +1054,10 @@
                 "length": 256
             },
             "assembly": {
-                "type": "assembly",
+                "type": "property",
+                "name": "Rage Known",
+                "mask": "0x01",
+                "bool": true,
                 "length": 1
             }
         },
@@ -1201,8 +1269,11 @@
                 "length": 512
             },
             "assembly": {
-                "type": "assembly",
-                "length": 1
+                "type": "property",
+                "name": "Battle Group",
+                "length": 1,
+                "mask": "0xFF",
+                "link": "battleGroupsRandom[%i]"
             }
         },
         "mapBattleProbability": {
@@ -1214,8 +1285,18 @@
                 "length": 512
             },
             "assembly": {
-                "type": "assembly",
-                "length": 1
+                "type": "property",
+                "name": "Battle Probability",
+                "length": 1,
+                "mask": "0x03",
+                "stringTable": {
+                    "string": {
+                        "0": "Normal",
+                        "1": "Low",
+                        "2": "High",
+                        "3": "Very High"
+                    }
+                }
             }
         },
         "mapColorMath": {
@@ -1484,8 +1565,8 @@
                         "type": "property",
                         "name": "Title",
                         "begin": 0,
-                        "stringTable": "mapTitles",
-                        "link": "mapTitles[%i]"
+                        "stringTable": "mapTitle",
+                        "link": "mapTitle[%i]"
                     },
                     "song": {
                         "type": "property",
@@ -1494,12 +1575,8 @@
                         "stringTable": "song"
                     },
                     "scriptPointer": {
-                        "type": "property",
-                        "name": "Start-Up Event",
-                        "begin": 0,
-                        "mask": "0xFFFFFF",
-                        "external": "mapStartupEvents[%i]",
-                        "script": "eventScript"
+                        "type": "assembly",
+                        "external": "mapStartupEvents[%i]"
                     },
                     "flags": {
                         "type": "property",
@@ -1759,27 +1836,12 @@
                         "stringTable": "battleBackground"
                     },
                     "battleGroup": {
-                        "type": "property",
-                        "name": "Battle Group",
-                        "begin": 0,
-                        "mask": "0xFF",
-                        "external": "mapBattleGroups[%i]",
-                        "link": "battleGroupsRandom[%i]"
+                        "type": "assembly",
+                        "external": "mapBattleGroups[%i]"
                     },
                     "battleProbability": {
-                        "type": "property",
-                        "name": "Battle Probability",
-                        "begin": 0,
-                        "mask": "0x03",
-                        "external": "mapBattleProbability[%i]",
-                        "stringTable": {
-                            "string": {
-                                "0": "Normal",
-                                "1": "Low",
-                                "2": "High",
-                                "3": "Very High"
-                            }
-                        }
+                        "type": "assembly",
+                        "external": "mapBattleProbability[%i]"
                     },
                     "unknown6_7": {
                         "type": "property",
@@ -2349,8 +2411,11 @@
                 "length": 512
             },
             "assembly": {
-                "type": "assembly",
-                "length": 3
+                "type": "property",
+                "name": "Start-Up Event",
+                "length": 3,
+                "mask": "0xFFFFFF",
+                "script": "eventScript"
             }
         },
         "mapTileProperties": {
@@ -2473,7 +2538,7 @@
                 "offset": "0xDE0000"
             }
         },
-        "mapTitles": {
+        "mapTitle": {
             "type": "array",
             "name": "Map Title",
             "range": "0xCEF100-0xCEF463",
@@ -2491,9 +2556,9 @@
                 "offset": "0xCEF100"
             },
             "stringTable": {
-                "name": "Map Titles",
+                "name": "Map Title",
                 "length": 73,
-                "default": "<mapTitles[%i]>",
+                "default": "<mapTitle[%i]>",
                 "string": {
                     "0": "No Title"
                 }
@@ -2507,7 +2572,8 @@
                 "length": 384
             },
             "assembly": {
-                "type": "assembly",
+                "type": "property",
+                "name": "Attack Animation",
                 "length": 1
             }
         },
@@ -2519,13 +2585,15 @@
                 "length": 384
             },
             "assembly": {
-                "type": "assembly",
+                "type": "text",
+                "name": "Attack Name",
+                "encoding": "smallText",
                 "length": 10
             },
             "stringTable": {
                 "name": "Monster Attack Name",
                 "length": 384,
-                "default": "<monsterProperties[%i].attackName>"
+                "default": "<monsterAttackName[%i]>"
             }
         },
         "monsterAttackControl": {
@@ -2536,8 +2604,34 @@
                 "length": 384
             },
             "assembly": {
-                "type": "assembly",
-                "length": 4
+                "type": "data",
+                "length": 4,
+                "assembly": {
+                    "attack1": {
+                        "type": "property",
+                        "name": "Control Attack 1",
+                        "begin": 0,
+                        "stringTable": "attackNames"
+                    },
+                    "attack2": {
+                        "type": "property",
+                        "name": "Control Attack 2",
+                        "begin": 1,
+                        "stringTable": "attackNames"
+                    },
+                    "attack3": {
+                        "type": "property",
+                        "name": "Control Attack 3",
+                        "begin": 2,
+                        "stringTable": "attackNames"
+                    },
+                    "attack4": {
+                        "type": "property",
+                        "name": "Control Attack 4",
+                        "begin": 3,
+                        "stringTable": "attackNames"
+                    }
+                }
             }
         },
         "monsterAttackRage": {
@@ -2548,8 +2642,22 @@
                 "length": 256
             },
             "assembly": {
-                "type": "assembly",
-                "length": 2
+                "type": "data",
+                "length": 2,
+                "assembly": {
+                    "attack1": {
+                        "type": "property",
+                        "name": "Rage Attack 1",
+                        "begin": 0,
+                        "stringTable": "attackNames"
+                    },
+                    "attack2": {
+                        "type": "property",
+                        "name": "Rage Attack 2",
+                        "begin": 1,
+                        "stringTable": "attackNames"
+                    }
+                }
             }
         },
         "monsterAttackSketch": {
@@ -2560,8 +2668,22 @@
                 "length": 384
             },
             "assembly": {
-                "type": "assembly",
-                "length": 2
+                "type": "data",
+                "length": 2,
+                "assembly": {
+                    "attack1": {
+                        "type": "property",
+                        "name": "Sketch Attack 1",
+                        "begin": 0,
+                        "stringTable": "attackNames"
+                    },
+                    "attack2": {
+                        "type": "property",
+                        "name": "Sketch Attack 2",
+                        "begin": 1,
+                        "stringTable": "attackNames"
+                    }
+                }
             }
         },
         "monsterColosseumType": {
@@ -2572,8 +2694,39 @@
                 "length": 256
             },
             "assembly": {
-                "type": "assembly",
-                "length": 1
+                "type": "property",
+                "name": "Colosseum Type",
+                "length": 1,
+                "stringTable": {
+                    "string": {
+                        "0": "Ceiling (top)",
+                        "1": "Ground (+0)",
+                        "2": "Floating (+8)",
+                        "3": "Buried (-8)",
+                        "4": "Flying (+40)"
+                    }
+                }
+            }
+        },
+        "monsterDialog": {
+            "type": "array",
+            "name": "Monster Dialog",
+            "range": "0xCFE1E0-0xCFF442",
+            "array": {
+                "length": 256
+            },
+            "assembly": {
+                "type": "text",
+                "encoding": "nullTerminated"
+            },
+            "pointerTable": {
+                "range": "0xCFDFE0-0xCFE1E0",
+                "offset": "0xCF0000"
+            },
+            "stringTable": {
+                "name": "Monster Dialog",
+                "length": 256,
+                "default": "<monsterDialog[%i]>"
             }
         },
         "monsterGraphics": {
@@ -2697,8 +2850,34 @@
                 "length": 384
             },
             "assembly": {
-                "type": "assembly",
-                "length": 4
+                "type": "data",
+                "length": 4,
+                "assembly": {
+                    "rareSteal": {
+                        "type": "property",
+                        "name": "Rare Steal",
+                        "begin": 0,
+                        "stringTable": "itemNames"
+                    },
+                    "commonSteal": {
+                        "type": "property",
+                        "name": "Common Steal",
+                        "begin": 1,
+                        "stringTable": "itemNames"
+                    },
+                    "rareDrop": {
+                        "type": "property",
+                        "name": "Rare Drop",
+                        "begin": 2,
+                        "stringTable": "itemNames"
+                    },
+                    "commonDrop": {
+                        "type": "property",
+                        "name": "Common Drop",
+                        "begin": 3,
+                        "stringTable": "itemNames"
+                    }
+                }
             }
         },
         "monsterName": {
@@ -2709,13 +2888,15 @@
                 "length": 384
             },
             "assembly": {
-                "type": "assembly",
+                "type": "text",
+                "name": "Name",
+                "encoding": "smallText",
                 "length": 10
             },
             "stringTable": {
                 "name": "Monster Name",
                 "length": 384,
-                "default": "<monsterProperties[%i].monsterName>"
+                "default": "<monsterName[%i]>"
             }
         },
         "monsterPalette": {
@@ -2742,11 +2923,8 @@
                 "length": 32,
                 "assembly": {
                     "monsterName": {
-                        "type": "text",
-                        "name": "Name",
-                        "external": "monsterName[%i]",
-                        "encoding": "smallText",
-                        "length": 10
+                        "type": "assembly",
+                        "external": "monsterName[%i]"
                     },
                     "level": {
                         "type": "property",
@@ -2841,6 +3019,10 @@
                             }
                         }
                     },
+                    "script": {
+                        "type": "property",
+                        "external": "monsterScriptPointers[%i]"
+                    },
                     "special": {
                         "type": "property",
                         "name": "Special",
@@ -2861,15 +3043,11 @@
                         "stringTable": "itemNames"
                     },
                     "attackName": {
-                        "type": "text",
-                        "name": "Attack Name",
-                        "external": "monsterAttackName[%i]",
-                        "encoding": "smallText",
-                        "length": 10
+                        "type": "assembly",
+                        "external": "monsterAttackName[%i]"
                     },
                     "attackAnimation": {
-                        "type": "property",
-                        "name": "Attack Animation",
+                        "type": "assembly",
                         "external": "monsterAttack[%i]"
                     },
                     "attackEffect": {
@@ -2880,10 +3058,7 @@
                         "stringTable": {
                             "length": 51,
                             "string": {
-                                "0-8": "Inflict <stringTable.statusNames[7-%i]>",
-                                "8-16": "Inflict <stringTable.statusNames[23-%i]>",
-                                "16-24": "Inflict <stringTable.statusNames[39-%i]>",
-                                "24-32": "Inflict <stringTable.statusNames[55-%i]>",
+                                "0-32": "Inflict <stringTable.statusNamesReversed[%i]>",
                                 "32": "1.5× Damage",
                                 "33": "2.0× Damage",
                                 "34": "2.5× Damage",
@@ -2920,61 +3095,42 @@
                         }
                     },
                     "sketch1": {
-                        "type": "property",
-                        "name": "Sketch Attack 1",
-                        "external": "monsterAttackSketch[%i]",
-                        "begin": 0
+                        "type": "assembly",
+                        "external": "monsterAttackSketch[%i].attack1"
                     },
                     "sketch2": {
-                        "type": "property",
-                        "name": "Sketch Attack 2",
-                        "external": "monsterAttackSketch[%i]",
-                        "begin": 1
+                        "type": "assembly",
+                        "external": "monsterAttackSketch[%i].attack2"
                     },
                     "control1": {
-                        "type": "property",
-                        "name": "Control Attack 1",
-                        "external": "monsterAttackControl[%i]",
-                        "begin": 0
+                        "type": "assembly",
+                        "external": "monsterAttackControl[%i].attack1"
                     },
                     "control2": {
-                        "type": "property",
-                        "name": "Control Attack 2",
-                        "external": "monsterAttackControl[%i]",
-                        "begin": 1
+                        "type": "assembly",
+                        "external": "monsterAttackControl[%i].attack2"
                     },
                     "control3": {
-                        "type": "property",
-                        "name": "Control Attack 3",
-                        "external": "monsterAttackControl[%i]",
-                        "begin": 2
+                        "type": "assembly",
+                        "external": "monsterAttackControl[%i].attack3"
                     },
                     "control4": {
-                        "type": "property",
-                        "name": "Control Attack 4",
-                        "external": "monsterAttackControl[%i]",
-                        "begin": 3
+                        "type": "assembly",
+                        "external": "monsterAttackControl[%i].attack4"
                     },
                     "rage1": {
-                        "type": "property",
-                        "name": "Rage Attack 1",
-                        "external": "monsterAttackRage[%i]",
-                        "begin": 0,
+                        "type": "assembly",
+                        "external": "monsterAttackRage[%i].attack1",
                         "invalid": "this.parent.i > 0xFF"
                     },
                     "rage2": {
-                        "type": "property",
-                        "name": "Rage Attack 2",
-                        "external": "monsterAttackRage[%i]",
-                        "begin": 1,
+                        "type": "assembly",
+                        "external": "monsterAttackRage[%i].attack2",
                         "invalid": "this.parent.i > 0xFF"
                     },
                     "initialRage": {
-                        "type": "property",
-                        "name": "Rage Known",
+                        "type": "assembly",
                         "external": "initialRage[%i]",
-                        "mask": "0x01",
-                        "bool": true,
                         "invalid": "this.parent.i > 0xFF"
                     },
                     "statusImmunity": {
@@ -2984,11 +3140,10 @@
                         "mask": "0xFFFFFF",
                         "flag": true,
                         "stringTable": {
+                            "length": 24,
+                            "default": "<stringTable.statusNamesReversed[%i]>",
                             "string": {
-                                "0-8": "<stringTable.statusNames[7-%i]>",
-                                "8-16": "<stringTable.statusNames[23-%i]>",
-                                "16": "Flying",
-                                "17-24": "<stringTable.statusNames[39-%i]>"
+                                "16": "Flying"
                             }
                         }
                     },
@@ -3025,32 +3180,20 @@
                         "stringTable": "element"
                     },
                     "rareSteal": {
-                        "type": "property",
-                        "name": "Rare Steal",
-                        "begin": 0,
-                        "external": "monsterItems[%i]",
-                        "stringTable": "itemNames"
+                        "type": "assembly",
+                        "external": "monsterItems[%i].rareSteal"
                     },
                     "commonSteal": {
-                        "type": "property",
-                        "name": "Common Steal",
-                        "begin": 1,
-                        "external": "monsterItems[%i]",
-                        "stringTable": "itemNames"
+                        "type": "assembly",
+                        "external": "monsterItems[%i].commonSteal"
                     },
                     "rareDrop": {
-                        "type": "property",
-                        "name": "Rare Drop",
-                        "begin": 2,
-                        "external": "monsterItems[%i]",
-                        "stringTable": "itemNames"
+                        "type": "assembly",
+                        "external": "monsterItems[%i].rareDrop"
                     },
                     "commonDrop": {
-                        "type": "property",
-                        "name": "Common Drop",
-                        "begin": 3,
-                        "external": "monsterItems[%i]",
-                        "stringTable": "itemNames"
+                        "type": "assembly",
+                        "external": "monsterItems[%i].commonDrop"
                     },
                     "morphItems": {
                         "type": "property",
@@ -3077,32 +3220,38 @@
                         }
                     },
                     "verticalOffset": {
-                        "type": "property",
-                        "name": "Vertical Offset",
-                        "begin": 0,
-                        "mask": "0xFF",
+                        "type": "assembly",
                         "external": "monsterVerticalOffset[%i]"
                     },
                     "colosseumType": {
-                        "type": "property",
-                        "name": "Colosseum Type",
-                        "begin": 0,
-                        "mask": "0xFF",
+                        "type": "assembly",
                         "external": "monsterColosseumType[%i]",
-                        "invalid": "this.parent.i > 0xFF",
-                        "stringTable": {
-                            "string": {
-                                "0": "Ceiling (top)",
-                                "1": "Ground (+0)",
-                                "2": "Floating (+8)",
-                                "3": "Buried (-8)",
-                                "4": "Flying (+40)"
-                            }
-                        }
+                        "invalid": "this.parent.i > 0xFF"
                     }
                 }
             },
             "stringTable": "monsterName"
+        },
+        "monsterScript": {
+            "type": "script",
+            "name": "Monster Script",
+            "range": "0xCF8700-0xCFC049",
+            "encoding": "monster"
+        },
+        "monsterScriptPointers": {
+            "type": "array",
+            "name": "Monster Script Pointers",
+            "range": "0xCF8400-0xCF8700",
+            "array": {
+                "length": 384
+            },
+            "assembly": {
+                "type": "property",
+                "name": "Script Pointer",
+                "mask": "0xFFFF",
+                "length": 2,
+                "script": "monsterScript"
+            }
         },
         "monsterVerticalOffset": {
             "type": "array",
@@ -3112,7 +3261,8 @@
                 "length": 384
             },
             "assembly": {
-                "type": "assembly",
+                "type": "property",
+                "name": "Vertical Offset",
                 "length": 1
             }
         },
@@ -3716,6 +3866,24 @@
                 }
             }
         },
+        "swdTechNames": {
+            "type": "array",
+            "name": "SwdTech Names",
+            "range": "0xCF3C40-0xCF3D00",
+            "array": {
+                "length": 8
+            },
+            "assembly": {
+                "type": "text",
+                "encoding": "smallText",
+                "length": 12
+            },
+            "stringTable": {
+                "name": "SwdTech Names",
+                "length": 8,
+                "default": "<swdTechNames[%i]>"
+            }
+        },
         "treasureProperties": {
             "type": "array",
             "name": "Treasure Properties",
@@ -3869,18 +4037,8 @@
                         "link": "battleGroupsRandom[%i]"
                     },
                     "probability": {
-                        "type": "property",
-                        "name": "Probability",
-                        "external": "worldBattleProbability[%i]",
-                        "mask": "0x03",
-                        "stringTable": {
-                            "string": {
-                                "0": "Normal",
-                                "1": "Low",
-                                "2": "High",
-                                "3": "None"
-                            }
-                        }
+                        "type": "assembly",
+                        "external": "worldBattleProbability[%i]"
                     }
                 }
             }
@@ -3894,8 +4052,18 @@
                 "length": 128
             },
             "assembly": {
-                "type": "assembly",
-                "length": 1
+                "type": "property",
+                "name": "Probability",
+                "length": 1,
+                "mask": "0x03",
+                "stringTable": {
+                    "string": {
+                        "0": "Normal",
+                        "1": "Low",
+                        "2": "High",
+                        "3": "None"
+                    }
+                }
             }
         },
         "worldLayout1": {
@@ -4350,8 +4518,8 @@
                             "flag": true,
                             "stringTable": {
                                 "string": {
-                                    "0-8": "<stringTable.statusNames[7-%i]>",
-                                    "8-16": "<stringTable.statusNames[39-%i]>"
+                                    "0-8": "<stringTable.statusNamesReversed[%i]>",
+                                    "8-16": "<stringTable.statusNamesReversed[%i+16]>"
                                 }
                             }
                         }
@@ -6116,6 +6284,459 @@
                             "begin": 1,
                             "multiplier": 0.25,
                             "invalid": "this.parent.units.value !== 0xB5"
+                        }
+                    }
+                }
+            }
+        },
+        "monster": {
+            "name": "Monster Script",
+            "delegate": "FF6MonsterScript",
+            "command": {
+                "animation": {
+                    "name": "Monster Animation",
+                    "opcode": ["0xFA00-0xFA09", "0xFA0A-0xFB00"],
+                    "length": 4,
+                    "assembly": {
+                        "animation": {
+                            "type": "property",
+                            "name": "Animation",
+                            "begin": 1
+                        },
+                        "monsters": {
+                            "type": "property",
+                            "name": "Monsters",
+                            "begin": 2,
+                            "min": 1,
+                            "flag": true,
+                            "stringTable": {
+                                "string": {
+                                    "0": "Slot 1",
+                                    "1": "Slot 2",
+                                    "2": "Slot 3",
+                                    "3": "Slot 4",
+                                    "4": "Slot 5",
+                                    "5": "Slot 6"
+                                }
+                            },
+                            "special": {
+                                "0": "This Monster",
+                                "0xFF": "All Monsters"
+                            }
+                        }
+                    }
+                },
+                "attack": {
+                    "name": "Attack (Single)",
+                    "opcode": "0x00-0xF0",
+                    "assembly": {
+                        "attack": {
+                            "type": "property",
+                            "name": "Attack",
+                            "stringTable": "attackNames",
+                            "max": "0xEF"
+                        }
+                    }
+                },
+                "attackRandom": {
+                    "name": "Attack",
+                    "opcode": "0xF0",
+                    "length": 4,
+                    "assembly": {
+                        "attack1": {
+                            "type": "property",
+                            "name": "Attack 1",
+                            "begin": 1,
+                            "stringTable": "attackNames",
+                            "max": "0xFE",
+                            "special": {
+                                "0xFE": "Do Nothing"
+                            }
+                        },
+                        "attack2": {
+                            "type": "property",
+                            "name": "Attack 2",
+                            "begin": 2,
+                            "stringTable": "attackNames",
+                            "max": "0xFE",
+                            "special": {
+                                "0xFE": "Do Nothing"
+                            }
+                        },
+                        "attack3": {
+                            "type": "property",
+                            "name": "Attack 3",
+                            "begin": 3,
+                            "stringTable": "attackNames",
+                            "max": "0xFE",
+                            "special": {
+                                "0xFE": "Do Nothing"
+                            }
+                        }
+                    }
+                },
+                "battleEvent": {
+                    "name": "Battle Event",
+                    "opcode": "0xF7",
+                    "length": 2,
+                    "assembly": {
+                        "battleEvent": {
+                            "type": "property",
+                            "name": "Battle Event",
+                            "begin": 1
+                        }
+                    }
+                },
+                "changeBattle": {
+                    "name": "Change Battle",
+                    "opcode": "0xF2",
+                    "length": 4,
+                    "assembly": {
+                        "exitEffect": {
+                            "type": "property",
+                            "name": "Exit Effect",
+                            "begin": 1,
+                            "mask": "0x7F"
+                        },
+                        "scroll": {
+                            "type": "property",
+                            "name": "Scroll Background",
+                            "begin": 1,
+                            "mask": "0x80",
+                            "bool": true
+                        },
+                        "battle": {
+                            "type": "property",
+                            "name": "Battle",
+                            "begin": 2,
+                            "mask": "0xFFFF",
+                            "link": "battleProperties[%i]"
+                        },
+                        "restoreMonsters": {
+                            "type": "property",
+                            "name": "Restore Monsters",
+                            "begin": 2,
+                            "mask": "0x8000",
+                            "bool": true
+                        }
+                    }
+                },
+                "commandRandom": {
+                    "name": "Command",
+                    "opcode": "0xF4",
+                    "length": 4,
+                    "assembly": {
+                        "command1": {
+                            "type": "property",
+                            "name": "Command 1",
+                            "begin": 1
+                        },
+                        "command2": {
+                            "type": "property",
+                            "name": "Command 2",
+                            "begin": 2
+                        },
+                        "command3": {
+                            "type": "property",
+                            "name": "Command 3",
+                            "begin": 3
+                        }
+                    }
+                },
+                "dialog": {
+                    "name": "Dialog",
+                    "opcode": "0xF3",
+                    "length": 2,
+                    "assembly": {
+                        "dialog": {
+                            "type": "property",
+                            "name": "Dialog",
+                            "begin": 1,
+                            "link": "monsterDialog[%i]",
+                            "stringTable": "monsterDialog"
+                        }
+                    }
+                },
+                "end": {
+                    "name": "End of Script",
+                    "opcode": "0xFF"
+                },
+                "endConditional": {
+                    "name": "End Conditional",
+                    "opcode": "0xFE"
+                },
+                "conditional": {
+                    "name": "Conditional",
+                    "opcode": "0xFC",
+                    "length": 4,
+                    "assembly": {
+                        "condition": {
+                            "type": "property",
+                            "name": "Condition",
+                            "begin": 1,
+                            "stringTable": {
+                                "string": {
+                                    "0": "Never",
+                                    "1": "Command",
+                                    "2": "Attack",
+                                    "3": "Item",
+                                    "4": "Element",
+                                    "5": "Any Action",
+                                    "6": "HP",
+                                    "7": "MP",
+                                    "8": "Has Status",
+                                    "9": "Does Not Have Status",
+                                    "10": "Never",
+                                    "11": "Monster Timer",
+                                    "12": "Variable Less Than",
+                                    "13": "Variable Greater Than",
+                                    "14": "Target's Level Less Than",
+                                    "15": "Target's Level Greater Than",
+                                    "16": "One Type of Monster",
+                                    "17": "Monsters Alive",
+                                    "18": "Monsters Dead",
+                                    "19": "Number of Monsters/Characters Left",
+                                    "20": "Switch On",
+                                    "21": "Switch Off",
+                                    "22": "Battle Timer",
+                                    "23": "Target Valid",
+                                    "24": "Gau is Present",
+                                    "25": "Monster Slot",
+                                    "26": "Target Weak vs. Element",
+                                    "27": "Battle Index",
+                                    "28": "Always"
+                                }
+                            }
+                        }
+                    }
+                },
+                "item": {
+                    "name": "Use/Throw Item",
+                    "opcode": "0xF6",
+                    "length": 4,
+                    "assembly": {
+                        "useThrow": {
+                            "type": "property",
+                            "name": "Use/Throw",
+                            "begin": 1,
+                            "stringTable": {
+                                "string": {
+                                    "0": "Use Item",
+                                    "1": "Throw Item"
+                                }
+                            }
+                        },
+                        "item1": {
+                            "type": "property",
+                            "name": "Item 1",
+                            "begin": 2,
+                            "stringTable": "itemNames"
+                        },
+                        "item2": {
+                            "type": "property",
+                            "name": "Item 2",
+                            "begin": 3,
+                            "stringTable": "itemNames"
+                        }
+                    }
+                },
+                "misc": {
+                    "name": "Misc. Effects",
+                    "opcode": "0xFB00-0xFB0D",
+                    "length": 3,
+                    "assembly": {
+                        "effect": {
+                            "type": "property",
+                            "name": "Effect",
+                            "begin": 1,
+                            "stringTable": {
+                                "string": {
+                                    "0": "Reset Monster Timer",
+                                    "1": "Target Becomes Invincible",
+                                    "2": "Terminate Battle",
+                                    "3": "Add Gau to the Party",
+                                    "4": "Reset Battle Timer",
+                                    "5": "Target Loses Invincibility",
+                                    "6": "Target Can Be Targeted",
+                                    "7": "Target Can't Be Targeted",
+                                    "8": "Fill Target's ATB Gauge",
+                                    "9": "Gau Returns from the Veldt",
+                                    "11": "Set Status",
+                                    "12": "Clear Status",
+                                    "13": "Hide This Monster (Piranha)"
+                                }
+                            }
+                        },
+                        "target": {
+                            "type": "property",
+                            "name": "Target",
+                            "begin": 2,
+                            "invalid": "(this.parent.effect.value !== 1) && (this.parent.effect.value !== 5) && (this.parent.effect.value !== 6) && (this.parent.effect.value !== 7) && (this.parent.effect.value !== 8)"
+                        },
+                        "status": {
+                            "type": "property",
+                            "name": "Status",
+                            "begin": 2,
+                            "invalid": "(this.parent.effect.value !== 11) && (this.parent.effect.value !== 12)",
+                            "stringTable": "statusNamesReversed"
+                        }
+                    }
+                },
+                "showHide": {
+                    "name": "Show/Hide Monster",
+                    "opcode": "0xF5",
+                    "length": 4,
+                    "assembly": {
+                        "showHide": {
+                            "type": "property",
+                            "name": "Show/Hide",
+                            "begin": 1,
+                            "stringTable": {
+                                "string": {
+                                    "0": "Show - Set HP to Max",
+                                    "1": "Hide - Normal",
+                                    "2": "Show - At Current HP",
+                                    "3": "Hide - Allow Targeting",
+                                    "4": "Hide - Battle Won't End",
+                                    "5": "Hide - Debug Mode"
+                                }
+                            }
+                        },
+                        "animation": {
+                            "type": "property",
+                            "name": "Animation",
+                            "begin": 2
+                        },
+                        "monsters": {
+                            "type": "property",
+                            "name": "Monsters",
+                            "begin": 3,
+                            "min": 1,
+                            "flag": true,
+                            "stringTable": {
+                                "string": {
+                                    "0": "Slot 1",
+                                    "1": "Slot 2",
+                                    "2": "Slot 3",
+                                    "3": "Slot 4",
+                                    "4": "Slot 5",
+                                    "5": "Slot 6"
+                                }
+                            },
+                            "special": {
+                                "0": "This Monster",
+                                "0xFF": "All Monsters"
+                            }
+                        }
+                    }
+                },
+                "soundEffect": {
+                    "name": "Sound Effect",
+                    "opcode": "0xFA09",
+                    "length": 4,
+                    "assembly": {
+                        "soundEffect": {
+                            "type": "property",
+                            "name": "Sound Effect",
+                            "begin": 2
+                        },
+                        "pan": {
+                            "type": "property",
+                            "name": "Pan",
+                            "begin": 3
+                        }
+                    }
+                },
+                "switch": {
+                    "name": "Change Switch",
+                    "opcode": "0xF9",
+                    "length": 3,
+                    "assembly": {
+                        "operation": {
+                            "type": "property",
+                            "name": "Operation",
+                            "begin": 1,
+                            "stringTable": {
+                                "string": {
+                                    "0": "Toggle",
+                                    "1": "On",
+                                    "2": "Off"
+                                }
+                            }
+                        },
+                        "variable": {
+                            "type": "property",
+                            "name": "Variable",
+                            "begin": 2,
+                            "hidden": true
+                        },
+                        "switch": {
+                            "type": "property",
+                            "name": "Switch",
+                            "begin": 3,
+                            "mask": "0x07",
+                            "max": "0x07FF",
+                            "msb": "this.parent.variable"
+                        }
+                    }
+                },
+                "target": {
+                    "name": "Change Target",
+                    "opcode": "0xF1",
+                    "length": 2,
+                    "assembly": {
+                        "target": {
+                            "type": "property",
+                            "name": "Target",
+                            "begin": 1,
+                            "stringTable": {
+                                "length": "0x4E",
+                                "default": "Target %i",
+                                "string": {
+                                    "0x00-0x30": "<characterNames[%i]>",
+                                    "0x30": "Monster Slot 1",
+                                    "0x31": "Monster Slot 2",
+                                    "0x32": "Monster Slot 3",
+                                    "0x33": "Monster Slot 4",
+                                    "0x34": "Monster Slot 5",
+                                    "0x35": "Monster Slot 6"
+                                }
+                            }
+                        }
+                    }
+                },
+                "wait": {
+                    "name": "Wait One Turn",
+                    "opcode": "0xFD"
+                },
+                "variable": {
+                    "name": "Change Variable",
+                    "opcode": "0xF8",
+                    "length": 3,
+                    "assembly": {
+                        "variable": {
+                            "type": "property",
+                            "name": "Variable",
+                            "begin": 1
+                        },
+                        "value": {
+                            "type": "property",
+                            "name": "Value",
+                            "begin": 2,
+                            "mask": "0x3F"
+                        },
+                        "operation": {
+                            "type": "property",
+                            "name": "Operation",
+                            "begin": 2,
+                            "mask": "0xC0",
+                            "stringTable": {
+                                "string": {
+                                    "0": "Set Variable",
+                                    "2": "Add to Variable",
+                                    "3": "Subtract from Variable"
+                                }
+                            }
                         }
                     }
                 }
@@ -9209,6 +9830,15 @@
                 "83": "Ending Theme 1",
                 "84": "Ending Theme 2",
                 "0xFF": "Continue Previous Song"
+            }
+        },
+        "statusNamesReversed": {
+            "name": "Status Names (Reverse Order)",
+            "string": {
+                "0-8": "<stringTable.statusNames[7-%i]>",
+                "8-16": "<stringTable.statusNames[23-%i]>",
+                "16-24": "<stringTable.statusNames[39-%i]>",
+                "24-32": "<stringTable.statusNames[55-%i]>"
             }
         },
         "treasureSwitches": {

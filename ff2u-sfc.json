@@ -232,7 +232,7 @@
             "stringTable": {
                 "name": "Character Names",
                 "length": 14,
-                "default": "<characterNames[%i].text>"
+                "default": "<characterNames[%i]>"
             }
         },
         "eventDialog1": {
@@ -649,8 +649,8 @@
                         "name": "Title",
                         "begin": 11,
                         "mask": "0x7F",
-                        "stringTable": "mapTitles",
-                        "link": "mapTitles[%i]"
+                        "stringTable": "mapTitle",
+                        "link": "mapTitle[%i]"
                     },
                     "hideTitle": {
                         "type": "property",
@@ -1267,9 +1267,9 @@
                 "length": 1024
             }
         },
-        "mapTitles": {
+        "mapTitle": {
             "type": "array",
-            "name": "Map Titles",
+            "name": "Map Title",
             "range": "0x159620-0x159AEF",
             "terminator": 0,
             "array": {
@@ -1281,9 +1281,9 @@
                 "encoding": "nullTerminated"
             },
             "stringTable": {
-                "name": "Map Titles",
+                "name": "Map Title",
                 "length": 121,
-                "default": "<mapTitles[%i].text>"
+                "default": "<mapTitle[%i]>"
             }
         },
         "mapTriggers": {
@@ -1367,7 +1367,9 @@
                             "name": "Battle",
                             "begin": 3,
                             "mask": "0x1F",
-                            "invalid": "(this.parent.map.value !== 0xFE) || !(this.parent.treasureType.value & 1)"
+                            "invalid": "(this.parent.map.value !== 0xFE) || !(this.parent.treasureType.value & 1)",
+                            "offset": "0x01C0",
+                            "link": "battleProperties[%i]"
                         },
                         "item": {
                             "type": "property",
@@ -1382,7 +1384,7 @@
                             "begin": 4,
                             "mask": "0x7F",
                             "multiplier": 10,
-                            "invalid": "(this.parent.map.value !== 0xFE) || (this.parent.treasureType.value !== 0) || (this.parent.gpMultiplier.value)"
+                            "invalid": "(this.parent.map.value !== 0xFE) || (this.parent.treasureType.value !== 0) || (this.parent.gpMultiplier.value === 1)"
                         },
                         "gp1000": {
                             "type": "property",
@@ -1390,7 +1392,7 @@
                             "begin": 4,
                             "mask": "0x7F",
                             "multiplier": 1000,
-                            "invalid": "(this.parent.map.value !== 0xFE) || (this.parent.treasureType.value !== 0) || (!this.parent.gpMultiplier.value)"
+                            "invalid": "(this.parent.map.value !== 0xFE) || (this.parent.treasureType.value !== 0) || (this.parent.gpMultiplier.value === 0)"
                         },
                         "gpMultiplier": {
                             "type": "property",
@@ -1532,8 +1534,10 @@
                 "length": 224
             },
             "assembly": {
-                "type": "assembly",
-                "length": 2
+                "type": "property",
+                "name": "Experience",
+                "length": 2,
+                "mask": "0xFFFF"
             }
         },
         "monsterGP": {
@@ -1544,8 +1548,10 @@
                 "length": 224
             },
             "assembly": {
-                "type": "assembly",
-                "length": 2
+                "type": "property",
+                "name": "GP",
+                "length": 2,
+                "mask": "0xFFFF"
             }
         },
         "monsterGraphics": {
@@ -1657,13 +1663,15 @@
                 "length": 224
             },
             "assembly": {
-                "type": "assembly",
+                "type": "text",
+                "name": "Name",
+                "encoding": "fixedLength",
                 "length": 8
             },
             "stringTable": {
                 "name": "Monster Name",
                 "length": 224,
-                "default": "<monsterProperties[%i].monsterName>"
+                "default": "<monsterName[%i]>"
             }
         },
         "monsterPalette": {
@@ -1724,11 +1732,8 @@
                 "format": "ff4-monster",
                 "assembly": {
                     "monsterName": {
-                        "type": "text",
-                        "name": "Name",
-                        "external": "monsterName[%i]",
-                        "encoding": "fixedLength",
-                        "length": 8
+                        "type": "assembly",
+                        "external": "monsterName[%i]"
                     },
                     "level": {
                         "type": "property",
@@ -1737,17 +1742,11 @@
                         "mask": "0x7F"
                     },
                     "experience": {
-                        "type": "property",
-                        "name": "Experience",
-                        "begin": 0,
-                        "mask": "0xFFFF",
+                        "type": "assembly",
                         "external": "monsterExperience[%i]"
                     },
                     "gp": {
-                        "type": "property",
-                        "name": "GP",
-                        "begin": 0,
-                        "mask": "0xFFFF",
+                        "type": "assembly",
                         "external": "monsterGP[%i]"
                     },
                     "boss": {
@@ -1908,8 +1907,123 @@
                 "length": 512
             },
             "assembly": {
-                "type": "assembly",
-                "length": 1
+                "type": "property",
+                "name": "Graphics",
+                "length": 1,
+                "stringTable": {
+                    "name": "NPC Graphics",
+                    "default": "Graphics %i",
+                    "length": 107,
+                    "string": {
+                        "0x00": "Cecil (DkKnight)",
+                        "0x01": "Kain",
+                        "0x02": "Rydia (Girl)",
+                        "0x03": "Tellah",
+                        "0x04": "Edward",
+                        "0x05": "Rosa",
+                        "0x06": "Yang",
+                        "0x07": "Palom",
+                        "0x08": "Porom",
+                        "0x09": "Cecil (Paladin)",
+                        "0x0A": "Cid",
+                        "0x0B": "Rydia (Adult)",
+                        "0x0C": "Edge",
+                        "0x0D": "FuSoYa",
+                        "0x0E": "Tiny",
+                        "0x0F": "Frog",
+                        "0x10": "Pig",
+                        "0x11": "Man",
+                        "0x12": "Woman",
+                        "0x13": "Dancer",
+                        "0x14": "Old Man",
+                        "0x15": "Old Woman",
+                        "0x16": "Boy",
+                        "0x17": "Girl",
+                        "0x18": "Soldier",
+                        "0x19": "Merchant",
+                        "0x1A": "Scholar",
+                        "0x1B": "Black Mage",
+                        "0x1C": "White Mage",
+                        "0x1D": "Engineer",
+                        "0x1E": "Chocobo",
+                        "0x1F": "Monk",
+                        "0x20": "Officer",
+                        "0x21": "Bomb",
+                        "0x22": "Monster",
+                        "0x23": "Namingway",
+                        "0x24": "Golbez",
+                        "0x25": "King",
+                        "0x26": "Elder",
+                        "0x27": "Cleric",
+                        "0x28": "Dwarf",
+                        "0x29": "Calbrena",
+                        "0x2A": "King Giott",
+                        "0x2B": "Dr. Lugae",
+                        "0x2C": "Dwarf Girl (Luca)",
+                        "0x2D": "Golbez' Hand",
+                        "0x2E": "Cecil + Rosa",
+                        "0x2F": "Crystal",
+                        "0x30": "Heart",
+                        "0x31": "Flame",
+                        "0x32": "Zzz",
+                        "0x33": "Woman Waving",
+                        "0x34": "Woman Blinking",
+                        "0x35": "Edward w/ Harp",
+                        "0x36": "Water Splash",
+                        "0x37": "Murasame/Masamune",
+                        "0x38": "Dancer w/ Dress",
+                        "0x39": "Sword",
+                        "0x3A": "Rosa (Tied Up)",
+                        "0x3B": "Rubicant",
+                        "0x3C": "Sparkle",
+                        "0x3D": "Elder (Praying)",
+                        "0x3E": "Black Mage (Praying)",
+                        "0x3F": "Zemus (Dead)",
+                        "0x40": "White Mage (Praying)",
+                        "0x41": "Sylph",
+                        "0x42": "Zeromus",
+                        "0x43": "Kain w/o Helmet",
+                        "0x44": "Lightning Bolt",
+                        "0x45": "Smoke",
+                        "0x46": "Big Chocobo 1",
+                        "0x47": "Big Chocobo 2",
+                        "0x48": "Big Chocobo 3",
+                        "0x49": "Big Chocobo 4",
+                        "0x4A": "Big Namingway 1",
+                        "0x4B": "Big Namingway 2",
+                        "0x4C": "Big Namingway 3",
+                        "0x4D": "Big Namingway 4",
+                        "0x4E": "Valvalis",
+                        "0x4F": "Dancer's Foot",
+                        "0x50": "Asura",
+                        "0x51": "Zemus",
+                        "0x52": "Tentacles",
+                        "0x53": "Magus Sisters",
+                        "0x54": "Dark Elf",
+                        "0x55": "Bahamut",
+                        "0x56": "Kainazzo",
+                        "0x57": "Dress",
+                        "0x58": "Ice",
+                        "0x59": "White Lance",
+                        "0x5A": "Rydia's Mother",
+                        "0x5B": "Big Ball",
+                        "0x5C": "Tower of Bab-il Ground",
+                        "0x5D": "Door",
+                        "0x5E": "Dead Soldier",
+                        "0x5F": "Antlion 1",
+                        "0x60": "Antlion 2",
+                        "0x61": "Anna",
+                        "0x62": "Golbez (Dead)",
+                        "0x63": "Crystal Sword",
+                        "0x64": "Anna (Dead)",
+                        "0x65": "Nothing",
+                        "0x66": "Ice",
+                        "0x67": "Big Flame 1",
+                        "0x68": "Big Flame 2",
+                        "0x69": "Stone Palom",
+                        "0x6A": "Stone Porom"
+                    }
+                }
             }
         },
         "npcPalettes": {
@@ -1942,123 +2056,8 @@
                         "script": "_npcScript"
                     },
                     "graphics": {
-                        "type": "property",
-                        "name": "Graphics",
-                        "external": "npcGraphicsProperties[%i]",
-                        "stringTable": {
-                            "name": "NPC Graphics",
-                            "default": "Graphics %i",
-                            "length": 107,
-                            "string": {
-                                "0x00": "Cecil (DkKnight)",
-                                "0x01": "Kain",
-                                "0x02": "Rydia (Girl)",
-                                "0x03": "Tellah",
-                                "0x04": "Edward",
-                                "0x05": "Rosa",
-                                "0x06": "Yang",
-                                "0x07": "Palom",
-                                "0x08": "Porom",
-                                "0x09": "Cecil (Paladin)",
-                                "0x0A": "Cid",
-                                "0x0B": "Rydia (Adult)",
-                                "0x0C": "Edge",
-                                "0x0D": "FuSoYa",
-                                "0x0E": "Tiny",
-                                "0x0F": "Frog",
-                                "0x10": "Pig",
-                                "0x11": "Man",
-                                "0x12": "Woman",
-                                "0x13": "Dancer",
-                                "0x14": "Old Man",
-                                "0x15": "Old Woman",
-                                "0x16": "Boy",
-                                "0x17": "Girl",
-                                "0x18": "Soldier",
-                                "0x19": "Merchant",
-                                "0x1A": "Scholar",
-                                "0x1B": "Black Mage",
-                                "0x1C": "White Mage",
-                                "0x1D": "Engineer",
-                                "0x1E": "Chocobo",
-                                "0x1F": "Monk",
-                                "0x20": "Officer",
-                                "0x21": "Bomb",
-                                "0x22": "Monster",
-                                "0x23": "Namingway",
-                                "0x24": "Golbez",
-                                "0x25": "King",
-                                "0x26": "Elder",
-                                "0x27": "Cleric",
-                                "0x28": "Dwarf",
-                                "0x29": "Calbrena",
-                                "0x2A": "King Giott",
-                                "0x2B": "Dr. Lugae",
-                                "0x2C": "Dwarf Girl (Luca)",
-                                "0x2D": "Golbez' Hand",
-                                "0x2E": "Cecil + Rosa",
-                                "0x2F": "Crystal",
-                                "0x30": "Heart",
-                                "0x31": "Flame",
-                                "0x32": "Zzz",
-                                "0x33": "Woman Waving",
-                                "0x34": "Woman Blinking",
-                                "0x35": "Edward w/ Harp",
-                                "0x36": "Water Splash",
-                                "0x37": "Murasame/Masamune",
-                                "0x38": "Dancer w/ Dress",
-                                "0x39": "Sword",
-                                "0x3A": "Rosa (Tied Up)",
-                                "0x3B": "Rubicant",
-                                "0x3C": "Sparkle",
-                                "0x3D": "Elder (Praying)",
-                                "0x3E": "Black Mage (Praying)",
-                                "0x3F": "Zemus (Dead)",
-                                "0x40": "White Mage (Praying)",
-                                "0x41": "Sylph",
-                                "0x42": "Zeromus",
-                                "0x43": "Kain w/o Helmet",
-                                "0x44": "Lightning Bolt",
-                                "0x45": "Smoke",
-                                "0x46": "Big Chocobo 1",
-                                "0x47": "Big Chocobo 2",
-                                "0x48": "Big Chocobo 3",
-                                "0x49": "Big Chocobo 4",
-                                "0x4A": "Big Namingway 1",
-                                "0x4B": "Big Namingway 2",
-                                "0x4C": "Big Namingway 3",
-                                "0x4D": "Big Namingway 4",
-                                "0x4E": "Valvalis",
-                                "0x4F": "Dancer's Foot",
-                                "0x50": "Asura",
-                                "0x51": "Zemus",
-                                "0x52": "Tentacles",
-                                "0x53": "Magus Sisters",
-                                "0x54": "Dark Elf",
-                                "0x55": "Bahamut",
-                                "0x56": "Kainazzo",
-                                "0x57": "Dress",
-                                "0x58": "Ice",
-                                "0x59": "White Lance",
-                                "0x5A": "Rydia's Mother",
-                                "0x5B": "Big Ball",
-                                "0x5C": "Tower of Bab-il Ground",
-                                "0x5D": "Door",
-                                "0x5E": "Dead Soldier",
-                                "0x5F": "Antlion 1",
-                                "0x60": "Antlion 2",
-                                "0x61": "Anna",
-                                "0x62": "Golbez (Dead)",
-                                "0x63": "Crystal Sword",
-                                "0x64": "Anna (Dead)",
-                                "0x65": "Nothing",
-                                "0x66": "Ice",
-                                "0x67": "Big Flame 1",
-                                "0x68": "Big Flame 2",
-                                "0x69": "Stone Palom",
-                                "0x6A": "Stone Porom"
-                            }
-                        }
+                        "type": "assembly",
+                        "external": "npcGraphicsProperties[%i]"
                     }
                 }
             }
@@ -4225,7 +4224,6 @@
         },
         "vehicles": {
             "name": "Vehicles",
-            "length": 32,
             "default": "Vehicle %i",
             "string": {
                 "0": "None",

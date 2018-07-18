@@ -141,7 +141,7 @@ FF6Battle.prototype.loadBattle = function(b) {
 
 FF6Battle.prototype.monsterInSlot = function(slot) {
     var m = this.battleProperties["monster" + slot].value;
-    if (this.battleProperties["monster" + slot + "MSB"].value) m += 256;
+//    if (this.battleProperties["monster" + slot + "MSB"].value) m += 256;
     if (m === 0x01FF) return null; // slot is empty
 
     return m;
