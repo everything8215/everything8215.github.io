@@ -32,7 +32,7 @@
 //
 //                    loadBuiltInDefinition();
 //                };
-//                localROM.open("get", "roms\\ff3u.sfc");
+//                localROM.open("get", "roms\\ff6j.sfc");
 //                localROM.responseType = "arraybuffer";
 //                localROM.send();
                 /////////////////////////////////////////
@@ -162,9 +162,12 @@
                         url = "ff4j-sfc.json";
                         break;
                     case 0xC1BC267D:
+                    case 0x84CC8DBE: // [h1]
                         url = "ff5j-sfc.json";
                         break;
-                    case 0x892E44BE:
+                    case 0x892E44BE: // [T-EngX.X_RPGe]
+                    case 0x17444605: // [T+Eng1.1_RPGe]
+                    case 0xD19F6CB5: // [T+Eng1.1_RPGe][h1]
                         url = "ff5u-sfc.json";
                         break;
                     case 0xA27F1C7A: // v1.0
@@ -224,6 +227,10 @@
                 // create the rom object
                 rom = ROMObject.create(null, definition);
                 rom.disassemble(data);
+
+                
+                console.log("CRC32: " + hexString(ROM.crc32(data), 8));
+                if (rom.isSFC) console.log("SNES Checksum: " + hexString(ROM.checksum(data), 4));
 
                 // update the map list
                 loadMapNames();
@@ -383,8 +390,23 @@
                 span.innerHTML = b.toString();
                 span.classList.add("navListIndex");
                 li.appendChild(span);
-                li.innerHTML += "Battle " + b;
+                var name = battleName(b);
+                rom.stringTable.battleProperties.string[b] = name;
+                li.innerHTML += name;
                 return li;
+            }
+            
+            function battleName(b) {
+
+                var defaultName = "Battle " + b.toString();
+                if (!rom.battleProperties) return defaultName;
+                var battleProperties = rom.battleProperties.item(b);
+                if (!battleProperties || !battleProperties.editor) return defaultName;
+                var editor = rom.getEditor(battleProperties.editor);
+                if (!editor || !editor.battleName) return defaultName;
+                var name = editor.battleName(b);
+                if (name === "") return defaultName;
+                return name;
             }
 
             function togglePane(p) {

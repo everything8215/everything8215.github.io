@@ -154,9 +154,7 @@ ROMAssembly.prototype.constructor = ROMAssembly;
 Object.defineProperty(ROMAssembly.prototype, "definition", { get: function() {
     var definition = Object.getOwnPropertyDescriptor(ROMObject.prototype, "definition").get.call(this);
     
-    if (!this.range.isEmpty) {
-        definition.range = this.range.toString();
-    }
+    if (!this.range.isEmpty) definition.range = this.range.toString();
     
     if (this.stringTable) definition.stringTable = this.stringTable;
     if (this.format) definition.format = this.format;
@@ -181,11 +179,11 @@ Object.defineProperty(ROMAssembly.prototype, "path", { get: function() {
     if (!this.parent || this.parent === this.rom) {
         return this.key;
     } else if (this.parent instanceof ROMArray) {
-        return this.parent.path + ".assembly";
+        return this.parent.path;
     } else if (this instanceof ROMCommand) {
         return this.parent.path + "." + this.encoding + "." + this.key;
     }
-    return this.parent.path + ".assembly." + this.key;
+    return this.parent.path + "." + this.key;
 }});
 
 // invalid: assembly is not shown in property view and will not be assembled
@@ -614,6 +612,9 @@ function ROM(rom, definition) {
     
     this.observer = new ROMObserver(this, this, {sub: true});
     this.selection = {current: null, previous: [], next: []};
+    this.undoStack = [];
+    this.redoStack = [];
+    this.action = null;
 
     // create the assemblies
     ROMData.call(this, this, definition);
@@ -1018,33 +1019,33 @@ ROM.dataFormat = {
             newData.set(data.subarray(0, 9));
             var flags = 0;
             var i = 10;
-            if (!(0 === data[10] === data[11] === data[12])) {
+            if (data[10] || data[11] || data[12]) {
                 flags |= 0x80;
                 newData.set(data.subarray(10, 13), i);
                 i += 3
             }
-            if (!(0 === data[13] === data[14] === data[15])) {
+            if (data[13] || data[14] || data[15]) {
                 flags |= 0x40;
                 newData.set(data.subarray(13, 16), i);
                 i += 3
             }
-            if (data[16] !== 0) {
+            if (data[16]) {
                 flags |= 0x20;
                 newData[i++] = data[16];
             }
-            if (data[17] !== 0) {
+            if (data[17]) {
                 flags |= 0x10;
                 newData[i++] = data[17];
             }
-            if (data[18] !== 0) {
+            if (data[18]) {
                 flags |= 0x08;
                 newData[i++] = data[18];
             }
-            if (data[19] !== 0) {
+            if (data[19]) {
                 flags |= 0x04;
                 newData[i++] = data[19];
             }
-            data[9] = flags;
+            newData[9] = flags;
             return newData.slice(0, i);
         },
         decode: function(data) {
@@ -1519,7 +1520,7 @@ ROM.prototype.parseLink = function(link, object) {
                 try {
                     i = eval(sub);
                 } catch (e) {
-                    this.log("Invalid Link: " + link);
+//                    this.log("Invalid Link: " + link);
                     return "Invalid Link: " + link;
                 }
             }
@@ -1540,7 +1541,7 @@ ROM.prototype.parseLink = function(link, object) {
                 continue;
             }
         } else {
-            this.log("Invalid Link: " + link);
+//            this.log("Invalid Link: " + link);
             return "Invalid Link: " + link;
         }
     }
@@ -1626,10 +1627,6 @@ ROM.prototype.showProperties = function() {
     }
     
     this.updateLabels();
-}
-
-ROM.prototype.updateProperty = function(p) {
-    
 }
 
 ROM.prototype.updateLabels = function() {
@@ -1722,9 +1719,6 @@ ROM.prototype.deselectAll = function() {
     this.selection.current = null;
 }
 
-ROM.prototype.undoStack = [];
-ROM.prototype.redoStack = [];
-ROM.prototype.action = null;
 ROM.prototype.canUndo = function() { return this.undoStack.length > 0; }
 ROM.prototype.canRedo = function() { return this.redoStack.length > 0; }
 
@@ -2137,7 +2131,7 @@ ROMProperty.prototype.propertyHTML = function() {
         label.htmlFor = id;
     }
     label.classList.add("property-label");
-    label.innerHTML = this.name + ":";
+    if (this.name) label.innerHTML = this.name + ":";
     propertyDiv.appendChild(label);
 
     // create a div for the control(s)
@@ -2159,6 +2153,14 @@ ROMProperty.prototype.propertyHTML = function() {
             property.setValue(value);
             document.getElementById(this.id).focus();
         };
+        
+        // move the label to the right of the check box
+        label.innerHTML = "";
+        label = document.createElement('label');
+        label.classList.add("property-check-label");
+        label.htmlFor = input.id;
+        if (this.name) label.innerHTML = this.name;
+        controlDiv.appendChild(label);
         
     } else if (this.flag) {
         // property with boolean flags
@@ -2228,7 +2230,7 @@ ROMProperty.prototype.propertyHTML = function() {
             }
             special.onchange = function() {
                 if (this.checked) {
-                    property.setValue(this.value);
+                    property.setValue(Number(this.value));
                 } else {
                     property.setValue(property.min);
                 }
@@ -2567,13 +2569,14 @@ ROMArray.prototype.disassemble = function(data) {
             begin = end;
         }
 
-    } else if (this.terminator !== undefined) {
+    } else if (isNumber(Number(this.terminator))) {
         // null-terminated items
+        var terminator = Number(this.terminator);
         begin = 0;
         end = 0;
         var i = 0;
         while (end < this.data.length) {
-            while (this.data[end] !== this.terminator && end < this.data.length) end++;
+            while (this.data[end] !== terminator && end < this.data.length) end++;
             end++;
             itemRanges.push(new ROMRange(begin, end));
             begin = end;
@@ -2952,7 +2955,7 @@ ROMScript.prototype.disassemble = function(data) {
 
     // start with default encoding
     var encoding = this.defaultEncoding;
-    encoding.initScript(this);
+    encoding.initScript(this, this.data);
     
     // disassemble commands
     var offset = 0;
@@ -3228,9 +3231,9 @@ ROMScriptEncoding.prototype.description = function(command) {
     }
 }
 
-ROMScriptEncoding.prototype.initScript = function(script) {
+ROMScriptEncoding.prototype.initScript = function(script, data) {
     if (this.delegate && this.delegate.initScript) {
-        return this.delegate.initScript(script);
+        return this.delegate.initScript(script, data);
     }
 }
 
@@ -3336,6 +3339,7 @@ function ROMScriptList(rom) {
 
 ROMScriptList.prototype.scroll = function() {
     
+    if (!this.script) return;
     this.closeMenu();
     
     var topSpace = this.scriptList.firstChild;
@@ -3350,9 +3354,7 @@ ROMScriptList.prototype.scroll = function() {
         var topCommand = this.script.command[this.blockStart];
         var commandNode = this.node[topCommand.ref];
         var oldOffset, newOffset;
-        if (commandNode) {
-            oldOffset = commandNode.offsetTop;
-        }
+        if (commandNode) oldOffset = commandNode.offsetTop;
         
         // change blockStart so that the previous blocks are visible
         index = index - index % this.blockSize - this.blockSize * (this.numBlocks - 2);
@@ -3375,14 +3377,12 @@ ROMScriptList.prototype.scroll = function() {
         var bottomCommand = this.script.command[bottomIndex];
         var commandNode = this.node[bottomCommand.ref];
         var oldOffset, newOffset;
-        if (commandNode) {
-            oldOffset = commandNode.offsetTop;
-        }
+        if (commandNode) oldOffset = commandNode.offsetTop;
         
         // change blockStart so that the next blocks are visible
         index = index - index % this.blockSize + this.blockSize * (this.numBlocks - 2);
         var maxStart = this.script.command.length - this.blockSize * this.numBlocks;
-        maxStart = maxStart + this.blockSize - (maxStart % this.blockSize);
+        maxStart = Math.max(maxStart + this.blockSize - (maxStart % this.blockSize), 0);
         this.blockStart = Math.min(index, maxStart);
         this.update();
         
@@ -3423,17 +3423,21 @@ ROMScriptList.prototype.selectCommand = function(command) {
     // select the command in the rom
     this.rom.select(command);
     
-    var node = this.node[command.ref];
-    if (!node) {
+    if (!this.node[command.ref]) {
         // node is not in the current block
         var index = this.script.command.indexOf(command);
         this.blockStart = Math.max(index - index % this.blockSize - this.blockSize, 0);
         this.update();
-        node = this.node[command.ref];
-        this.scriptList.parentElement.scrollTop = node.offsetTop - this.container.offsetTop - Math.floor(this.container.offsetHeight - node.offsetHeight) / 2;
     }
     
+    var node = this.node[command.ref];
+    if (!node) return;
     node.classList.add("selected");
+    
+    // center the node in the list
+    var nodeTop = node.offsetTop - this.container.offsetTop;
+    var nodeBottom = nodeTop + node.offsetHeight;
+    if ((this.scriptList.parentElement.scrollTop > nodeTop) || ((this.scriptList.parentElement.scrollTop + this.container.offsetHeight) < nodeBottom)) this.scriptList.parentElement.scrollTop = nodeTop - Math.floor(this.container.offsetHeight - node.offsetHeight) / 2;
 }
 
 ROMScriptList.prototype.selectRef = function(ref) {
@@ -3703,6 +3707,8 @@ function ROMText(rom, definition, parent) {
     
     this.encoding = definition.encoding;
     this.text = "";
+    this.length = definition.length; // this is different from this.range.length
+//    this.fixedLength = (definition.fixedLength === true);
 }
 
 ROMText.prototype = Object.create(ROMAssembly.prototype);
@@ -3713,14 +3719,17 @@ Object.defineProperty(ROMText.prototype, "definition", { get: function() {
 
     delete definition.range;
     if (this.range.begin) definition.begin = this.range.begin;
-    if (this.range.length) definition.length = this.range.length;
+//    if (this.range.length) definition.length = this.range.length;
     definition.encoding = this.encoding;
+    definition.length = this.length;
+//    if (this.fixedLength) definition.fixedLength = true;
 
     return definition;
 }});
 
 ROMText.prototype.disassemble = function(data) {
     
+    // for variable length text, length is determined by the data
     if (this.range.length === 0) this.range = new ROMRange(0, data.length);
     
     ROMAssembly.prototype.disassemble.call(this, data);
@@ -3783,7 +3792,14 @@ ROMText.prototype.setText = function(text) {
     // validate the text
     var encoding = this.rom.textEncoding[this.encoding];
     if (!encoding) return; // TODO: add default encoding
+    
+    // encode the text to data
     var data = encoding.encode(text);
+    
+    // pad data for fixed-length text
+    if (this.length) data = encoding.pad(data, this.length);
+    
+    // decode the data back to text to fix identify encoding errors
     text = encoding.decode(data);
 
     // return if the value didn't change
@@ -3871,6 +3887,7 @@ function ROMTextEncoding(rom, definition, parent) {
     if (!isArray(definition.charTable)) { return; }
     for (var i = 0; i < definition.charTable.length; i++) {
         var charTable = this.rom.charTable[this.charTable[i]];
+        if (!charTable) continue;
         var keys = Object.keys(charTable.char);
         for (var c = 0; c < keys.length; c++) {
             var key = Number(keys[c]);
@@ -3981,6 +3998,21 @@ ROMTextEncoding.prototype.encode = function(text) {
     }
     
     return Uint8Array.from(data);
+}
+
+ROMTextEncoding.prototype.pad = function(data, length) {
+    if (data.length > length) {
+        // trim the data if it is too long
+        data = data.subarray(0, length);
+    } else if (data.length < length) {
+        // find the encoding's pad value
+        var padValue = this.encodingTable["\\pad"] || 0xFF;
+        var newData = new Uint8Array(length);
+        newData.set(data);
+        newData.fill(padValue, data.length);
+        data = newData;
+    }
+    return data;
 }
 
 ROMTextEncoding.prototype.textLength = function(data) {
@@ -4297,6 +4329,15 @@ function isNumber(value) {
 // returns if a value is an array
 function isArray(value) {
     return value && typeof value === 'object' && value.constructor === Array;
+}
+
+function bitCount (value) {
+    for (var count = 0, mask = 1; value !== 0; mask <<= 1) {
+        if (!(value & mask)) continue;
+        count++;
+        value ^= mask;
+    }
+    return count;
 }
 
 function compareTypedArrays(a1, a2) {

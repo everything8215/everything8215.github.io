@@ -151,7 +151,7 @@ FF6Map.prototype.mouseDown = function(e) {
         if (index !== -1) {
             // select the next trigger in a stack
             this.selectedTrigger = triggers[(index + 1) % triggers.length];
-            rom.select(this.selectedTrigger);
+            this.rom.select(this.selectedTrigger);
             this.isDragging = true;
             this.triggerPoint = {
                 x: this.selectedTrigger.x.value,
@@ -160,7 +160,7 @@ FF6Map.prototype.mouseDown = function(e) {
         } else if (triggers.length !== 0) {
             // select the first trigger
             this.selectedTrigger = triggers[0];
-            rom.select(this.selectedTrigger);
+            this.rom.select(this.selectedTrigger);
             this.isDragging = true;
             this.triggerPoint = {
                 x: this.selectedTrigger.x.value,
@@ -172,7 +172,7 @@ FF6Map.prototype.mouseDown = function(e) {
             if (this.m < 3) {
                 this.selectWorldBattle(this.clickPoint.x, this.clickPoint.y) 
             } else {
-                rom.select(this.mapProperties);
+                this.rom.select(this.mapProperties);
             }
             this.isDragging = false;
         }
@@ -681,7 +681,7 @@ FF6Map.prototype.loadWorldMap = function(m) {
     layerButtons[2].disabled = true;
 
     this.mapProperties = null;
-    rom.select(null);
+    this.rom.select(null);
 
     // load graphics and layout
     var layout = this.rom["worldLayout" + (m + 1)];

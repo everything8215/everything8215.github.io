@@ -37,6 +37,37 @@ function FF4Battle(rom) {
     this.clickedPoint = null;
 }
 
+FF4Battle.prototype.battleName = function(b) {
+    var battleProperties = this.rom.battleProperties.item(b);
+    var monster1 = battleProperties.monster1.value;
+    var monster2 = battleProperties.monster2.value;
+    var monster3 = battleProperties.monster3.value;
+    var m1 = battleProperties.monster1Count.value
+    var m2 = battleProperties.monster2Count.value
+    var m3 = battleProperties.monster3Count.value
+
+    if (monster2 === monster3) { m2 += m3; m3 = 0; }
+    if (monster1 === monster2) { m1 += m2; m2 = 0; }
+    if (monster1 === monster3) { m1 += m3; m3 = 0; }
+
+    var battleName = "";
+    if (m1 !== 0) {
+        battleName += this.rom.stringTable.monsterName.fString(monster1);
+        if (m1 !== 1) battleName += " ×" + m1;
+    }
+    if (m2 !== 0) {
+        if (battleName !== "") battleName += ", ";
+        battleName += this.rom.stringTable.monsterName.fString(monster2);
+        if (m2 !== 1) battleName += " ×" + m2;
+    }
+    if (m3 !== 0) {
+        if (battleName !== "") battleName += ", ";
+        battleName += this.rom.stringTable.monsterName.fString(monster3);
+        if (m3 !== 1) battleName += " ×" + m3;
+    }
+    return battleName;
+}
+
 FF4Battle.prototype.mouseDown = function(e) {
     var x = Math.floor(e.offsetX / this.zoom) + this.battleRect.l;
     var y = Math.floor(e.offsetY / this.zoom) + this.battleRect.t;

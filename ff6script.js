@@ -307,30 +307,252 @@ FF6Script.nextEncoding = function(command) {
     }
 }
 
-var FF6MonsterScript = {};
-FF6MonsterScript.name = "FF6MonsterScript";
-
-FF6MonsterScript.initScript = function(script) {
-    // add references for monsters
-    for (var e = 0; e < script.rom.monsterScriptPointers.array.length; e++) {
-        var offset = script.rom.monsterScriptPointers.item(e).value;
-        var label = script.rom.stringTable.monsterName.fString(e);
-        script.addPlaceholder(null, offset, "monster", label);
-    }
-}
-
-FF6MonsterScript.description = function(command) {
-    switch (command.key) {
-        case "dialog":
-            var d = command.dialog.value;
-            var dialog = command.rom.monsterDialog.item(d);
-            if (dialog) {
-                return "Display Dialog:<br/>" + dialog.htmlText;
-            } else {
-                return "Display Dialog:<br/>Invalid Dialog Message";
+var FF6MonsterScript = {
+    name: "FF6MonsterScript",
+    
+    initScript: function(script) {
+        // add references for monsters
+        for (var e = 0; e < script.rom.monsterScriptPointers.array.length; e++) {
+            var offset = script.rom.monsterScriptPointers.item(e).value;
+            var label = script.rom.stringTable.monsterName.fString(e);
+            if (!label || label.length === 0) continue;
+            script.addPlaceholder(script.rom.monsterScriptPointers.item(e), offset, "monster", label);
+        }
+    },
+    
+    string: function(command, key, stringKey) {
+        return command.rom.stringTable[stringKey].fString(command[key].value);
+    },
+    
+    attackString: function(command, key) {
+        var a = command[key].value;
+        if (a === 0xFE) return "Do Nothing";
+        return this.string(command, key, "attackName");
+    },
+    
+    commandString: function(command, key) {
+        var a = command[key].value;
+        if (a === 0xFE) return "Do Nothing";
+        return this.string(command, key, "battleCommandName");
+    },
+    
+    elementString: function(command, key) {
+        var e = command[key].value;
+        if (e === 0) return "No Element";
+        var element = "";
+        var count = bitCount(e);
+        for (var i = 0; i < 8; i++) {
+            var mask = 1 << i;
+            if (!(e & mask)) continue;
+            e ^= mask; // flip the bit
+            if (element !== "") {
+                // this is not the first element
+                if (count === 2) element += " or ";
+                else element += (e ? ", " : ", or ");
             }
-            
-        default: break;
+            element += command.rom.stringTable.element.fString(i);
+        }
+        return element;
+    },
+
+    slotString: function(command, prep) {
+        var s = command.monsters.value;
+        if (s === 0) return "This Monster";
+        if (s === 0xFF) return "All Monsters";
+        s &= 0x3F;
+        var slot = "";
+        var count = bitCount(s);
+        for (var i = 0; i < 6; i++) {
+            var mask = 1 << i;
+            if (!(s & mask)) continue;
+            s ^= mask; // flip the bit
+            if (slot !== "") {
+                // this is not the first element
+                if (count === 2) slot += (" " + prep + " ");
+                else slot += (s ? ", " : (", " + prep + " "));
+            } else {
+                slot = "Monster Slot ";
+            }
+            slot += (i + 1).toString();
+        }
+        return slot;
+    },
+
+    conditionalString: function(command) {
+        var target = this.string(command, "target", "battleTargets");
+        switch (command.condition.value) {
+                
+            case 1: // command
+                var command1 = this.commandString(command, "command1");
+                var command2 = this.commandString(command, "command2");
+                if (command.command1.value === command.command2.value) return "If " + command1 + " Was Used Against This Monster";
+                return "If " + command1 + " or " + command2 + " Was Used Against This Monster";
+
+            case 2: // attack
+                var attack1 = this.attackString(command, "attack1");
+                var attack2 = this.attackString(command, "attack2");
+                if (command.attack1.value === command.attack2.value) return "If " + attack1 + " Was Used Against This Monster";
+                return "If " + attack1 + " or " + attack2 + " Was Used Against This Monster";
+
+            case 3: // item
+                var item1 = this.string(command, "item1", "itemNames");
+                var item2 = this.string(command, "item2", "itemNames");
+                if (command.item1.value === command.item2.value) return "If " + item1 + " Was Used On This Monster";
+                return "If " + item1 + " or " + item2 + " Was Used On This Monster";
+
+            case 4: // element
+                return "If " + this.elementString(command, "element") + " Was Used Against this Monster";
+
+            case 5: // any action
+                return "If Any Action Was Used Against This Monster";
+                
+            case 6: // hp
+                return "If " + target + "'s HP < " + command.hp.value.toString();
+
+            case 7: // mp
+                return "If " + target + "'s MP < " + command.mp.value.toString();
+
+            case 8: // has status
+                return "If " + target + " Has " + this.string(command, "status", "statusNamesReversed") + " Status";
+
+            case 9: // does not have status
+                return "If " + target + " Does Not Have " + this.string(command, "status", "statusNamesReversed") + " Status";
+
+            case 11: // monster timer
+                return "If Monster Timer > " + command.timer.value.toString();
+
+            case 12: // variable less than
+                return "If " + this.string(command, "variable", "battleVariable") + " < " + command.value.value.toString();
+
+            case 13: // variable greater than
+                return "If " + this.string(command, "variable", "battleVariable") + " ≥ " + command.value.value.toString();
+
+            case 14: // level less than
+                return "If " + target + "'s Level < " + command.level.value.toString();
+
+            case 15: // level greater than
+                return "If " + target + "'s Level ≥ " + command.level.value.toString();
+
+            case 16: // only one type of monster
+                return "If There is Only One Type of Monster Remaining";
+
+            case 17: // monsters alive
+            case 18: // monsters dead
+                return "If " + this.slotString(command, "and") + ((bitCount(command.monsters.value) < 2) ? " is " : " are ") + (command.condition.value === 17 ? "Alive" : "Dead");
+
+            case 19: // characters/monsters alive
+                if (command.countType.value) {
+                    return "If There Are " + command.count.value.toString() + " or Fewer Monsters Remaining";
+                }
+                return "If There Are " + command.count.value.toString() + " or More Characters Remaining";
+
+            case 20: // switch on
+                return "If " + this.string(command, "switch", "battleSwitch") + " == On";
+
+            case 21: // switch off
+                return "If " + this.string(command, "switch", "battleSwitch") + " == Off";
+                
+            case 22: // battle timer
+                return "If Battle Timer > " + command.timer.value.toString();
+
+            case 23: // target valid
+                return "If " + target + " is a Valid Target";
+
+            case 24: // gau present
+                return "If " + command.rom.stringTable.characterNames.fString(11) + " is Present";
+
+            case 25: // monster slot
+                return "If This Monster is " + this.slotString(command, "or");
+
+            case 26: // weak vs. element
+                return "If " + target + " is Weak vs. " + this.elementString(command, "element2");
+
+            case 27: // battle index
+                return "If Current Battle is " + this.string(command, "battle", "battleProperties");
+
+            default: return this.string(command, "condition", command.condition.stringTable);
+        }
+    },
+    
+    description: function(command) {
+        switch (command.key) {
+            case "attack":
+                var a1 = command.attack1.value;
+                var a2 = command.attack2.value;
+                var a3 = command.attack3.value;
+                if (a1 === a2 && a1 === a3) return "Attack: " + this.attackString(command, "attack1");
+                return "Attack: " + this.attackString(command, "attack1") + ", " + this.attackString(command, "attack2") + ", or " + this.attackString(command, "attack3");
+
+            case "attackSingle":
+                return "Attack: " + this.attackString(command, "attack");
+
+            case "changeBattle":
+                return "Change Battle: " + this.string(command, "battle", "battleProperties");
+
+            case "command":
+                var c1 = command.command1.value;
+                var c2 = command.command2.value;
+                var c3 = command.command3.value;
+                if (c1 === c2 && c1 === c3) return "Command: " + this.commandString(command, "command1");
+                return "Command: " + this.commandString(command, "command1") + ", " + this.commandString(command, "command2") + ", or " + this.commandString(command, "command3");
+
+            case "conditional":
+                return "Conditional: " + this.conditionalString(command);
+
+            case "dialog":
+                var d = command.dialog.value;
+                var dialog = command.rom.monsterDialog.item(d);
+                if (dialog) {
+                    return "Display Monster Dialog:<br/>" + dialog.htmlText;
+                } else {
+                    return "Display Monster Dialog:<br/>Invalid Dialog Message";
+                }
+
+            case "item":
+                var i1 = command.item1.value;
+                var i2 = command.item2.value;
+                var useThrow = command.useThrow.value ? "Throw Item: " : "Use Item: ";
+                if (i1 === i2) return useThrow + this.string(command, "item1", "itemNames");
+                return useThrow + this.string(command, "item1", "itemNames") + " or " + this.string(command, "item2", "itemNames");
+
+            case "misc":
+                var desc = this.string(command, "effect", command.effect.stringTable);
+                if (!command.target.invalid) {
+                    desc += ": " + this.string(command, "target", "battleTargets");
+                } else if (!command.status.invalid) {
+                    desc += ": " + this.string(command, "status", "statusNamesReversed");
+                }
+                return desc;
+
+            case "showHide":
+            case "animation":
+                return command.name + ": " + this.slotString(command, "and");
+
+            case "switch":
+                if (command.operation.value === 0) {
+                    return "Toggle " + this.string(command, "switch", "battleSwitch");
+                } else if (command.operation.value === 1) {
+                    return this.string(command, "switch", "battleSwitch") + " = On";
+                } else if (command.operation.value === 2) {
+                    return this.string(command, "switch", "battleSwitch") + " = Off";
+                }
+                return "Invalid Switch Operation";
+
+            case "target":
+                return "Change Target: " + this.string(command, "target", "battleTargets");
+
+            case "variable":
+                if (command.operation.value === 0) {
+                    return this.string(command, "variable", "battleVariable") + " = " + command.value.value.toString();
+                } else if (command.operation.value === 2) {
+                    return this.string(command, "variable", "battleVariable") + " += " + command.value.value.toString();
+                } else if (command.operation.value === 3) {
+                    return this.string(command, "variable", "battleVariable") + " -= " + command.value.value.toString();
+                }
+                return "Invalid Switch Operation";
+
+            default: break;
+        }
+        return command.name;
     }
-    return command.name;
-}
+};

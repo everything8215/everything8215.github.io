@@ -7,25 +7,25 @@
     "system": "sfc",
     "mode": "hiROM",
     "assembly": {
-        "attackNames": {
+        "attackName": {
             "type": "array",
-            "name": "Attack Names",
+            "name": "Attack Name",
             "range": "0xE6F7B9-0xE6FE8F",
             "array": {
                 "length": 175
             },
             "assembly": {
                 "type": "text",
-                "encoding": "smallText",
+                "encoding": "bigText",
                 "length": 10
             },
             "stringTable": {
-                "name": "Attack Names",
+                "name": "Attack Name",
                 "length": 256,
-                "default": "<attackNames[%i-0x51]>",
+                "default": "<attackName[%i-0x51]>",
                 "string": {
                     "0x00-0x36": "<spellNames[%i]>",
-                    "0x36-0x51": "<esperNames[%i-0x36]> (<esperAttackNames[%i-0x36]>)",
+                    "0x36-0x51": "<esperNames[%i-0x36]> (<esperAttackName[%i-0x36]>)",
                     "0x55-0x5D": "<swdTechNames[%i-0x55]>",
                     "0xFF": "Nothing"
                 }
@@ -49,14 +49,7 @@
                     }
                 }
             },
-            "stringTable": {
-                "name": "Attack Names",
-                "default": "Attack %i",
-                "length": 256,
-                "string": {
-                    "0-54": "<spellNames[%i]"
-                }
-            }
+            "stringTable": "attackName"
         },
         "battleBackgroundGraphics": {
             "type": "array",
@@ -154,9 +147,48 @@
                 "length": 6
             }
         },
+        "battleCommandName": {
+            "type": "array",
+            "name": "Battle Command Name",
+            "range": "0xD8CEA0-0xD8CF80",
+            "array": {
+                "length": 32
+            },
+            "assembly": {
+                "type": "text",
+                "encoding": "smallText",
+                "length": 7
+            },
+            "stringTable": {
+                "name": "Battle Command Name",
+                "default": "Battle Command %i",
+                "string": {
+                    "0x00-0x1F": "<battleCommandName[%i]>",
+                    "0x1E": "A.I. Command",
+                    "0x1F": "Random Attack",
+                    "0x20": "Change Battle",
+                    "0x21": "Battle Dialog",
+                    "0x22": "Enemy Roulette",
+                    "0x23": "Battle Event",
+                    "0x24": "Monster Entry/Exit",
+                    "0x25": "Battle Message",
+                    "0x26": "Attack w/o Attacker",
+                    "0x27": "Scan Info",
+                    "0x29": "Status Counter Expired",
+                    "0x2A": "Run",
+                    "0x2B": "Monster Animation",
+                    "0x2C": "Reset Character Action",
+                    "0x2D": "Seize Damage",
+                    "0x2E": "Change Variable",
+                    "0x2F": "Change Switch",
+                    "0x30": "Misc. Effects",
+                    "0xFF": "Nothing"
+                }
+            }
+        },
         "battleGroupsEvent": {
             "type": "array",
-            "name": "Event Battle Groups",
+            "name": "Event Battle Group",
             "range": "0xCF5000-0xCF5400",
             "array": {
                 "length": 256
@@ -169,11 +201,12 @@
                         "name": "Battle 1",
                         "begin": 0,
                         "mask": "0x03FF",
-                        "link": "battleProperties[%i]"
+                        "link": "battleProperties[%i]",
+                        "stringTable": "battleProperties"
                     },
                     "random1": {
                         "type": "property",
-                        "name": "Random 1",
+                        "name": "Choose From Next Four",
                         "begin": 1,
                         "mask": "0x80",
                         "bool": true
@@ -183,11 +216,12 @@
                         "name": "Battle 2",
                         "begin": 2,
                         "mask": "0x03FF",
-                        "link": "battleProperties[%i]"
+                        "link": "battleProperties[%i]",
+                        "stringTable": "battleProperties"
                     },
                     "random2": {
                         "type": "property",
-                        "name": "Random 2",
+                        "name": "Choose From Next Four",
                         "begin": 3,
                         "mask": "0x80",
                         "bool": true
@@ -198,7 +232,7 @@
         },
         "battleGroupsRandom": {
             "type": "array",
-            "name": "Random Battle Groups",
+            "name": "Random Battle Group",
             "range": "0xCF4800-0xCF5000",
             "array": {
                 "length": 256
@@ -211,11 +245,12 @@
                         "name": "Battle 1",
                         "begin": 0,
                         "mask": "0x03FF",
-                        "link": "battleProperties[%i]"
+                        "link": "battleProperties[%i]",
+                        "stringTable": "battleProperties"
                     },
                     "random1": {
                         "type": "property",
-                        "name": "Random 1",
+                        "name": "Choose From Next Four",
                         "begin": 1,
                         "mask": "0x80",
                         "bool": true
@@ -225,11 +260,12 @@
                         "name": "Battle 2",
                         "begin": 2,
                         "mask": "0x03FF",
-                        "link": "battleProperties[%i]"
+                        "link": "battleProperties[%i]",
+                        "stringTable": "battleProperties"
                     },
                     "random2": {
                         "type": "property",
-                        "name": "Random 2",
+                        "name": "Choose From Next Four",
                         "begin": 3,
                         "mask": "0x80",
                         "bool": true
@@ -239,11 +275,12 @@
                         "name": "Battle 3",
                         "begin": 4,
                         "mask": "0x03FF",
-                        "link": "battleProperties[%i]"
+                        "link": "battleProperties[%i]",
+                        "stringTable": "battleProperties"
                     },
                     "random3": {
                         "type": "property",
-                        "name": "Random 3",
+                        "name": "Choose From Next Four",
                         "begin": 5,
                         "mask": "0x80",
                         "bool": true
@@ -253,17 +290,36 @@
                         "name": "Battle 4",
                         "begin": 6,
                         "mask": "0x03FF",
-                        "link": "battleProperties[%i]"
+                        "link": "battleProperties[%i]",
+                        "stringTable": "battleProperties"
                     },
                     "random4": {
                         "type": "property",
-                        "name": "Random 4",
+                        "name": "Choose From Next Four",
                         "begin": 7,
                         "mask": "0x80",
                         "bool": true
                     }
                 },
                 "length": 8
+            }
+        },
+        "battleMagicPoints": {
+            "type": "array",
+            "name": "Battle Magic Points",
+            "range": "0xDFB400-0xDFB600",
+            "array": {
+                "length": 512
+            },
+            "assembly": {
+                "type": "data",
+                "length": 1,
+                "assembly": {
+                    "magicPoints": {
+                        "type": "property",
+                        "name": "Magic Points"
+                    }
+                }
             }
         },
         "battleProperties": {
@@ -276,6 +332,7 @@
             "assembly": {
                 "type": "data",
                 "editor": "FF6Battle",
+                "length": 15,
                 "assembly": {
                     "monster1": {
                         "type": "property",
@@ -298,6 +355,13 @@
                         "bool": true,
                         "hidden": true
                     },
+                    "monster1Present": {
+                        "type": "property",
+                        "name": "Present",
+                        "begin": 1,
+                        "mask": "0x01",
+                        "bool": true
+                    },
                     "monster2": {
                         "type": "property",
                         "name": "Monster 2",
@@ -317,6 +381,13 @@
                         "mask": "0x02",
                         "bool": true,
                         "hidden": true
+                    },
+                    "monster2Present": {
+                        "type": "property",
+                        "name": "Present",
+                        "begin": 1,
+                        "mask": "0x02",
+                        "bool": true
                     },
                     "monster3": {
                         "type": "property",
@@ -338,6 +409,13 @@
                         "bool": true,
                         "hidden": true
                     },
+                    "monster3Present": {
+                        "type": "property",
+                        "name": "Present",
+                        "begin": 1,
+                        "mask": "0x04",
+                        "bool": true
+                    },
                     "monster4": {
                         "type": "property",
                         "name": "Monster 4",
@@ -357,6 +435,13 @@
                         "mask": "0x08",
                         "bool": true,
                         "hidden": true
+                    },
+                    "monster4Present": {
+                        "type": "property",
+                        "name": "Present",
+                        "begin": 1,
+                        "mask": "0x08",
+                        "bool": true
                     },
                     "monster5": {
                         "type": "property",
@@ -378,6 +463,13 @@
                         "bool": true,
                         "hidden": true
                     },
+                    "monster5Present": {
+                        "type": "property",
+                        "name": "Present",
+                        "begin": 1,
+                        "mask": "0x10",
+                        "bool": true
+                    },
                     "monster6": {
                         "type": "property",
                         "name": "Monster 6",
@@ -397,6 +489,13 @@
                         "mask": "0x20",
                         "bool": true,
                         "hidden": true
+                    },
+                    "monster6Present": {
+                        "type": "property",
+                        "name": "Present",
+                        "begin": 1,
+                        "mask": "0x20",
+                        "bool": true
                     },
                     "monster1X": {
                         "type": "property",
@@ -493,9 +592,52 @@
                         "mask": "0x0F",
                         "multiplier": 8,
                         "hidden": true
+                    },
+                    "vramMap": {
+                        "type": "property",
+                        "name": "VRAM Map",
+                        "begin": 0,
+                        "mask": "0xF0"
+                    },
+                    "monsterEntry": {
+                        "type": "property",
+                        "external": "battlePropertiesAux[%i].monsterEntry"
+                    },
+                    "magicPoints": {
+                        "type": "property",
+                        "external": "battleMagicPoints[%i].magicPoints",
+                        "invalid": "this.parent.i >= 512"
+                    },
+                    "song": {
+                        "type": "property",
+                        "external": "battlePropertiesAux[%i].song"
+                    },
+                    "continueSong": {
+                        "type": "property",
+                        "external": "battlePropertiesAux[%i].continueSong"
+                    },
+                    "characterAI": {
+                        "type": "property",
+                        "external": "battlePropertiesAux[%i].characterAI"
+                    },
+                    "enableCharacterAI": {
+                        "type": "property",
+                        "external": "battlePropertiesAux[%i].enableCharacterAI"
+                    },
+                    "flags": {
+                        "type": "property",
+                        "external": "battlePropertiesAux[%i].flags"
+                    },
+                    "flags2": {
+                        "type": "property",
+                        "external": "battlePropertiesAux[%i].flags2"
                     }
-                },
-                "length": 15
+                }
+            },
+            "stringTable": {
+                "name": "Battle Properties",
+                "length": 576,
+                "default": "Battle %i"
             }
         },
         "battlePropertiesAux": {
@@ -506,8 +648,84 @@
                 "length": 576
             },
             "assembly": {
-                "type": "assembly",
-                "length": 4
+                "type": "data",
+                "length": 4,
+                "assembly": {
+                    "monsterEntry": {
+                        "type": "property",
+                        "name": "Monster Entry",
+                        "begin": 0,
+                        "mask": "0x0F"
+                    },
+                    "flags": {
+                        "type": "property",
+                        "name": "Flags",
+                        "begin": 0,
+                        "mask": "0x0EF0",
+                        "flag": true,
+                        "stringTable": {
+                            "string": {
+                                "0": "Disable Normal Attack",
+                                "1": "Disable Back Attack",
+                                "2": "Disable Pincer Attack",
+                                "3": "Disable Side Attack",
+                                "5": "Disable Fanfare",
+                                "6": "Disable Joker Doom",
+                                "7": "Disable Leap"
+                            }
+                        }
+                    },
+                    "song": {
+                        "type": "property",
+                        "name": "Song",
+                        "begin": 3,
+                        "mask": "0x38",
+                        "stringTable": {
+                            "string": {
+                                "0": "Battle Theme",
+                                "1": "The Decisive Battle",
+                                "2": "The Fierce Battle",
+                                "3": "Returners",
+                                "4": "Save Them!",
+                                "5": "Dancing Mad",
+                                "6": "None",
+                                "7": "None"
+                            }
+                        }
+                    },
+                    "continueSong": {
+                        "type": "property",
+                        "name": "Continue Previous Song",
+                        "begin": 3,
+                        "mask": "0x80",
+                        "bool": true
+                    },
+                    "characterAI": {
+                        "type": "property",
+                        "name": "Character A.I.",
+                        "begin": 2
+                    },
+                    "enableCharacterAI": {
+                        "type": "property",
+                        "name": "Enable Character A.I.",
+                        "begin": 1,
+                        "mask": "0x80",
+                        "bool": true
+                    },
+                    "flags2": {
+                        "type": "property",
+                        "begin": 3,
+                        "mask": "0x07",
+                        "flag": true,
+                        "stringTable": {
+                            "string": {
+                                "0": "Disable L+R",
+                                "1": "Disable On The Veldt",
+                                "2": "Disable Preemptive Attack"
+                            }
+                        }
+                    }
+                }
             }
         },
         "characterNames": {
@@ -752,9 +970,9 @@
                 "offset": "0xCF3940"
             }
         },
-        "esperAttackNames": {
+        "esperAttackName": {
             "type": "array",
-            "name": "Esper Attack Names",
+            "name": "Esper Attack Name",
             "range": "0xE6FE8F-0xE6FF9D",
             "array": {
                 "length": 27
@@ -762,13 +980,13 @@
             "assembly": {
                 "type": "text",
                 "name": "Attack Name",
-                "encoding": "smallText",
+                "encoding": "bigText",
                 "length": 10
             },
             "stringTable": {
-                "name": "Esper Attack Names",
+                "name": "Esper Attack Name",
                 "length": 27,
-                "default": "<esperAttackNames[%i]>"
+                "default": "<esperAttackName[%i]>"
             }
         },
         "esperBonusDescriptions": {
@@ -868,7 +1086,7 @@
                     },
                     "attackName": {
                         "type": "assembly",
-                        "external": "esperAttackNames[%i]"
+                        "external": "esperAttackName[%i]"
                     },
                     "attackDescription": {
                         "type": "assembly",
@@ -1098,6 +1316,7 @@
                         "type": "text",
                         "name": "Item Name",
                         "range": "1-13",
+                        "length": 12,
                         "encoding": "smallText"
                     }
                 }
@@ -1739,28 +1958,28 @@
                         "name": "Layer 2 H-Size",
                         "begin": 23,
                         "mask": "0x0C",
-                        "stringTable": "mapProperties.assembly.assembly.hSize1"
+                        "stringTable": "mapProperties.hSize1"
                     },
                     "vSize2": {
                         "type": "property",
                         "name": "Layer 2 V-Size",
                         "begin": 23,
                         "mask": "0x03",
-                        "stringTable": "mapProperties.assembly.assembly.vSize1"
+                        "stringTable": "mapProperties.vSize1"
                     },
                     "hSize3": {
                         "type": "property",
                         "name": "Layer 3 H-Size",
                         "begin": 24,
                         "mask": "0xC0",
-                        "stringTable": "mapProperties.assembly.assembly.hSize1"
+                        "stringTable": "mapProperties.hSize1"
                     },
                     "vSize3": {
                         "type": "property",
                         "name": "Layer 3 V-Size",
                         "begin": 24,
                         "mask": "0x30",
-                        "stringTable": "mapProperties.assembly.assembly.vSize1"
+                        "stringTable": "mapProperties.vSize1"
                     },
                     "palette": {
                         "type": "property",
@@ -2587,7 +2806,7 @@
             "assembly": {
                 "type": "text",
                 "name": "Attack Name",
-                "encoding": "smallText",
+                "encoding": "bigText",
                 "length": 10
             },
             "stringTable": {
@@ -2611,25 +2830,25 @@
                         "type": "property",
                         "name": "Control Attack 1",
                         "begin": 0,
-                        "stringTable": "attackNames"
+                        "stringTable": "attackName"
                     },
                     "attack2": {
                         "type": "property",
                         "name": "Control Attack 2",
                         "begin": 1,
-                        "stringTable": "attackNames"
+                        "stringTable": "attackName"
                     },
                     "attack3": {
                         "type": "property",
                         "name": "Control Attack 3",
                         "begin": 2,
-                        "stringTable": "attackNames"
+                        "stringTable": "attackName"
                     },
                     "attack4": {
                         "type": "property",
                         "name": "Control Attack 4",
                         "begin": 3,
-                        "stringTable": "attackNames"
+                        "stringTable": "attackName"
                     }
                 }
             }
@@ -2649,13 +2868,13 @@
                         "type": "property",
                         "name": "Rage Attack 1",
                         "begin": 0,
-                        "stringTable": "attackNames"
+                        "stringTable": "attackName"
                     },
                     "attack2": {
                         "type": "property",
                         "name": "Rage Attack 2",
                         "begin": 1,
-                        "stringTable": "attackNames"
+                        "stringTable": "attackName"
                     }
                 }
             }
@@ -2675,13 +2894,13 @@
                         "type": "property",
                         "name": "Sketch Attack 1",
                         "begin": 0,
-                        "stringTable": "attackNames"
+                        "stringTable": "attackName"
                     },
                     "attack2": {
                         "type": "property",
                         "name": "Sketch Attack 2",
                         "begin": 1,
-                        "stringTable": "attackNames"
+                        "stringTable": "attackName"
                     }
                 }
             }
@@ -2915,6 +3134,7 @@
             "type": "array",
             "name": "Monster Properties",
             "range": "0xCF0000-0xCF3000",
+            "stringTable": "monsterName",
             "array": {
                 "length": 384
             },
@@ -3153,7 +3373,7 @@
                         "begin": 27,
                         "mask": "0xFFFFFF",
                         "flag": true,
-                        "stringTable": "monsterProperties.assembly.assembly.statusImmunity"
+                        "stringTable": "monsterProperties.statusImmunity"
                     },
                     "elementAbsorb": {
                         "type": "property",
@@ -3229,8 +3449,7 @@
                         "invalid": "this.parent.i > 0xFF"
                     }
                 }
-            },
-            "stringTable": "monsterName"
+            }
         },
         "monsterScript": {
             "type": "script",
@@ -3384,7 +3603,7 @@
                             "begin": 4,
                             "mask": "0x80",
                             "bool": true,
-                            "hidden": "this.parent.vehicle.value === 0"
+                            "disabled": "this.parent.vehicle.value === 0"
                         },
                         "special": {
                             "type": "property",
@@ -4946,7 +5165,7 @@
                             "name": "State 2",
                             "begin": 3,
                             "mask": "0x8000",
-                            "stringTable": "eventScript.event.jumpSwitch.assembly.state1",
+                            "stringTable": "eventScript.event.jumpSwitch.state1",
                             "invalid": "this.parent.count.value < 2"
                         },
                         "switch3": {
@@ -4962,7 +5181,7 @@
                             "name": "State 3",
                             "begin": 5,
                             "mask": "0x8000",
-                            "stringTable": "eventScript.event.jumpSwitch.assembly.state1",
+                            "stringTable": "eventScript.event.jumpSwitch.state1",
                             "invalid": "this.parent.count.value < 3"
                         },
                         "switch4": {
@@ -4978,7 +5197,7 @@
                             "name": "State 4",
                             "begin": 7,
                             "mask": "0x8000",
-                            "stringTable": "eventScript.event.jumpSwitch.assembly.state1",
+                            "stringTable": "eventScript.event.jumpSwitch.state1",
                             "invalid": "this.parent.count.value < 4"
                         },
                         "switch5": {
@@ -4994,7 +5213,7 @@
                             "name": "State 5",
                             "begin": 9,
                             "mask": "0x8000",
-                            "stringTable": "eventScript.event.jumpSwitch.assembly.state1",
+                            "stringTable": "eventScript.event.jumpSwitch.state1",
                             "invalid": "this.parent.count.value < 5"
                         },
                         "switch6": {
@@ -5010,7 +5229,7 @@
                             "name": "State 6",
                             "begin": 11,
                             "mask": "0x8000",
-                            "stringTable": "eventScript.event.jumpSwitch.assembly.state1",
+                            "stringTable": "eventScript.event.jumpSwitch.state1",
                             "invalid": "this.parent.count.value < 6"
                         },
                         "switch7": {
@@ -5026,7 +5245,7 @@
                             "name": "State 7",
                             "begin": 13,
                             "mask": "0x8000",
-                            "stringTable": "eventScript.event.jumpSwitch.assembly.state1",
+                            "stringTable": "eventScript.event.jumpSwitch.state1",
                             "invalid": "this.parent.count.value < 7"
                         },
                         "switch8": {
@@ -5042,7 +5261,7 @@
                             "name": "State 8",
                             "begin": 15,
                             "mask": "0x8000",
-                            "stringTable": "eventScript.event.jumpSwitch.assembly.state1",
+                            "stringTable": "eventScript.event.jumpSwitch.state1",
                             "invalid": "this.parent.count.value < 8"
                         }
                     }
@@ -6301,7 +6520,8 @@
                         "animation": {
                             "type": "property",
                             "name": "Animation",
-                            "begin": 1
+                            "begin": 1,
+                            "stringTable": "monsterAnimation"
                         },
                         "monsters": {
                             "type": "property",
@@ -6327,19 +6547,7 @@
                     }
                 },
                 "attack": {
-                    "name": "Attack (Single)",
-                    "opcode": "0x00-0xF0",
-                    "assembly": {
-                        "attack": {
-                            "type": "property",
-                            "name": "Attack",
-                            "stringTable": "attackNames",
-                            "max": "0xEF"
-                        }
-                    }
-                },
-                "attackRandom": {
-                    "name": "Attack",
+                    "name": "Attack (Choose 1 of 3)",
                     "opcode": "0xF0",
                     "length": 4,
                     "assembly": {
@@ -6347,7 +6555,7 @@
                             "type": "property",
                             "name": "Attack 1",
                             "begin": 1,
-                            "stringTable": "attackNames",
+                            "stringTable": "attackName",
                             "max": "0xFE",
                             "special": {
                                 "0xFE": "Do Nothing"
@@ -6357,7 +6565,7 @@
                             "type": "property",
                             "name": "Attack 2",
                             "begin": 2,
-                            "stringTable": "attackNames",
+                            "stringTable": "attackName",
                             "max": "0xFE",
                             "special": {
                                 "0xFE": "Do Nothing"
@@ -6367,11 +6575,23 @@
                             "type": "property",
                             "name": "Attack 3",
                             "begin": 3,
-                            "stringTable": "attackNames",
+                            "stringTable": "attackName",
                             "max": "0xFE",
                             "special": {
                                 "0xFE": "Do Nothing"
                             }
+                        }
+                    }
+                },
+                "attackSingle": {
+                    "name": "Attack (Single)",
+                    "opcode": "0x00-0xF0",
+                    "assembly": {
+                        "attack": {
+                            "type": "property",
+                            "name": "Attack",
+                            "stringTable": "attackName",
+                            "max": "0xEF"
                         }
                     }
                 },
@@ -6392,6 +6612,14 @@
                     "opcode": "0xF2",
                     "length": 4,
                     "assembly": {
+                        "battle": {
+                            "type": "property",
+                            "name": "Battle",
+                            "begin": 2,
+                            "mask": "0x7FFF",
+                            "link": "battleProperties[%i]",
+                            "stringTable": "battleProperties"
+                        },
                         "exitEffect": {
                             "type": "property",
                             "name": "Exit Effect",
@@ -6405,13 +6633,6 @@
                             "mask": "0x80",
                             "bool": true
                         },
-                        "battle": {
-                            "type": "property",
-                            "name": "Battle",
-                            "begin": 2,
-                            "mask": "0xFFFF",
-                            "link": "battleProperties[%i]"
-                        },
                         "restoreMonsters": {
                             "type": "property",
                             "name": "Restore Monsters",
@@ -6421,7 +6642,7 @@
                         }
                     }
                 },
-                "commandRandom": {
+                "command": {
                     "name": "Command",
                     "opcode": "0xF4",
                     "length": 4,
@@ -6429,41 +6650,22 @@
                         "command1": {
                             "type": "property",
                             "name": "Command 1",
-                            "begin": 1
+                            "begin": 1,
+                            "stringTable": "battleCommandName"
                         },
                         "command2": {
                             "type": "property",
                             "name": "Command 2",
-                            "begin": 2
+                            "begin": 2,
+                            "stringTable": "battleCommandName"
                         },
                         "command3": {
                             "type": "property",
                             "name": "Command 3",
-                            "begin": 3
+                            "begin": 3,
+                            "stringTable": "battleCommandName"
                         }
                     }
-                },
-                "dialog": {
-                    "name": "Dialog",
-                    "opcode": "0xF3",
-                    "length": 2,
-                    "assembly": {
-                        "dialog": {
-                            "type": "property",
-                            "name": "Dialog",
-                            "begin": 1,
-                            "link": "monsterDialog[%i]",
-                            "stringTable": "monsterDialog"
-                        }
-                    }
-                },
-                "end": {
-                    "name": "End of Script",
-                    "opcode": "0xFF"
-                },
-                "endConditional": {
-                    "name": "End Conditional",
-                    "opcode": "0xFE"
                 },
                 "conditional": {
                     "name": "Conditional",
@@ -6490,25 +6692,218 @@
                                     "11": "Monster Timer",
                                     "12": "Variable Less Than",
                                     "13": "Variable Greater Than",
-                                    "14": "Target's Level Less Than",
-                                    "15": "Target's Level Greater Than",
+                                    "14": "Level Less Than",
+                                    "15": "Level Greater Than",
                                     "16": "One Type of Monster",
                                     "17": "Monsters Alive",
                                     "18": "Monsters Dead",
-                                    "19": "Number of Monsters/Characters Left",
+                                    "19": "Targets Alive",
                                     "20": "Switch On",
                                     "21": "Switch Off",
                                     "22": "Battle Timer",
                                     "23": "Target Valid",
                                     "24": "Gau is Present",
                                     "25": "Monster Slot",
-                                    "26": "Target Weak vs. Element",
+                                    "26": "Weak vs. Element",
                                     "27": "Battle Index",
                                     "28": "Always"
                                 }
                             }
+                        },
+                        "target": {
+                            "type": "property",
+                            "name": "Target",
+                            "begin": 2,
+                            "invalid": "![6,7,8,9,14,15,23,26].includes(this.parent.condition.value)",
+                            "stringTable": "battleTargets"
+                        },
+                        "command1": {
+                            "type": "property",
+                            "name": "Command 1",
+                            "begin": 2,
+                            "invalid": "(this.parent.condition.value !== 1)",
+                            "stringTable": "battleCommandName"
+                        },
+                        "command2": {
+                            "type": "property",
+                            "name": "Command 2",
+                            "begin": 3,
+                            "invalid": "(this.parent.condition.value !== 1)",
+                            "stringTable": "battleCommandName"
+                        },
+                        "attack1": {
+                            "type": "property",
+                            "name": "Attack 1",
+                            "begin": 2,
+                            "invalid": "(this.parent.condition.value !== 2)",
+                            "stringTable": "attackName"
+                        },
+                        "attack2": {
+                            "type": "property",
+                            "name": "Attack 2",
+                            "begin": 3,
+                            "invalid": "(this.parent.condition.value !== 2)",
+                            "stringTable": "attackName"
+                        },
+                        "item1": {
+                            "type": "property",
+                            "name": "Item 1",
+                            "begin": 2,
+                            "invalid": "(this.parent.condition.value !== 3)",
+                            "stringTable": "itemNames"
+                        },
+                        "item2": {
+                            "type": "property",
+                            "name": "Item 2",
+                            "begin": 3,
+                            "invalid": "(this.parent.condition.value !== 3)",
+                            "stringTable": "itemNames"
+                        },
+                        "element": {
+                            "type": "property",
+                            "name": "Element",
+                            "begin": 2,
+                            "flag": true,
+                            "invalid": "(this.parent.condition.value !== 4)",
+                            "stringTable": "element"
+                        },
+                        "hp": {
+                            "type": "property",
+                            "name": "HP",
+                            "begin": 3,
+                            "multiplier": 128,
+                            "invalid": "(this.parent.condition.value !== 6)"
+                        },
+                        "mp": {
+                            "type": "property",
+                            "name": "MP",
+                            "begin": 3,
+                            "invalid": "(this.parent.condition.value !== 7)"
+                        },
+                        "status": {
+                            "type": "property",
+                            "name": "Status",
+                            "begin": 3,
+                            "invalid": "![8,9].includes(this.parent.condition.value)",
+                            "stringTable": "statusNamesReversed"
+                        },
+                        "timer": {
+                            "type": "property",
+                            "name": "Timer",
+                            "begin": 2,
+                            "multiplier": 2,
+                            "invalid": "![11,22].includes(this.parent.condition.value)"
+                        },
+                        "variable": {
+                            "type": "property",
+                            "name": "Variable",
+                            "begin": 2,
+                            "hidden": "![12,13].includes(this.parent.condition.value)",
+                            "invalid": "![12,13,20,21].includes(this.parent.condition.value)",
+                            "stringTable": "battleVariable"
+                        },
+                        "value": {
+                            "type": "property",
+                            "name": "Value",
+                            "begin": 3,
+                            "invalid": "![12,13].includes(this.parent.condition.value)"
+                        },
+                        "level": {
+                            "type": "property",
+                            "name": "Level",
+                            "begin": 3,
+                            "invalid": "![14,15].includes(this.parent.condition.value)"
+                        },
+                        "monsters": {
+                            "type": "property",
+                            "name": "Monsters",
+                            "begin": 2,
+                            "min": 1,
+                            "invalid": "![17,18,25].includes(this.parent.condition.value)",
+                            "flag": true,
+                            "stringTable": {
+                                "string": {
+                                    "0": "Slot 1",
+                                    "1": "Slot 2",
+                                    "2": "Slot 3",
+                                    "3": "Slot 4",
+                                    "4": "Slot 5",
+                                    "5": "Slot 6"
+                                }
+                            },
+                            "special": {
+                                "0": "This Monster",
+                                "0xFF": "All Monsters"
+                            }
+                        },
+                        "countType": {
+                            "type": "property",
+                            "name": "Type",
+                            "begin": 2,
+                            "invalid": "(this.parent.condition.value !== 19)",
+                            "stringTable": {
+                                "string": {
+                                    "0": "Characters (≥)",
+                                    "1": "Monsters (≤)"
+                                }
+                            }
+                        },
+                        "count": {
+                            "type": "property",
+                            "name": "Count",
+                            "begin": 3,
+                            "invalid": "(this.parent.condition.value !== 19)"
+                        },
+                        "switch": {
+                            "type": "property",
+                            "name": "Switch",
+                            "begin": 3,
+                            "mask": "0x07",
+                            "max": "0x07FF",
+                            "msb": "this.parent.variable",
+                            "invalid": "![20,21].includes(this.parent.condition.value)",
+                            "stringTable": "battleSwitch"
+                        },
+                        "element2": {
+                            "type": "property",
+                            "name": "Element",
+                            "begin": 3,
+                            "flag": true,
+                            "invalid": "(this.parent.condition.value !== 26)",
+                            "stringTable": "element"
+                        },
+                        "battle": {
+                            "type": "property",
+                            "name": "Battle",
+                            "begin": 2,
+                            "mask": "0xFFFF",
+                            "invalid": "(this.parent.condition.value !== 27)",
+                            "link": "battleProperties[%i]",
+                            "stringTable": "battleProperties"
                         }
                     }
+                },
+                "dialog": {
+                    "name": "Dialog",
+                    "opcode": "0xF3",
+                    "length": 3,
+                    "assembly": {
+                        "dialog": {
+                            "type": "property",
+                            "name": "Dialog",
+                            "begin": 1,
+                            "link": "monsterDialog[%i]",
+                            "stringTable": "monsterDialog"
+                        }
+                    }
+                },
+                "end": {
+                    "name": "End of Script",
+                    "opcode": "0xFF"
+                },
+                "endConditional": {
+                    "name": "End Conditional",
+                    "opcode": "0xFE"
                 },
                 "item": {
                     "name": "Use/Throw Item",
@@ -6521,20 +6916,20 @@
                             "begin": 1,
                             "stringTable": {
                                 "string": {
-                                    "0": "Use Item",
-                                    "1": "Throw Item"
+                                    "0": "Use",
+                                    "1": "Throw"
                                 }
                             }
                         },
                         "item1": {
                             "type": "property",
-                            "name": "Item 1",
+                            "name": "2/3 Chance",
                             "begin": 2,
                             "stringTable": "itemNames"
                         },
                         "item2": {
                             "type": "property",
-                            "name": "Item 2",
+                            "name": "1/3 Chance",
                             "begin": 3,
                             "stringTable": "itemNames"
                         }
@@ -6542,7 +6937,7 @@
                 },
                 "misc": {
                     "name": "Misc. Effects",
-                    "opcode": "0xFB00-0xFB0D",
+                    "opcode": "0xFB00-0xFB0E",
                     "length": 3,
                     "assembly": {
                         "effect": {
@@ -6562,7 +6957,7 @@
                                     "8": "Fill Target's ATB Gauge",
                                     "9": "Gau Returns from the Veldt",
                                     "11": "Set Status",
-                                    "12": "Clear Status",
+                                    "12": "Remove Status",
                                     "13": "Hide This Monster (Piranha)"
                                 }
                             }
@@ -6571,7 +6966,8 @@
                             "type": "property",
                             "name": "Target",
                             "begin": 2,
-                            "invalid": "(this.parent.effect.value !== 1) && (this.parent.effect.value !== 5) && (this.parent.effect.value !== 6) && (this.parent.effect.value !== 7) && (this.parent.effect.value !== 8)"
+                            "invalid": "(this.parent.effect.value !== 1) && (this.parent.effect.value !== 5) && (this.parent.effect.value !== 6) && (this.parent.effect.value !== 7) && (this.parent.effect.value !== 8)",
+                            "stringTable": "battleTargets"
                         },
                         "status": {
                             "type": "property",
@@ -6590,7 +6986,7 @@
                         "showHide": {
                             "type": "property",
                             "name": "Show/Hide",
-                            "begin": 1,
+                            "begin": 2,
                             "stringTable": {
                                 "string": {
                                     "0": "Show - Set HP to Max",
@@ -6605,7 +7001,7 @@
                         "animation": {
                             "type": "property",
                             "name": "Animation",
-                            "begin": 2
+                            "begin": 1
                         },
                         "monsters": {
                             "type": "property",
@@ -6650,7 +7046,7 @@
                 "switch": {
                     "name": "Change Switch",
                     "opcode": "0xF9",
-                    "length": 3,
+                    "length": 4,
                     "assembly": {
                         "operation": {
                             "type": "property",
@@ -6676,7 +7072,8 @@
                             "begin": 3,
                             "mask": "0x07",
                             "max": "0x07FF",
-                            "msb": "this.parent.variable"
+                            "msb": "this.parent.variable",
+                            "stringTable": "battleSwitch"
                         }
                     }
                 },
@@ -6689,19 +7086,7 @@
                             "type": "property",
                             "name": "Target",
                             "begin": 1,
-                            "stringTable": {
-                                "length": "0x4E",
-                                "default": "Target %i",
-                                "string": {
-                                    "0x00-0x30": "<characterNames[%i]>",
-                                    "0x30": "Monster Slot 1",
-                                    "0x31": "Monster Slot 2",
-                                    "0x32": "Monster Slot 3",
-                                    "0x33": "Monster Slot 4",
-                                    "0x34": "Monster Slot 5",
-                                    "0x35": "Monster Slot 6"
-                                }
-                            }
+                            "stringTable": "battleTargets"
                         }
                     }
                 },
@@ -6717,13 +7102,8 @@
                         "variable": {
                             "type": "property",
                             "name": "Variable",
-                            "begin": 1
-                        },
-                        "value": {
-                            "type": "property",
-                            "name": "Value",
-                            "begin": 2,
-                            "mask": "0x3F"
+                            "begin": 1,
+                            "stringTable": "battleVariable"
                         },
                         "operation": {
                             "type": "property",
@@ -6737,6 +7117,12 @@
                                     "3": "Subtract from Variable"
                                 }
                             }
+                        },
+                        "value": {
+                            "type": "property",
+                            "name": "Value",
+                            "begin": 2,
+                            "mask": "0x3F"
                         }
                     }
                 }
@@ -7239,7 +7625,7 @@
                             "name": "State 2",
                             "begin": 3,
                             "mask": "0x8000",
-                            "stringTable": "eventScript.event.jumpSwitch.assembly.state1",
+                            "stringTable": "eventScript.event.jumpSwitch.state1",
                             "invalid": "this.parent.count.value < 2"
                         },
                         "switch3": {
@@ -7255,7 +7641,7 @@
                             "name": "State 3",
                             "begin": 5,
                             "mask": "0x8000",
-                            "stringTable": "eventScript.event.jumpSwitch.assembly.state1",
+                            "stringTable": "eventScript.event.jumpSwitch.state1",
                             "invalid": "this.parent.count.value < 3"
                         },
                         "switch4": {
@@ -7271,7 +7657,7 @@
                             "name": "State 4",
                             "begin": 7,
                             "mask": "0x8000",
-                            "stringTable": "eventScript.event.jumpSwitch.assembly.state1",
+                            "stringTable": "eventScript.event.jumpSwitch.state1",
                             "invalid": "this.parent.count.value < 4"
                         },
                         "switch5": {
@@ -7287,7 +7673,7 @@
                             "name": "State 5",
                             "begin": 9,
                             "mask": "0x8000",
-                            "stringTable": "eventScript.event.jumpSwitch.assembly.state1",
+                            "stringTable": "eventScript.event.jumpSwitch.state1",
                             "invalid": "this.parent.count.value < 5"
                         },
                         "switch6": {
@@ -7303,7 +7689,7 @@
                             "name": "State 6",
                             "begin": 11,
                             "mask": "0x8000",
-                            "stringTable": "eventScript.event.jumpSwitch.assembly.state1",
+                            "stringTable": "eventScript.event.jumpSwitch.state1",
                             "invalid": "this.parent.count.value < 6"
                         },
                         "switch7": {
@@ -7319,7 +7705,7 @@
                             "name": "State 7",
                             "begin": 13,
                             "mask": "0x8000",
-                            "stringTable": "eventScript.event.jumpSwitch.assembly.state1",
+                            "stringTable": "eventScript.event.jumpSwitch.state1",
                             "invalid": "this.parent.count.value < 7"
                         },
                         "switch8": {
@@ -7335,7 +7721,7 @@
                             "name": "State 8",
                             "begin": 15,
                             "mask": "0x8000",
-                            "stringTable": "eventScript.event.jumpSwitch.assembly.state1",
+                            "stringTable": "eventScript.event.jumpSwitch.state1",
                             "invalid": "this.parent.count.value < 8"
                         }
                     }
@@ -7788,7 +8174,7 @@
                             "name": "State 2",
                             "begin": 3,
                             "mask": "0x8000",
-                            "stringTable": "eventScript.event.jumpSwitch.assembly.state1",
+                            "stringTable": "eventScript.event.jumpSwitch.state1",
                             "invalid": "this.parent.count.value < 2"
                         },
                         "switch3": {
@@ -7804,7 +8190,7 @@
                             "name": "State 3",
                             "begin": 5,
                             "mask": "0x8000",
-                            "stringTable": "eventScript.event.jumpSwitch.assembly.state1",
+                            "stringTable": "eventScript.event.jumpSwitch.state1",
                             "invalid": "this.parent.count.value < 3"
                         },
                         "switch4": {
@@ -7820,7 +8206,7 @@
                             "name": "State 4",
                             "begin": 7,
                             "mask": "0x8000",
-                            "stringTable": "eventScript.event.jumpSwitch.assembly.state1",
+                            "stringTable": "eventScript.event.jumpSwitch.state1",
                             "invalid": "this.parent.count.value < 4"
                         },
                         "switch5": {
@@ -7836,7 +8222,7 @@
                             "name": "State 5",
                             "begin": 9,
                             "mask": "0x8000",
-                            "stringTable": "eventScript.event.jumpSwitch.assembly.state1",
+                            "stringTable": "eventScript.event.jumpSwitch.state1",
                             "invalid": "this.parent.count.value < 5"
                         },
                         "switch6": {
@@ -7852,7 +8238,7 @@
                             "name": "State 6",
                             "begin": 11,
                             "mask": "0x8000",
-                            "stringTable": "eventScript.event.jumpSwitch.assembly.state1",
+                            "stringTable": "eventScript.event.jumpSwitch.state1",
                             "invalid": "this.parent.count.value < 6"
                         },
                         "switch7": {
@@ -7868,7 +8254,7 @@
                             "name": "State 7",
                             "begin": 13,
                             "mask": "0x8000",
-                            "stringTable": "eventScript.event.jumpSwitch.assembly.state1",
+                            "stringTable": "eventScript.event.jumpSwitch.state1",
                             "invalid": "this.parent.count.value < 7"
                         },
                         "switch8": {
@@ -7884,7 +8270,7 @@
                             "name": "State 8",
                             "begin": 15,
                             "mask": "0x8000",
-                            "stringTable": "eventScript.event.jumpSwitch.assembly.state1",
+                            "stringTable": "eventScript.event.jumpSwitch.state1",
                             "invalid": "this.parent.count.value < 8"
                         }
                     }
@@ -8531,6 +8917,14 @@
         }
     },
     "textEncoding": {
+        "bigText": {
+            "name": "Big Text",
+            "charTable": [
+                "text",
+                "element",
+                "fixedLength"
+            ]
+        },
         "dialog": {
             "name": "Dialog",
             "charTable": [
@@ -8620,8 +9014,28 @@
                 "255": "No Background Override"
             }
         },
+        "battleSwitch": {
+            "name": "Local Battle Switch",
+            "length": 296,
+            "default": "Local Battle Switch %i",
+            "string": {
+                "32-192": "<stringTable.battleSwitchGlobal[%i-32]>",
+                "192-200": "Forcefield: <stringTable.element[%i-192]>",
+                "200-208": "Number of Targets",
+                "208-216": "Number of Types of Monsters",
+                "288": "Monster Switch 0",
+                "289": "Monster Switch 1",
+                "290": "Monster Switch 2",
+                "291": "Monster Switch 3",
+                "292": "Monster Switch 4",
+                "293": "Monster Switch 5",
+                "294": "Monster Switch 6",
+                "295": "Monster Switch 7"
+            }
+        },
         "battleSwitchGlobal": {
-            "name": "Global Battle Switches",
+            "name": "Global Battle Switch",
+            "length": 160,
             "default": "Global Battle Switch %i",
             "string": {
                 "40-56": "Conditional Battle Switch %i",
@@ -8643,6 +9057,70 @@
                 "77": "<characterNames[1]> is a Green Soldier",
                 "80-96": "Doom Gaze's HP",
                 "96-104": "Cursed Shield Battle Counter"
+            }
+        },
+        "battleTargets": {
+            "length": "0x4E",
+            "default": "Target %i",
+            "string": {
+                "0x00-0x30": "<characterNames[%i]>",
+                "0x30": "Monster Slot 1",
+                "0x31": "Monster Slot 2",
+                "0x32": "Monster Slot 3",
+                "0x33": "Monster Slot 4",
+                "0x34": "Monster Slot 5",
+                "0x35": "Monster Slot 6",
+                "0x36": "Self",
+                "0x37": "All Monsters (Not Self)",
+                "0x38": "All Monsters",
+                "0x39": "Random Monster (Not Self)",
+                "0x3A": "Random Monster",
+                "0x3B": "All Dead Characters",
+                "0x3C": "Random Dead Character",
+                "0x3D": "All Dead Monsters",
+                "0x3E": "Random Dead Monster",
+                "0x3F": "All Characters with Reflect",
+                "0x40": "Random Character with Reflect",
+                "0x41": "All Monsters with Reflect",
+                "0x42": "Random Monster with Reflect",
+                "0x43": "All Characters",
+                "0x44": "Random Character",
+                "0x45": "Previous Attacker",
+                "0x46": "All Targets",
+                "0x47": "Nothing",
+                "0x48": "Character Slot 1",
+                "0x49": "Character Slot 2",
+                "0x4A": "Character Slot 3",
+                "0x4B": "Character Slot 4",
+                "0x4C": "Random Target(s)",
+                "0x4D": "\"<stringTable.attackName[0xCA]>\" Target"
+            }
+        },
+        "battleVariable": {
+            "name": "Local Battle Variable",
+            "length": 37,
+            "default": "Local Battle Variable %i",
+            "string": {
+                "4-24": "<stringTable.battleVariableGlobal[%i-4]>",
+                "24": "Forcefield Elements",
+                "25": "Number of Targets",
+                "26": "Number of Types of Monsters",
+                "36": "Monster Variable"
+            }
+        },
+        "battleVariableGlobal": {
+            "name": "Global Battle Variable",
+            "length": 20,
+            "default": "Global Battle Variable %i",
+            "string": {
+                "5": "Conditional Battle Switches 1",
+                "6": "Conditional Battle Switches 2",
+                "7": "Battle Switches 1",
+                "8": "Battle Switches 2",
+                "9": "Battle Switches 3",
+                "10": "Doom Gaze's HP 1",
+                "11": "Doom Gaze's HP 2",
+                "12": "Cursed Shield Counter"
             }
         },
         "directions": {
@@ -9341,6 +9819,24 @@
                 "765": "Umaro is available",
                 "766": "Go to Narshe scene after Magitek March",
                 "767": "At least one saved game"
+            }
+        },
+        "monsterAnimation": {
+            "name": "Monster Animation",
+            "string": {
+                "0": "Flash Red",
+                "1": "Move Back 8 (slow)",
+                "2": "Move Forward 8 (slow)",
+                "3": "Move Back 8 (instantly)",
+                "4": "Move Forward 8 (instantly)",
+                "5": "Characters Run Right",
+                "6": "Characters Run Left",
+                "7": "Move Back 64 (instantly)",
+                "8": "Move Forward 64 (instantly)",
+                "10": "Kefka Head",
+                "11": "Atma Glow (long)",
+                "12": "Atma Glow (short)",
+                "13": "Kefka Death"
             }
         },
         "npcSwitches": {

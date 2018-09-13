@@ -38,6 +38,32 @@ function FF6Battle(rom) {
     this.clickedPoint = null;
 }
 
+FF6Battle.prototype.battleName = function(b) {
+    var battleProperties = this.rom.battleProperties.item(b);
+    
+    // count up the monsters
+    var monsterList = {};
+    var index, count;
+    for (var m = 1; m <= 6; m++) {
+        index = battleProperties["monster" + m].value;
+        if (index === 0x01FF) continue;
+        count = monsterList[index];
+        monsterList[index] = (count || 0) + 1;
+    }
+
+    var battleName = "";
+    var keys = Object.keys(monsterList);
+    for (var k = 0; k < keys.length; k++) {
+        index = keys[k];
+        count = monsterList[index];
+        if (battleName !== "") battleName += ", ";
+        battleName += this.rom.stringTable.monsterName.fString(index);
+        if (count !== 1) battleName += " ×" + count;
+    }
+
+    return battleName;
+}
+
 FF6Battle.prototype.mouseDown = function(e) {
     var x = Math.floor(e.offsetX / this.zoom) + this.battleRect.l;
     var y = Math.floor(e.offsetY / this.zoom) + this.battleRect.t;

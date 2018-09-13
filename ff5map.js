@@ -143,19 +143,19 @@ FF5Map.prototype.mouseDown = function(e) {
         if (index !== -1) {
             // select the next trigger in a stack
             this.selectedTrigger = triggers[(index + 1) % triggers.length];
-            rom.select(this.selectedTrigger);
+            this.rom.select(this.selectedTrigger);
             this.clickedCol = this.selectedTrigger.x.value;
             this.clickedRow = this.selectedTrigger.y.value;
         } else if (triggers.length !== 0) {
             // select the first trigger
             this.selectedTrigger = triggers[0];
-            rom.select(this.selectedTrigger);
+            this.rom.select(this.selectedTrigger);
             this.clickedCol = this.selectedTrigger.x.value;
             this.clickedRow = this.selectedTrigger.y.value;
         } else {
             // clear trigger selection selection and select map properties
             this.selectedTrigger = null;
-            rom.select(this.mapProperties);
+            this.rom.select(this.mapProperties);
             this.clickedCol = null;
             this.clickedRow = null;
         }
@@ -588,7 +588,7 @@ FF5Map.prototype.loadWorldMap = function(m) {
     layerButtons[2].disabled = true;
 
     this.mapProperties = null;
-    rom.select(null);
+    this.rom.select(null);
 
     // load graphics and layout
     var w = 0;

@@ -121,56 +121,56 @@
                 "assembly": {
                     "flag1": {
                         "type": "property",
-                        "name": "Tile 1",
+                        "name": "Flag 1",
                         "begin": 0,
                         "mask": "0x80",
                         "bool": true
                     },
                     "flag2": {
                         "type": "property",
-                        "name": "Tile 2",
+                        "name": "Flag 2",
                         "begin": 1,
                         "mask": "0x80",
                         "bool": true
                     },
                     "flag3": {
                         "type": "property",
-                        "name": "Tile 3",
+                        "name": "Flag 3",
                         "begin": 2,
                         "mask": "0x80",
                         "bool": true
                     },
                     "flag4": {
                         "type": "property",
-                        "name": "Tile 4",
+                        "name": "Flag 4",
                         "begin": 3,
                         "mask": "0x80",
                         "bool": true
                     },
                     "flag5": {
                         "type": "property",
-                        "name": "Tile 5",
+                        "name": "Flag 5",
                         "begin": 4,
                         "mask": "0x80",
                         "bool": true
                     },
                     "flag6": {
                         "type": "property",
-                        "name": "Tile 6",
+                        "name": "Flag 6",
                         "begin": 5,
                         "mask": "0x80",
                         "bool": true
                     },
                     "flag7": {
                         "type": "property",
-                        "name": "Tile 7",
+                        "name": "Flag 7",
                         "begin": 6,
                         "mask": "0x80",
                         "bool": true
                     },
                     "flag8": {
                         "type": "property",
-                        "name": "Tile 8",
+                        "name": "Flag 8",
                         "begin": 7,
                         "mask": "0x80",
                         "bool": true
@@ -184,21 +184,21 @@
                     },
                     "flag2Layer3": {
                         "type": "property",
-                        "name": "Tile 8",
+                        "name": "Flag 2 (Layer 3)",
                         "begin": 9,
                         "mask": "0x80",
                         "bool": true
                     },
                     "flag3Layer3": {
                         "type": "property",
-                        "name": "Tile 8",
+                        "name": "Flag 3 (Layer 3)",
                         "begin": 10,
                         "mask": "0x80",
                         "bool": true
                     },
                     "flag4Layer3": {
                         "type": "property",
-                        "name": "Tile 8",
+                        "name": "Flag 4 (Layer 3)",
                         "begin": 11,
                         "mask": "0x80",
                         "bool": true
@@ -760,7 +760,7 @@
                      "0x00C7": "Desert of Shifting Sands",
                      "0x00C8": "Lix",
                      "0x00C9": "Lix - Magic Shop",
-                     "0x00CA": "Lix - <Butz>'s House",
+                     "0x00CA": "Lix - Butz's House",
                      "0x00CB": "Lix - Inn",
                      "0x00CC": "Lix - Item Shop",
                      "0x00CD": "Lix - Equipment Shop",

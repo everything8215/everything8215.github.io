@@ -7,6 +7,30 @@
     "system": "sfc",
     "mode": "hiROM",
     "assembly": {
+        "attackName": {
+            "type": "array",
+            "name": "Attack Name",
+            "range": "0xED75E6-0xED7B5E",
+            "array": {
+                "length": 175
+            },
+            "assembly": {
+                "type": "text",
+                "encoding": "bigText",
+                "length": 8
+            },
+            "stringTable": {
+                "name": "Attack Name",
+                "length": 256,
+                "default": "<attackName[%i-0x51]>",
+                "string": {
+                    "0x00-0x36": "<spellNames[%i]>",
+                    "0x36-0x51": "<esperNames[%i-0x36]> (<esperAttackName[%i-0x36]>)",
+                    "0x55-0x5D": "<swdTechNames[%i-0x55]>",
+                    "0xFF": "Nothing"
+                }
+            }
+        },
         "attackProperties": {
             "type": "array",
             "name": "Attack Properties",
@@ -130,9 +154,48 @@
                 "length": 6
             }
         },
+        "battleCommandName": {
+            "type": "array",
+            "name": "Battle Command Name",
+            "range": "0xD8CEA0-0xD8CF80",
+            "array": {
+                "length": 32
+            },
+            "assembly": {
+                "type": "text",
+                "encoding": "smallText",
+                "length": 7
+            },
+            "stringTable": {
+                "name": "Battle Command Name",
+                "default": "Battle Command %i",
+                "string": {
+                    "0x00-0x1F": "<battleCommandName[%i]>",
+                    "0x1E": "A.I. Command",
+                    "0x1F": "Random Attack",
+                    "0x20": "Change Battle",
+                    "0x21": "Battle Dialog",
+                    "0x22": "Enemy Roulette",
+                    "0x23": "Battle Event",
+                    "0x24": "Monster Entry/Exit",
+                    "0x25": "Battle Message",
+                    "0x26": "Attack w/o Attacker",
+                    "0x27": "Scan Info",
+                    "0x29": "Status Counter Expired",
+                    "0x2A": "Run",
+                    "0x2B": "Monster Animation",
+                    "0x2C": "Reset Character Action",
+                    "0x2D": "Seize Damage",
+                    "0x2E": "Change Variable",
+                    "0x2F": "Change Switch",
+                    "0x30": "Misc. Effects",
+                    "0xFF": "Nothing"
+                }
+            }
+        },
         "battleGroupsEvent": {
             "type": "array",
-            "name": "Event Battle Groups",
+            "name": "Event Battle Group",
             "range": "0xCF5000-0xCF5400",
             "array": {
                 "length": 256
@@ -145,11 +208,12 @@
                         "name": "Battle 1",
                         "begin": 0,
                         "mask": "0x03FF",
-                        "link": "battleProperties[%i]"
+                        "link": "battleProperties[%i]",
+                        "stringTable": "battleProperties"
                     },
                     "random1": {
                         "type": "property",
-                        "name": "Random 1",
+                        "name": "Choose From Next Four",
                         "begin": 1,
                         "mask": "0x80",
                         "bool": true
@@ -159,11 +223,12 @@
                         "name": "Battle 2",
                         "begin": 2,
                         "mask": "0x03FF",
-                        "link": "battleProperties[%i]"
+                        "link": "battleProperties[%i]",
+                        "stringTable": "battleProperties"
                     },
                     "random2": {
                         "type": "property",
-                        "name": "Random 2",
+                        "name": "Choose From Next Four",
                         "begin": 3,
                         "mask": "0x80",
                         "bool": true
@@ -174,7 +239,7 @@
         },
         "battleGroupsRandom": {
             "type": "array",
-            "name": "Random Battle Groups",
+            "name": "Random Battle Group",
             "range": "0xCF4800-0xCF5000",
             "array": {
                 "length": 256
@@ -187,11 +252,12 @@
                         "name": "Battle 1",
                         "begin": 0,
                         "mask": "0x03FF",
-                        "link": "battleProperties[%i]"
+                        "link": "battleProperties[%i]",
+                        "stringTable": "battleProperties"
                     },
                     "random1": {
                         "type": "property",
-                        "name": "Random 1",
+                        "name": "Choose From Next Four",
                         "begin": 1,
                         "mask": "0x80",
                         "bool": true
@@ -201,11 +267,12 @@
                         "name": "Battle 2",
                         "begin": 2,
                         "mask": "0x03FF",
-                        "link": "battleProperties[%i]"
+                        "link": "battleProperties[%i]",
+                        "stringTable": "battleProperties"
                     },
                     "random2": {
                         "type": "property",
-                        "name": "Random 2",
+                        "name": "Choose From Next Four",
                         "begin": 3,
                         "mask": "0x80",
                         "bool": true
@@ -215,11 +282,12 @@
                         "name": "Battle 3",
                         "begin": 4,
                         "mask": "0x03FF",
-                        "link": "battleProperties[%i]"
+                        "link": "battleProperties[%i]",
+                        "stringTable": "battleProperties"
                     },
                     "random3": {
                         "type": "property",
-                        "name": "Random 3",
+                        "name": "Choose From Next Four",
                         "begin": 5,
                         "mask": "0x80",
                         "bool": true
@@ -229,17 +297,36 @@
                         "name": "Battle 4",
                         "begin": 6,
                         "mask": "0x03FF",
-                        "link": "battleProperties[%i]"
+                        "link": "battleProperties[%i]",
+                        "stringTable": "battleProperties"
                     },
                     "random4": {
                         "type": "property",
-                        "name": "Random 4",
+                        "name": "Choose From Next Four",
                         "begin": 7,
                         "mask": "0x80",
                         "bool": true
                     }
                 },
                 "length": 8
+            }
+        },
+        "battleMagicPoints": {
+            "type": "array",
+            "name": "Battle Magic Points",
+            "range": "0xD0FE00-0xD10000",
+            "array": {
+                "length": 512
+            },
+            "assembly": {
+                "type": "data",
+                "length": 1,
+                "assembly": {
+                    "magicPoints": {
+                        "type": "property",
+                        "name": "Magic Points"
+                    }
+                }
             }
         },
         "battleProperties": {
@@ -252,6 +339,7 @@
             "assembly": {
                 "type": "data",
                 "editor": "FF6Battle",
+                "length": 15,
                 "assembly": {
                     "monster1": {
                         "type": "property",
@@ -274,6 +362,13 @@
                         "bool": true,
                         "hidden": true
                     },
+                    "monster1Present": {
+                        "type": "property",
+                        "name": "Present",
+                        "begin": 1,
+                        "mask": "0x01",
+                        "bool": true
+                    },
                     "monster2": {
                         "type": "property",
                         "name": "Monster 2",
@@ -293,6 +388,13 @@
                         "mask": "0x02",
                         "bool": true,
                         "hidden": true
+                    },
+                    "monster2Present": {
+                        "type": "property",
+                        "name": "Present",
+                        "begin": 1,
+                        "mask": "0x02",
+                        "bool": true
                     },
                     "monster3": {
                         "type": "property",
@@ -314,6 +416,13 @@
                         "bool": true,
                         "hidden": true
                     },
+                    "monster3Present": {
+                        "type": "property",
+                        "name": "Present",
+                        "begin": 1,
+                        "mask": "0x04",
+                        "bool": true
+                    },
                     "monster4": {
                         "type": "property",
                         "name": "Monster 4",
@@ -333,6 +442,13 @@
                         "mask": "0x08",
                         "bool": true,
                         "hidden": true
+                    },
+                    "monster4Present": {
+                        "type": "property",
+                        "name": "Present",
+                        "begin": 1,
+                        "mask": "0x08",
+                        "bool": true
                     },
                     "monster5": {
                         "type": "property",
@@ -354,6 +470,13 @@
                         "bool": true,
                         "hidden": true
                     },
+                    "monster5Present": {
+                        "type": "property",
+                        "name": "Present",
+                        "begin": 1,
+                        "mask": "0x10",
+                        "bool": true
+                    },
                     "monster6": {
                         "type": "property",
                         "name": "Monster 6",
@@ -373,6 +496,13 @@
                         "mask": "0x20",
                         "bool": true,
                         "hidden": true
+                    },
+                    "monster6Present": {
+                        "type": "property",
+                        "name": "Present",
+                        "begin": 1,
+                        "mask": "0x20",
+                        "bool": true
                     },
                     "monster1X": {
                         "type": "property",
@@ -469,9 +599,52 @@
                         "mask": "0x0F",
                         "multiplier": 8,
                         "hidden": true
+                    },
+                    "vramMap": {
+                        "type": "property",
+                        "name": "VRAM Map",
+                        "begin": 0,
+                        "mask": "0xF0"
+                    },
+                    "monsterEntry": {
+                        "type": "property",
+                        "external": "battlePropertiesAux[%i].monsterEntry"
+                    },
+                    "magicPoints": {
+                        "type": "property",
+                        "external": "battleMagicPoints[%i].magicPoints",
+                        "invalid": "this.parent.i >= 512"
+                    },
+                    "song": {
+                        "type": "property",
+                        "external": "battlePropertiesAux[%i].song"
+                    },
+                    "continueSong": {
+                        "type": "property",
+                        "external": "battlePropertiesAux[%i].continueSong"
+                    },
+                    "characterAI": {
+                        "type": "property",
+                        "external": "battlePropertiesAux[%i].characterAI"
+                    },
+                    "enableCharacterAI": {
+                        "type": "property",
+                        "external": "battlePropertiesAux[%i].enableCharacterAI"
+                    },
+                    "flags": {
+                        "type": "property",
+                        "external": "battlePropertiesAux[%i].flags"
+                    },
+                    "flags2": {
+                        "type": "property",
+                        "external": "battlePropertiesAux[%i].flags2"
                     }
-                },
-                "length": 15
+                }
+            },
+            "stringTable": {
+                "name": "Battle Properties",
+                "length": 576,
+                "default": "Battle %i"
             }
         },
         "battlePropertiesAux": {
@@ -482,8 +655,84 @@
                 "length": 576
             },
             "assembly": {
-                "type": "assembly",
-                "length": 4
+                "type": "data",
+                "length": 4,
+                "assembly": {
+                    "monsterEntry": {
+                        "type": "property",
+                        "name": "Monster Entry",
+                        "begin": 0,
+                        "mask": "0x0F"
+                    },
+                    "flags": {
+                        "type": "property",
+                        "name": "Flags",
+                        "begin": 0,
+                        "mask": "0x0EF0",
+                        "flag": true,
+                        "stringTable": {
+                            "string": {
+                                "0": "Disable Normal Attack",
+                                "1": "Disable Back Attack",
+                                "2": "Disable Pincer Attack",
+                                "3": "Disable Side Attack",
+                                "5": "Disable Fanfare",
+                                "6": "Disable Joker Doom",
+                                "7": "Disable Leap"
+                            }
+                        }
+                    },
+                    "song": {
+                        "type": "property",
+                        "name": "Song",
+                        "begin": 3,
+                        "mask": "0x38",
+                        "stringTable": {
+                            "string": {
+                                "0": "Battle Theme",
+                                "1": "The Decisive Battle",
+                                "2": "The Fierce Battle",
+                                "3": "Returners",
+                                "4": "Save Them!",
+                                "5": "Dancing Mad",
+                                "6": "None",
+                                "7": "None"
+                            }
+                        }
+                    },
+                    "continueSong": {
+                        "type": "property",
+                        "name": "Continue Previous Song",
+                        "begin": 3,
+                        "mask": "0x80",
+                        "bool": true
+                    },
+                    "characterAI": {
+                        "type": "property",
+                        "name": "Character A.I.",
+                        "begin": 2
+                    },
+                    "enableCharacterAI": {
+                        "type": "property",
+                        "name": "Enable Character A.I.",
+                        "begin": 1,
+                        "mask": "0x80",
+                        "bool": true
+                    },
+                    "flags2": {
+                        "type": "property",
+                        "begin": 3,
+                        "mask": "0x07",
+                        "flag": true,
+                        "stringTable": {
+                            "string": {
+                                "0": "Disable L+R",
+                                "1": "Disable On The Veldt",
+                                "2": "Disable Preemptive Attack"
+                            }
+                        }
+                    }
+                }
             }
         },
         "characterNames": {
@@ -728,7 +977,7 @@
                 "offset": "0xD8CDA0"
             }
         },
-        "esperAttackNames": {
+        "esperAttackName": {
             "type": "array",
             "name": "Esper Attack Names",
             "range": "0xED7B5E-0xED7C51",
@@ -738,13 +987,13 @@
             "assembly": {
                 "type": "text",
                 "name": "Attack Name",
-                "encoding": "smallText",
+                "encoding": "bigText",
                 "length": 10
             },
             "stringTable": {
                 "name": "Esper Attack Names",
                 "length": 27,
-                "default": "<esperAttackNames[%i]>"
+                "default": "<esperAttackName[%i]>"
             }
         },
         "esperBonusDescriptions": {
@@ -844,7 +1093,7 @@
                     },
                     "attackName": {
                         "type": "assembly",
-                        "external": "esperAttackNames[%i]"
+                        "external": "esperAttackName[%i]"
                     },
                     "attackDescription": {
                         "type": "assembly",
@@ -1060,6 +1309,7 @@
                         "type": "text",
                         "name": "Item Name",
                         "range": "1-9",
+                        "length": 8,
                         "encoding": "smallText"
                     }
                 }
@@ -1078,6 +1328,22 @@
             "name": "Map Animation Graphics",
             "range": "0xE60000-0xE68000",
             "format": "snes4bpp"
+        },
+        "mapAnimationGraphicsLayer3": {
+            "type": "array",
+            "name": "Map Animation Graphics (Layer 3)",
+            "range": "0xE6CDC0-0xE6F198",
+            "array": {
+                "length": 6
+            },
+            "assembly": {
+                "format": ["snes2bpp", "ff6-lzss"]
+            },
+            "pointerTable": {
+                "range": "0xE6CDA0-0xE6CDC0",
+                "pointerLength": 3,
+                "offset": "0xE6CDC0"
+            }
         },
         "mapAnimationProperties": {
             "type": "array",
@@ -1129,22 +1395,6 @@
             "pointerTable": {
                 "range": "0xC091D5-0xC091FF",
                 "offset": "0xC091FF"
-            }
-        },
-        "mapAnimationGraphicsLayer3": {
-            "type": "array",
-            "name": "Map Animation Graphics (Layer 3)",
-            "range": "0xE6CDC0-0xE6F198",
-            "array": {
-                "length": 6
-            },
-            "assembly": {
-                "format": ["snes2bpp", "ff6-lzss"]
-            },
-            "pointerTable": {
-                "range": "0xE6CDA0-0xE6CDC0",
-                "pointerLength": 3,
-                "offset": "0xE6CDC0"
             }
         },
         "mapAnimationPropertiesLayer3": {
@@ -1232,8 +1482,11 @@
                 "length": 512
             },
             "assembly": {
-                "type": "assembly",
-                "length": 1
+                "type": "property",
+                "name": "Battle Group",
+                "length": 1,
+                "mask": "0xFF",
+                "link": "battleGroupsRandom[%i]"
             }
         },
         "mapBattleProbability": {
@@ -1245,8 +1498,18 @@
                 "length": 512
             },
             "assembly": {
-                "type": "assembly",
-                "length": 1
+                "type": "property",
+                "name": "Battle Probability",
+                "length": 1,
+                "mask": "0x03",
+                "stringTable": {
+                    "string": {
+                        "0": "Normal",
+                        "1": "Low",
+                        "2": "High",
+                        "3": "Very High"
+                    }
+                }
             }
         },
         "mapColorMath": {
@@ -1689,28 +1952,28 @@
                         "name": "Layer 2 H-Size",
                         "begin": 23,
                         "mask": "0x0C",
-                        "stringTable": "mapProperties.assembly.assembly.hSize1"
+                        "stringTable": "mapProperties.hSize1"
                     },
                     "vSize2": {
                         "type": "property",
                         "name": "Layer 2 V-Size",
                         "begin": 23,
                         "mask": "0x03",
-                        "stringTable": "mapProperties.assembly.assembly.vSize1"
+                        "stringTable": "mapProperties.vSize1"
                     },
                     "hSize3": {
                         "type": "property",
                         "name": "Layer 3 H-Size",
                         "begin": 24,
                         "mask": "0xC0",
-                        "stringTable": "mapProperties.assembly.assembly.hSize1"
+                        "stringTable": "mapProperties.hSize1"
                     },
                     "vSize3": {
                         "type": "property",
                         "name": "Layer 3 V-Size",
                         "begin": 24,
                         "mask": "0x30",
-                        "stringTable": "mapProperties.assembly.assembly.vSize1"
+                        "stringTable": "mapProperties.vSize1"
                     },
                     "palette": {
                         "type": "property",
@@ -1786,12 +2049,8 @@
                         "stringTable": "battleBackground"
                     },
                     "battleGroup": {
-                        "type": "property",
-                        "name": "Battle Group",
-                        "begin": 0,
-                        "mask": "0xFF",
-                        "external": "mapBattleGroups[%i]",
-                        "link": "battleGroupsRandom[%i]"
+                        "type": "assembly",
+                        "external": "mapBattleGroups[%i]"
                     },
                     "battleProbability": {
                         "type": "property",
@@ -2552,7 +2811,7 @@
             "assembly": {
                 "type": "text",
                 "name": "Attack Name",
-                "encoding": "smallText",
+                "encoding": "bigText",
                 "length": 8
             },
             "stringTable": {
@@ -2575,22 +2834,26 @@
                     "attack1": {
                         "type": "property",
                         "name": "Control Attack 1",
-                        "begin": 0
+                        "begin": 0,
+                        "stringTable": "attackName"
                     },
                     "attack2": {
                         "type": "property",
                         "name": "Control Attack 2",
-                        "begin": 1
+                        "begin": 1,
+                        "stringTable": "attackName"
                     },
                     "attack3": {
                         "type": "property",
                         "name": "Control Attack 3",
-                        "begin": 2
+                        "begin": 2,
+                        "stringTable": "attackName"
                     },
                     "attack4": {
                         "type": "property",
                         "name": "Control Attack 4",
-                        "begin": 3
+                        "begin": 3,
+                        "stringTable": "attackName"
                     }
                 }
             }
@@ -2609,12 +2872,14 @@
                     "attack1": {
                         "type": "property",
                         "name": "Rage Attack 1",
-                        "begin": 0
+                        "begin": 0,
+                        "stringTable": "attackName"
                     },
                     "attack2": {
                         "type": "property",
                         "name": "Rage Attack 2",
-                        "begin": 1
+                        "begin": 1,
+                        "stringTable": "attackName"
                     }
                 }
             }
@@ -2633,12 +2898,14 @@
                     "attack1": {
                         "type": "property",
                         "name": "Sketch Attack 1",
-                        "begin": 0
+                        "begin": 0,
+                        "stringTable": "attackName"
                     },
                     "attack2": {
                         "type": "property",
                         "name": "Sketch Attack 2",
-                        "begin": 1
+                        "begin": 1,
+                        "stringTable": "attackName"
                     }
                 }
             }
@@ -2663,6 +2930,27 @@
                         "4": "Flying (+40)"
                     }
                 }
+            }
+        },
+        "monsterDialog": {
+            "type": "array",
+            "name": "Monster Dialog",
+            "range": "0xCFE400-0xCFF400",
+            "array": {
+                "length": 256
+            },
+            "assembly": {
+                "type": "text",
+                "encoding": "nullTerminated"
+            },
+            "pointerTable": {
+                "range": "0xCFE000-0xCFE200",
+                "offset": "0xCF0000"
+            },
+            "stringTable": {
+                "name": "Monster Dialog",
+                "length": 256,
+                "default": "<monsterDialog[%i]>"
             }
         },
         "monsterGraphics": {
@@ -2851,6 +3139,7 @@
             "type": "array",
             "name": "Monster Properties",
             "range": "0xCF0000-0xCF3000",
+            "stringTable": "monsterName",
             "array": {
                 "length": 384
             },
@@ -2955,6 +3244,10 @@
                             }
                         }
                     },
+                    "script": {
+                        "type": "property",
+                        "external": "monsterScriptPointers[%i]"
+                    },
                     "special": {
                         "type": "property",
                         "name": "Special",
@@ -2990,10 +3283,7 @@
                         "stringTable": {
                             "length": 51,
                             "string": {
-                                "0-8": "Inflict <stringTable.statusNames[7-%i]>",
-                                "8-16": "Inflict <stringTable.statusNames[23-%i]>",
-                                "16-24": "Inflict <stringTable.statusNames[39-%i]>",
-                                "24-32": "Inflict <stringTable.statusNames[55-%i]>",
+                                "0-32": "Inflict <stringTable.statusNamesReversed[%i]>",
                                 "32": "1.5× Damage",
                                 "33": "2.0× Damage",
                                 "34": "2.5× Damage",
@@ -3075,11 +3365,10 @@
                         "mask": "0xFFFFFF",
                         "flag": true,
                         "stringTable": {
+                            "length": 24,
+                            "default": "<stringTable.statusNamesReversed[%i]>",
                             "string": {
-                                "0-8": "<stringTable.statusNames[7-%i]>",
-                                "8-16": "<stringTable.statusNames[23-%i]>",
-                                "16": "Flying",
-                                "17-24": "<stringTable.statusNames[39-%i]>"
+                                "16": "Flying"
                             }
                         }
                     },
@@ -3089,7 +3378,7 @@
                         "begin": 27,
                         "mask": "0xFFFFFF",
                         "flag": true,
-                        "stringTable": "monsterProperties.assembly.assembly.statusImmunity"
+                        "stringTable": "monsterProperties.statusImmunity"
                     },
                     "elementAbsorb": {
                         "type": "property",
@@ -3165,8 +3454,28 @@
                         "invalid": "this.parent.i > 0xFF"
                     }
                 }
+            }
+        },
+        "monsterScript": {
+            "type": "script",
+            "name": "Monster Script",
+            "range": "0xCF8700-0xCFC049",
+            "encoding": "monster"
+        },
+        "monsterScriptPointers": {
+            "type": "array",
+            "name": "Monster Script Pointers",
+            "range": "0xCF8400-0xCF8700",
+            "array": {
+                "length": 384
             },
-            "stringTable": "monsterName"
+            "assembly": {
+                "type": "property",
+                "name": "Script Pointer",
+                "mask": "0xFFFF",
+                "length": 2,
+                "script": "monsterScript"
+            }
         },
         "monsterVerticalOffset": {
             "type": "array",
@@ -3299,7 +3608,7 @@
                             "begin": 4,
                             "mask": "0x80",
                             "bool": true,
-                            "hidden": "this.parent.vehicle.value === 0"
+                            "disabled": "this.parent.vehicle.value === 0"
                         },
                         "special": {
                             "type": "property",
@@ -3763,6 +4072,24 @@
                     "30": "Freeze",
                     "31": "Rage"
                 }
+            }
+        },
+        "swdTechNames": {
+            "type": "array",
+            "name": "SwdTech Names",
+            "range": "0xD1F9D0-0xD1FA00",
+            "array": {
+                "length": 8
+            },
+            "assembly": {
+                "type": "text",
+                "encoding": "swdTech",
+                "length": 6
+            },
+            "stringTable": {
+                "name": "SwdTech Names",
+                "length": 8,
+                "default": "<swdTechNames[%i]>"
             }
         },
         "treasureProperties": {
@@ -4827,7 +5154,7 @@
                             "name": "State 2",
                             "begin": 3,
                             "mask": "0x8000",
-                            "stringTable": "eventScript.event.jumpSwitch.assembly.state1",
+                            "stringTable": "eventScript.event.jumpSwitch.state1",
                             "invalid": "this.parent.count.value < 2"
                         },
                         "switch3": {
@@ -4843,7 +5170,7 @@
                             "name": "State 3",
                             "begin": 5,
                             "mask": "0x8000",
-                            "stringTable": "eventScript.event.jumpSwitch.assembly.state1",
+                            "stringTable": "eventScript.event.jumpSwitch.state1",
                             "invalid": "this.parent.count.value < 3"
                         },
                         "switch4": {
@@ -4859,7 +5186,7 @@
                             "name": "State 4",
                             "begin": 7,
                             "mask": "0x8000",
-                            "stringTable": "eventScript.event.jumpSwitch.assembly.state1",
+                            "stringTable": "eventScript.event.jumpSwitch.state1",
                             "invalid": "this.parent.count.value < 4"
                         },
                         "switch5": {
@@ -4875,7 +5202,7 @@
                             "name": "State 5",
                             "begin": 9,
                             "mask": "0x8000",
-                            "stringTable": "eventScript.event.jumpSwitch.assembly.state1",
+                            "stringTable": "eventScript.event.jumpSwitch.state1",
                             "invalid": "this.parent.count.value < 5"
                         },
                         "switch6": {
@@ -4891,7 +5218,7 @@
                             "name": "State 6",
                             "begin": 11,
                             "mask": "0x8000",
-                            "stringTable": "eventScript.event.jumpSwitch.assembly.state1",
+                            "stringTable": "eventScript.event.jumpSwitch.state1",
                             "invalid": "this.parent.count.value < 6"
                         },
                         "switch7": {
@@ -4907,7 +5234,7 @@
                             "name": "State 7",
                             "begin": 13,
                             "mask": "0x8000",
-                            "stringTable": "eventScript.event.jumpSwitch.assembly.state1",
+                            "stringTable": "eventScript.event.jumpSwitch.state1",
                             "invalid": "this.parent.count.value < 7"
                         },
                         "switch8": {
@@ -4923,7 +5250,7 @@
                             "name": "State 8",
                             "begin": 15,
                             "mask": "0x8000",
-                            "stringTable": "eventScript.event.jumpSwitch.assembly.state1",
+                            "stringTable": "eventScript.event.jumpSwitch.state1",
                             "invalid": "this.parent.count.value < 8"
                         }
                     }
@@ -6170,6 +6497,626 @@
                 }
             }
         },
+        "monster": {
+            "name": "Monster Script",
+            "delegate": "FF6MonsterScript",
+            "command": {
+                "animation": {
+                    "name": "Monster Animation",
+                    "opcode": ["0xFA00-0xFA09", "0xFA0A-0xFB00"],
+                    "length": 4,
+                    "assembly": {
+                        "animation": {
+                            "type": "property",
+                            "name": "Animation",
+                            "begin": 1,
+                            "stringTable": "monsterAnimation"
+                        },
+                        "monsters": {
+                            "type": "property",
+                            "name": "Monsters",
+                            "begin": 2,
+                            "min": 1,
+                            "flag": true,
+                            "stringTable": {
+                                "string": {
+                                    "0": "Slot 1",
+                                    "1": "Slot 2",
+                                    "2": "Slot 3",
+                                    "3": "Slot 4",
+                                    "4": "Slot 5",
+                                    "5": "Slot 6"
+                                }
+                            },
+                            "special": {
+                                "0": "This Monster",
+                                "0xFF": "All Monsters"
+                            }
+                        }
+                    }
+                },
+                "attack": {
+                    "name": "Attack (Choose 1 of 3)",
+                    "opcode": "0xF0",
+                    "length": 4,
+                    "assembly": {
+                        "attack1": {
+                            "type": "property",
+                            "name": "Attack 1",
+                            "begin": 1,
+                            "stringTable": "attackName",
+                            "max": "0xFE",
+                            "special": {
+                                "0xFE": "Do Nothing"
+                            }
+                        },
+                        "attack2": {
+                            "type": "property",
+                            "name": "Attack 2",
+                            "begin": 2,
+                            "stringTable": "attackName",
+                            "max": "0xFE",
+                            "special": {
+                                "0xFE": "Do Nothing"
+                            }
+                        },
+                        "attack3": {
+                            "type": "property",
+                            "name": "Attack 3",
+                            "begin": 3,
+                            "stringTable": "attackName",
+                            "max": "0xFE",
+                            "special": {
+                                "0xFE": "Do Nothing"
+                            }
+                        }
+                    }
+                },
+                "attackSingle": {
+                    "name": "Attack (Single)",
+                    "opcode": "0x00-0xF0",
+                    "assembly": {
+                        "attack": {
+                            "type": "property",
+                            "name": "Attack",
+                            "stringTable": "attackName",
+                            "max": "0xEF"
+                        }
+                    }
+                },
+                "battleEvent": {
+                    "name": "Battle Event",
+                    "opcode": "0xF7",
+                    "length": 2,
+                    "assembly": {
+                        "battleEvent": {
+                            "type": "property",
+                            "name": "Battle Event",
+                            "begin": 1
+                        }
+                    }
+                },
+                "changeBattle": {
+                    "name": "Change Battle",
+                    "opcode": "0xF2",
+                    "length": 4,
+                    "assembly": {
+                        "battle": {
+                            "type": "property",
+                            "name": "Battle",
+                            "begin": 2,
+                            "mask": "0x7FFF",
+                            "link": "battleProperties[%i]",
+                            "stringTable": "battleProperties"
+                        },
+                        "exitEffect": {
+                            "type": "property",
+                            "name": "Exit Effect",
+                            "begin": 1,
+                            "mask": "0x7F"
+                        },
+                        "scroll": {
+                            "type": "property",
+                            "name": "Scroll Background",
+                            "begin": 1,
+                            "mask": "0x80",
+                            "bool": true
+                        },
+                        "restoreMonsters": {
+                            "type": "property",
+                            "name": "Restore Monsters",
+                            "begin": 2,
+                            "mask": "0x8000",
+                            "bool": true
+                        }
+                    }
+                },
+                "command": {
+                    "name": "Command",
+                    "opcode": "0xF4",
+                    "length": 4,
+                    "assembly": {
+                        "command1": {
+                            "type": "property",
+                            "name": "Command 1",
+                            "begin": 1,
+                            "stringTable": "battleCommandName"
+                        },
+                        "command2": {
+                            "type": "property",
+                            "name": "Command 2",
+                            "begin": 2,
+                            "stringTable": "battleCommandName"
+                        },
+                        "command3": {
+                            "type": "property",
+                            "name": "Command 3",
+                            "begin": 3,
+                            "stringTable": "battleCommandName"
+                        }
+                    }
+                },
+                "conditional": {
+                    "name": "Conditional",
+                    "opcode": "0xFC",
+                    "length": 4,
+                    "assembly": {
+                        "condition": {
+                            "type": "property",
+                            "name": "Condition",
+                            "begin": 1,
+                            "stringTable": {
+                                "string": {
+                                    "0": "Never",
+                                    "1": "Command",
+                                    "2": "Attack",
+                                    "3": "Item",
+                                    "4": "Element",
+                                    "5": "Any Action",
+                                    "6": "HP",
+                                    "7": "MP",
+                                    "8": "Has Status",
+                                    "9": "Does Not Have Status",
+                                    "10": "Never",
+                                    "11": "Monster Timer",
+                                    "12": "Variable Less Than",
+                                    "13": "Variable Greater Than",
+                                    "14": "Level Less Than",
+                                    "15": "Level Greater Than",
+                                    "16": "One Type of Monster",
+                                    "17": "Monsters Alive",
+                                    "18": "Monsters Dead",
+                                    "19": "Targets Alive",
+                                    "20": "Switch On",
+                                    "21": "Switch Off",
+                                    "22": "Battle Timer",
+                                    "23": "Target Valid",
+                                    "24": "Gau is Present",
+                                    "25": "Monster Slot",
+                                    "26": "Weak vs. Element",
+                                    "27": "Battle Index",
+                                    "28": "Always"
+                                }
+                            }
+                        },
+                        "target": {
+                            "type": "property",
+                            "name": "Target",
+                            "begin": 2,
+                            "invalid": "![6,7,8,9,14,15,23,26].includes(this.parent.condition.value)",
+                            "stringTable": "battleTargets"
+                        },
+                        "command1": {
+                            "type": "property",
+                            "name": "Command 1",
+                            "begin": 2,
+                            "invalid": "(this.parent.condition.value !== 1)",
+                            "stringTable": "battleCommandName"
+                        },
+                        "command2": {
+                            "type": "property",
+                            "name": "Command 2",
+                            "begin": 3,
+                            "invalid": "(this.parent.condition.value !== 1)",
+                            "stringTable": "battleCommandName"
+                        },
+                        "attack1": {
+                            "type": "property",
+                            "name": "Attack 1",
+                            "begin": 2,
+                            "invalid": "(this.parent.condition.value !== 2)",
+                            "stringTable": "attackName"
+                        },
+                        "attack2": {
+                            "type": "property",
+                            "name": "Attack 2",
+                            "begin": 3,
+                            "invalid": "(this.parent.condition.value !== 2)",
+                            "stringTable": "attackName"
+                        },
+                        "item1": {
+                            "type": "property",
+                            "name": "Item 1",
+                            "begin": 2,
+                            "invalid": "(this.parent.condition.value !== 3)",
+                            "stringTable": "itemNames"
+                        },
+                        "item2": {
+                            "type": "property",
+                            "name": "Item 2",
+                            "begin": 3,
+                            "invalid": "(this.parent.condition.value !== 3)",
+                            "stringTable": "itemNames"
+                        },
+                        "element": {
+                            "type": "property",
+                            "name": "Element",
+                            "begin": 2,
+                            "flag": true,
+                            "invalid": "(this.parent.condition.value !== 4)",
+                            "stringTable": "element"
+                        },
+                        "hp": {
+                            "type": "property",
+                            "name": "HP",
+                            "begin": 3,
+                            "multiplier": 128,
+                            "invalid": "(this.parent.condition.value !== 6)"
+                        },
+                        "mp": {
+                            "type": "property",
+                            "name": "MP",
+                            "begin": 3,
+                            "invalid": "(this.parent.condition.value !== 7)"
+                        },
+                        "status": {
+                            "type": "property",
+                            "name": "Status",
+                            "begin": 3,
+                            "invalid": "![8,9].includes(this.parent.condition.value)",
+                            "stringTable": "statusNamesReversed"
+                        },
+                        "timer": {
+                            "type": "property",
+                            "name": "Timer",
+                            "begin": 2,
+                            "multiplier": 2,
+                            "invalid": "![11,22].includes(this.parent.condition.value)"
+                        },
+                        "variable": {
+                            "type": "property",
+                            "name": "Variable",
+                            "begin": 2,
+                            "hidden": "![12,13].includes(this.parent.condition.value)",
+                            "invalid": "![12,13,20,21].includes(this.parent.condition.value)",
+                            "stringTable": "battleVariable"
+                        },
+                        "value": {
+                            "type": "property",
+                            "name": "Value",
+                            "begin": 3,
+                            "invalid": "![12,13].includes(this.parent.condition.value)"
+                        },
+                        "level": {
+                            "type": "property",
+                            "name": "Level",
+                            "begin": 3,
+                            "invalid": "![14,15].includes(this.parent.condition.value)"
+                        },
+                        "monsters": {
+                            "type": "property",
+                            "name": "Monsters",
+                            "begin": 2,
+                            "min": 1,
+                            "invalid": "![17,18,25].includes(this.parent.condition.value)",
+                            "flag": true,
+                            "stringTable": {
+                                "string": {
+                                    "0": "Slot 1",
+                                    "1": "Slot 2",
+                                    "2": "Slot 3",
+                                    "3": "Slot 4",
+                                    "4": "Slot 5",
+                                    "5": "Slot 6"
+                                }
+                            },
+                            "special": {
+                                "0": "This Monster",
+                                "0xFF": "All Monsters"
+                            }
+                        },
+                        "countType": {
+                            "type": "property",
+                            "name": "Type",
+                            "begin": 2,
+                            "invalid": "(this.parent.condition.value !== 19)",
+                            "stringTable": {
+                                "string": {
+                                    "0": "Characters (≥)",
+                                    "1": "Monsters (≤)"
+                                }
+                            }
+                        },
+                        "count": {
+                            "type": "property",
+                            "name": "Count",
+                            "begin": 3,
+                            "invalid": "(this.parent.condition.value !== 19)"
+                        },
+                        "switch": {
+                            "type": "property",
+                            "name": "Switch",
+                            "begin": 3,
+                            "mask": "0x07",
+                            "max": "0x07FF",
+                            "msb": "this.parent.variable",
+                            "invalid": "![20,21].includes(this.parent.condition.value)",
+                            "stringTable": "battleSwitch"
+                        },
+                        "element2": {
+                            "type": "property",
+                            "name": "Element",
+                            "begin": 3,
+                            "flag": true,
+                            "invalid": "(this.parent.condition.value !== 26)",
+                            "stringTable": "element"
+                        },
+                        "battle": {
+                            "type": "property",
+                            "name": "Battle",
+                            "begin": 2,
+                            "mask": "0xFFFF",
+                            "invalid": "(this.parent.condition.value !== 27)",
+                            "link": "battleProperties[%i]",
+                            "stringTable": "battleProperties"
+                        }
+                    }
+                },
+                "dialog": {
+                    "name": "Dialog",
+                    "opcode": "0xF3",
+                    "length": 3,
+                    "assembly": {
+                        "dialog": {
+                            "type": "property",
+                            "name": "Dialog",
+                            "begin": 1,
+                            "link": "monsterDialog[%i]",
+                            "stringTable": "monsterDialog"
+                        }
+                    }
+                },
+                "end": {
+                    "name": "End of Script",
+                    "opcode": "0xFF"
+                },
+                "endConditional": {
+                    "name": "End Conditional",
+                    "opcode": "0xFE"
+                },
+                "item": {
+                    "name": "Use/Throw Item",
+                    "opcode": "0xF6",
+                    "length": 4,
+                    "assembly": {
+                        "useThrow": {
+                            "type": "property",
+                            "name": "Use/Throw",
+                            "begin": 1,
+                            "stringTable": {
+                                "string": {
+                                    "0": "Use",
+                                    "1": "Throw"
+                                }
+                            }
+                        },
+                        "item1": {
+                            "type": "property",
+                            "name": "2/3 Chance",
+                            "begin": 2,
+                            "stringTable": "itemNames"
+                        },
+                        "item2": {
+                            "type": "property",
+                            "name": "1/3 Chance",
+                            "begin": 3,
+                            "stringTable": "itemNames"
+                        }
+                    }
+                },
+                "misc": {
+                    "name": "Misc. Effects",
+                    "opcode": "0xFB00-0xFB0E",
+                    "length": 3,
+                    "assembly": {
+                        "effect": {
+                            "type": "property",
+                            "name": "Effect",
+                            "begin": 1,
+                            "stringTable": {
+                                "string": {
+                                    "0": "Reset Monster Timer",
+                                    "1": "Target Becomes Invincible",
+                                    "2": "Terminate Battle",
+                                    "3": "Add Gau to the Party",
+                                    "4": "Reset Battle Timer",
+                                    "5": "Target Loses Invincibility",
+                                    "6": "Target Can Be Targeted",
+                                    "7": "Target Can't Be Targeted",
+                                    "8": "Fill Target's ATB Gauge",
+                                    "9": "Gau Returns from the Veldt",
+                                    "11": "Set Status",
+                                    "12": "Remove Status",
+                                    "13": "Hide This Monster (Piranha)"
+                                }
+                            }
+                        },
+                        "target": {
+                            "type": "property",
+                            "name": "Target",
+                            "begin": 2,
+                            "invalid": "(this.parent.effect.value !== 1) && (this.parent.effect.value !== 5) && (this.parent.effect.value !== 6) && (this.parent.effect.value !== 7) && (this.parent.effect.value !== 8)",
+                            "stringTable": "battleTargets"
+                        },
+                        "status": {
+                            "type": "property",
+                            "name": "Status",
+                            "begin": 2,
+                            "invalid": "(this.parent.effect.value !== 11) && (this.parent.effect.value !== 12)",
+                            "stringTable": "statusNamesReversed"
+                        }
+                    }
+                },
+                "showHide": {
+                    "name": "Show/Hide Monster",
+                    "opcode": "0xF5",
+                    "length": 4,
+                    "assembly": {
+                        "showHide": {
+                            "type": "property",
+                            "name": "Show/Hide",
+                            "begin": 2,
+                            "stringTable": {
+                                "string": {
+                                    "0": "Show - Set HP to Max",
+                                    "1": "Hide - Normal",
+                                    "2": "Show - At Current HP",
+                                    "3": "Hide - Allow Targeting",
+                                    "4": "Hide - Battle Won't End",
+                                    "5": "Hide - Debug Mode"
+                                }
+                            }
+                        },
+                        "animation": {
+                            "type": "property",
+                            "name": "Animation",
+                            "begin": 1
+                        },
+                        "monsters": {
+                            "type": "property",
+                            "name": "Monsters",
+                            "begin": 3,
+                            "min": 1,
+                            "flag": true,
+                            "stringTable": {
+                                "string": {
+                                    "0": "Slot 1",
+                                    "1": "Slot 2",
+                                    "2": "Slot 3",
+                                    "3": "Slot 4",
+                                    "4": "Slot 5",
+                                    "5": "Slot 6"
+                                }
+                            },
+                            "special": {
+                                "0": "This Monster",
+                                "0xFF": "All Monsters"
+                            }
+                        }
+                    }
+                },
+                "soundEffect": {
+                    "name": "Sound Effect",
+                    "opcode": "0xFA09",
+                    "length": 4,
+                    "assembly": {
+                        "soundEffect": {
+                            "type": "property",
+                            "name": "Sound Effect",
+                            "begin": 2
+                        },
+                        "pan": {
+                            "type": "property",
+                            "name": "Pan",
+                            "begin": 3
+                        }
+                    }
+                },
+                "switch": {
+                    "name": "Change Switch",
+                    "opcode": "0xF9",
+                    "length": 4,
+                    "assembly": {
+                        "operation": {
+                            "type": "property",
+                            "name": "Operation",
+                            "begin": 1,
+                            "stringTable": {
+                                "string": {
+                                    "0": "Toggle",
+                                    "1": "On",
+                                    "2": "Off"
+                                }
+                            }
+                        },
+                        "variable": {
+                            "type": "property",
+                            "name": "Variable",
+                            "begin": 2,
+                            "hidden": true
+                        },
+                        "switch": {
+                            "type": "property",
+                            "name": "Switch",
+                            "begin": 3,
+                            "mask": "0x07",
+                            "max": "0x07FF",
+                            "msb": "this.parent.variable",
+                            "stringTable": "battleSwitch"
+                        }
+                    }
+                },
+                "target": {
+                    "name": "Change Target",
+                    "opcode": "0xF1",
+                    "length": 2,
+                    "assembly": {
+                        "target": {
+                            "type": "property",
+                            "name": "Target",
+                            "begin": 1,
+                            "stringTable": "battleTargets"
+                        }
+                    }
+                },
+                "wait": {
+                    "name": "Wait One Turn",
+                    "opcode": "0xFD"
+                },
+                "variable": {
+                    "name": "Change Variable",
+                    "opcode": "0xF8",
+                    "length": 3,
+                    "assembly": {
+                        "variable": {
+                            "type": "property",
+                            "name": "Variable",
+                            "begin": 1,
+                            "stringTable": "battleVariable"
+                        },
+                        "operation": {
+                            "type": "property",
+                            "name": "Operation",
+                            "begin": 2,
+                            "mask": "0xC0",
+                            "stringTable": {
+                                "string": {
+                                    "0": "Set Variable",
+                                    "2": "Add to Variable",
+                                    "3": "Subtract from Variable"
+                                }
+                            }
+                        },
+                        "value": {
+                            "type": "property",
+                            "name": "Value",
+                            "begin": 2,
+                            "mask": "0x3F"
+                        }
+                    }
+                }
+            }
+        },
         "object": {
             "name": "Object Script",
             "delegate": "FF6Script",
@@ -6667,7 +7614,7 @@
                             "name": "State 2",
                             "begin": 3,
                             "mask": "0x8000",
-                            "stringTable": "eventScript.event.jumpSwitch.assembly.state1",
+                            "stringTable": "eventScript.event.jumpSwitch.state1",
                             "invalid": "this.parent.count.value < 2"
                         },
                         "switch3": {
@@ -6683,7 +7630,7 @@
                             "name": "State 3",
                             "begin": 5,
                             "mask": "0x8000",
-                            "stringTable": "eventScript.event.jumpSwitch.assembly.state1",
+                            "stringTable": "eventScript.event.jumpSwitch.state1",
                             "invalid": "this.parent.count.value < 3"
                         },
                         "switch4": {
@@ -6699,7 +7646,7 @@
                             "name": "State 4",
                             "begin": 7,
                             "mask": "0x8000",
-                            "stringTable": "eventScript.event.jumpSwitch.assembly.state1",
+                            "stringTable": "eventScript.event.jumpSwitch.state1",
                             "invalid": "this.parent.count.value < 4"
                         },
                         "switch5": {
@@ -6715,7 +7662,7 @@
                             "name": "State 5",
                             "begin": 9,
                             "mask": "0x8000",
-                            "stringTable": "eventScript.event.jumpSwitch.assembly.state1",
+                            "stringTable": "eventScript.event.jumpSwitch.state1",
                             "invalid": "this.parent.count.value < 5"
                         },
                         "switch6": {
@@ -6731,7 +7678,7 @@
                             "name": "State 6",
                             "begin": 11,
                             "mask": "0x8000",
-                            "stringTable": "eventScript.event.jumpSwitch.assembly.state1",
+                            "stringTable": "eventScript.event.jumpSwitch.state1",
                             "invalid": "this.parent.count.value < 6"
                         },
                         "switch7": {
@@ -6747,7 +7694,7 @@
                             "name": "State 7",
                             "begin": 13,
                             "mask": "0x8000",
-                            "stringTable": "eventScript.event.jumpSwitch.assembly.state1",
+                            "stringTable": "eventScript.event.jumpSwitch.state1",
                             "invalid": "this.parent.count.value < 7"
                         },
                         "switch8": {
@@ -6763,7 +7710,7 @@
                             "name": "State 8",
                             "begin": 15,
                             "mask": "0x8000",
-                            "stringTable": "eventScript.event.jumpSwitch.assembly.state1",
+                            "stringTable": "eventScript.event.jumpSwitch.state1",
                             "invalid": "this.parent.count.value < 8"
                         }
                     }
@@ -7216,7 +8163,7 @@
                             "name": "State 2",
                             "begin": 3,
                             "mask": "0x8000",
-                            "stringTable": "eventScript.event.jumpSwitch.assembly.state1",
+                            "stringTable": "eventScript.event.jumpSwitch.state1",
                             "invalid": "this.parent.count.value < 2"
                         },
                         "switch3": {
@@ -7232,7 +8179,7 @@
                             "name": "State 3",
                             "begin": 5,
                             "mask": "0x8000",
-                            "stringTable": "eventScript.event.jumpSwitch.assembly.state1",
+                            "stringTable": "eventScript.event.jumpSwitch.state1",
                             "invalid": "this.parent.count.value < 3"
                         },
                         "switch4": {
@@ -7248,7 +8195,7 @@
                             "name": "State 4",
                             "begin": 7,
                             "mask": "0x8000",
-                            "stringTable": "eventScript.event.jumpSwitch.assembly.state1",
+                            "stringTable": "eventScript.event.jumpSwitch.state1",
                             "invalid": "this.parent.count.value < 4"
                         },
                         "switch5": {
@@ -7264,7 +8211,7 @@
                             "name": "State 5",
                             "begin": 9,
                             "mask": "0x8000",
-                            "stringTable": "eventScript.event.jumpSwitch.assembly.state1",
+                            "stringTable": "eventScript.event.jumpSwitch.state1",
                             "invalid": "this.parent.count.value < 5"
                         },
                         "switch6": {
@@ -7280,7 +8227,7 @@
                             "name": "State 6",
                             "begin": 11,
                             "mask": "0x8000",
-                            "stringTable": "eventScript.event.jumpSwitch.assembly.state1",
+                            "stringTable": "eventScript.event.jumpSwitch.state1",
                             "invalid": "this.parent.count.value < 6"
                         },
                         "switch7": {
@@ -7296,7 +8243,7 @@
                             "name": "State 7",
                             "begin": 13,
                             "mask": "0x8000",
-                            "stringTable": "eventScript.event.jumpSwitch.assembly.state1",
+                            "stringTable": "eventScript.event.jumpSwitch.state1",
                             "invalid": "this.parent.count.value < 7"
                         },
                         "switch8": {
@@ -7312,7 +8259,7 @@
                             "name": "State 8",
                             "begin": 15,
                             "mask": "0x8000",
-                            "stringTable": "eventScript.event.jumpSwitch.assembly.state1",
+                            "stringTable": "eventScript.event.jumpSwitch.state1",
                             "invalid": "this.parent.count.value < 8"
                         }
                     }
@@ -7555,6 +8502,40 @@
         }
     },
     "charTable": {
+        "battleEscapeSequences": {
+            "name": "Battle Escape Sequences",
+            "char": {
+                "0x00": "\\0",
+                "0x01": "\\n",
+                "0x02": "\\char[",
+                "0x05": "\\pause",
+                "0x07": "\\key",
+                "0x0E": "\\item",
+                "0x0F": "\\attack",
+                "0x10": "\\var0",
+                "0x11": "\\var1",
+                "0x12": "\\string[",
+                "0x13": "\\var2",
+                "0x14": "\\var3"
+            }
+        },
+        "bigTextPunctuation": {
+            "name": "Big Text Punctuation",
+            "char": {
+                "0xCD": "、",
+                "0xCE": "／",
+                "0xCF": "：",
+                "0xD0": "「",
+                "0xD1": "」",
+                "0xD2": "。",
+                "0xD3": "＋",
+                "0xD4": "『",
+                "0xD5": "（",
+                "0xD6": "）",
+                "0xD7": "・",
+                "0xD8": "……"
+            }
+        },
         "dialogEscapeSequences": {
             "name": "Dialog Escape Sequences",
             "char": {
@@ -7604,21 +8585,35 @@
                 "0xFD": "\\char13"
             }
         },
-        "battleEscapeSequences": {
-            "name": "Battle Escape Sequences",
+        "fixedLength": {
+            "name": "Fixed Length",
             "char": {
-                "0x00": "\\0",
-                "0x01": "\\n",
-                "0x02": "\\char[",
-                "0x05": "\\pause",
-                "0x07": "\\key",
-                "0x0E": "\\item",
-                "0x0F": "\\attack",
-                "0x10": "\\var0",
-                "0x11": "\\var1",
-                "0x12": "\\string[",
-                "0x13": "\\var2",
-                "0x14": "\\var3"
+                "0xFE": "　",
+                "0xFF": "\\pad"
+            }
+        },
+        "item": {
+            "name": "Item Icons",
+            "char": {
+                "0xD8": "\\dagger",
+                "0xD9": "\\sword",
+                "0xDA": "\\spear",
+                "0xDB": "\\katana",
+                "0xDC": "\\staff",
+                "0xDD": "\\brush",
+                "0xDE": "\\star",
+                "0xDF": "\\special",
+                "0xE0": "\\card",
+                "0xE1": "\\claw",
+                "0xE2": "\\shield",
+                "0xE3": "\\helm",
+                "0xE4": "\\armor",
+                "0xE5": "\\tool",
+                "0xE6": "\\scroll",
+                "0xE7": "\\relic",
+                "0xE8": "\\white",
+                "0xE9": "\\black",
+                "0xEA": "\\effect"
             }
         },
         "kana": {
@@ -8810,28 +9805,11 @@
                 "0xEF": "人間"
             }
         },
-        "item": {
-            "name": "Item Icons",
+        "nullTerminated": {
+            "name": "Null-Terminated",
             "char": {
-                "0xD8": "\\dagger",
-                "0xD9": "\\sword",
-                "0xDA": "\\spear",
-                "0xDB": "\\katana",
-                "0xDC": "\\staff",
-                "0xDD": "\\brush",
-                "0xDE": "\\star",
-                "0xDF": "\\special",
-                "0xE0": "\\card",
-                "0xE1": "\\claw",
-                "0xE2": "\\shield",
-                "0xE3": "\\helm",
-                "0xE4": "\\armor",
-                "0xE5": "\\tool",
-                "0xE6": "\\scroll",
-                "0xE7": "\\relic",
-                "0xE8": "\\white",
-                "0xE9": "\\black",
-                "0xEA": "\\effect"
+                "0xFE": "\\pad",
+                "0xFF": "　"
             }
         },
         "smallTextPunctuation": {
@@ -8854,39 +9832,249 @@
                 "0xF7": "\\white"
             }
         },
-        "bigTextPunctuation": {
-            "name": "Big Text Punctuation",
+        "swdTech": {
+            "name": "SwdTech",
             "char": {
-                "0xCD": "、",
-                "0xCE": "／",
-                "0xCF": "：",
-                "0xD0": "「",
-                "0xD1": "」",
-                "0xD2": "。",
-                "0xD3": "＋",
-                "0xD4": "『",
-                "0xD5": "（",
-                "0xD6": "）",
-                "0xD7": "・",
-                "0xD8": "……"
-            }
-        },
-        "fixedLength": {
-            "name": "Fixed Length",
-            "char": {
-                "0xFE": "　",
+                "0x00": "防",
+                "0x01": "間",
+                "0x02": "器",
+                "0x03": "吸",
+                "0x04": "行",
+                "0x05": "具",
+                "0x06": "下",
+                "0x07": "穴",
+                "0x08": "現",
+                "0x09": "元",
+                "0x0A": "攻",
+                "0x0B": "後",
+                "0x0C": "混",
+                "0x0D": "士",
+                "0x0E": "視",
+                "0x0F": "使",
+                "0x10": "時",
+                "0x11": "次",
+                "0x12": "自",
+                "0x13": "持",
+                "0x14": "実",
+                "0x15": "者",
+                "0x16": "弱",
+                "0x17": "手",
+                "0x18": "守",
+                "0x19": "受",
+                "0x1A": "収",
+                "0x1B": "出",
+                "0x1C": "消",
+                "0x1D": "障",
+                "0x1E": "傷",
+                "0x1F": "状",
+                "0x20": "上",
+                "0x21": "色",
+                "0x22": "身",
+                "0x23": "人",
+                "0x24": "水",
+                "0x25": "数",
+                "0x26": "制",
+                "0x27": "成",
+                "0x28": "石",
+                "0x29": "先",
+                "0x2A": "戦",
+                "0x2B": "全",
+                "0x2C": "素",
+                "0x2D": "装",
+                "0x2E": "続",
+                "0x2F": "体",
+                "0x30": "態",
+                "0x31": "脱",
+                "0x32": "単",
+                "0x33": "治",
+                "0x34": "中",
+                "0x35": "仲",
+                "0x36": "長",
+                "0x37": "追",
+                "0x38": "敵",
+                "0x39": "点",
+                "0x3A": "盗",
+                "0x3B": "倒",
+                "0x3C": "等",
+                "0x3D": "道",
+                "0x3E": "動",
+                "0x3F": "同",
+                "0x40": "特",
+                "0x41": "入",
+                "0x42": "能",
+                "0x43": "倍",
+                "0x44": "発",
+                "0x45": "半",
+                "0x46": "反",
+                "0x47": "備",
+                "0x48": "不",
+                "0x49": "復",
+                "0x4A": "物",
+                "0x4B": "分",
+                "0x4C": "変",
+                "0x4D": "歩",
+                "0x4E": "方",
+                "0x4F": "放",
+                "0x50": "Ａ",
+                "0x51": "Ｂ",
+                "0x52": "Ｘ",
+                "0x53": "Ｙ",
+                "0x54": "Ｌ",
+                "0x55": "Ｒ",
+                "0x56": "Ｅ",
+                "0x57": "Ｈ",
+                "0x58": "Ｍ",
+                "0x59": "Ｐ",
+                "0x5A": "Ｃ",
+                "0x5B": "Ｔ",
+                "0x5C": "Ｖ",
+                "0x5D": "Ｓ",
+                "0x5E": "岩",
+                "0x5F": "％",
+                "0x60": "沈",
+                "0x61": "黙",
+                "0x62": "御",
+                "0x63": "狂",
+                "0x64": "張",
+                "0x65": "効",
+                "0x66": "除",
+                "0x67": "複",
+                "0x68": "瀕",
+                "0x69": "麻",
+                "0x6B": "率",
+                "0x6C": "定",
+                "0x6D": "避",
+                "0x6E": "伴",
+                "0x6F": "滑",
+                "0x70": "闇",
+                "0x71": "睡",
+                "0x72": "果",
+                "0x73": "費",
+                "0x74": "量",
+                "0x75": "減",
+                "0x76": "繰",
+                "0x77": "系",
+                "0x78": "算",
+                "0x79": "型",
+                "0x7A": "換",
+                "0x7B": "折",
+                "0x7C": "晩",
+                "0x7D": "致",
+                "0x7E": "浴",
+                "0x7F": "床",
+                "0x80": "阿",
+                "0x81": "愛",
+                "0x82": "暗",
+                "0x83": "影",
+                "0x84": "円",
+                "0x85": "炎",
+                "0x86": "焔",
+                "0x87": "燕",
+                "0x88": "艶",
+                "0x89": "王",
+                "0x8A": "凰",
+                "0x8B": "奥",
+                "0x8C": "火",
+                "0x8D": "香",
+                "0x8E": "華",
+                "0x8F": "我",
+                "0x90": "牙",
+                "0x91": "海",
+                "0x92": "快",
+                "0x93": "鶴",
+                "0x94": "気",
+                "0x96": "義",
+                "0x97": "技",
+                "0x98": "究",
+                "0x99": "極",
+                "0x9A": "空",
+                "0x9B": "激",
+                "0x9C": "撃",
+                "0x9D": "月",
+                "0x9E": "剣",
+                "0x9F": "幻",
+                "0xA0": "虎",
+                "0xA3": "光",
+                "0xA4": "皇",
+                "0xA5": "功",
+                "0xA9": "黒",
+                "0xAA": "殺",
+                "0xAB": "斬",
+                "0xAC": "死",
+                "0xAD": "車",
+                "0xAE": "修",
+                "0xAF": "獣",
+                "0xB3": "真",
+                "0xB4": "心",
+                "0xB5": "神",
+                "0xB6": "刃",
+                "0xB7": "陣",
+                "0xB9": "生",
+                "0xBA": "星",
+                "0xBC": "旋",
+                "0xBD": "相",
+                "0xBE": "想",
+                "0xC0": "大",
+                "0xC2": "断",
+                "0xC3": "地",
+                "0xC4": "超",
+                "0xC6": "跳",
+                "0xC7": "天",
+                "0xC8": "転",
+                "0xC9": "怒",
+                "0xCA": "刀",
+                "0xCB": "闘",
+                "0xCC": "波",
+                "0xCD": "破",
+                "0xD0": "飛",
+                "0xD1": "秘",
+                "0xD2": "美",
+                "0xD3": "必",
+                "0xD4": "百",
+                "0xD5": "舞",
+                "0xD6": "風",
+                "0xD7": "法",
+                "0xDA": "魔",
+                "0xDB": "無",
+                "0xDC": "夢",
+                "0xDD": "命",
+                "0xDE": "鳴",
+                "0xE0": "滅",
+                "0xE2": "翼",
+                "0xE3": "羅",
+                "0xE4": "雷",
+                "0xE5": "乱",
+                "0xE6": "嵐",
+                "0xE8": "竜",
+                "0xE9": "龍",
+                "0xEA": "流",
+                "0xEB": "輪",
+                "0xEC": "烈",
+                "0xED": "裂",
+                "0xEF": "　",
+                "0xF0": "毛",
+                "0xF1": "皮",
+                "0xF2": "透",
+                "0xF3": "個",
+                "0xF4": "経",
+                "0xF5": "盾",
+                "0xF6": "雄",
+                "0xF7": "〇",
                 "0xFF": "\\pad"
-            }
-        },
-        "nullTerminated": {
-            "name": "Null-Terminated",
-            "char": {
-                "0xFE": "\\pad",
-                "0xFF": "　"
             }
         }
     },
     "textEncoding": {
+        "bigText": {
+            "name": "Big Text",
+            "charTable": [
+                "battleEscapeSequences",
+                "kana",
+                "bigTextPunctuation",
+                "kanji",
+                "fixedLength"
+            ]
+        },
         "dialog": {
             "name": "Dialog",
             "charTable": [
@@ -8894,6 +10082,16 @@
                 "kana",
                 "bigTextPunctuation",
                 "mte",
+                "kanji",
+                "nullTerminated"
+            ]
+        },
+        "nullTerminated": {
+            "name": "Null-Terminated",
+            "charTable": [
+                "battleEscapeSequences",
+                "kana",
+                "bigTextPunctuation",
                 "kanji",
                 "nullTerminated"
             ]
@@ -8908,14 +10106,10 @@
                 "fixedLength"
             ]
         },
-        "nullTerminated": {
-            "name": "Null-Terminated",
+        "swdTech": {
+            "name": "SwdTech",
             "charTable": [
-                "battleEscapeSequences",
-                "kana",
-                "bigTextPunctuation",
-                "kanji",
-                "nullTerminated"
+                "swdTech"
             ]
         }
     },
@@ -8984,8 +10178,28 @@
                 "255": "No Background Override"
             }
         },
+        "battleSwitch": {
+            "name": "Local Battle Switch",
+            "length": 296,
+            "default": "Local Battle Switch %i",
+            "string": {
+                "32-192": "<stringTable.battleSwitchGlobal[%i-32]>",
+                "192-200": "Forcefield: <stringTable.element[%i-192]>",
+                "200-208": "Number of Targets",
+                "208-216": "Number of Types of Monsters",
+                "288": "Monster Switch 0",
+                "289": "Monster Switch 1",
+                "290": "Monster Switch 2",
+                "291": "Monster Switch 3",
+                "292": "Monster Switch 4",
+                "293": "Monster Switch 5",
+                "294": "Monster Switch 6",
+                "295": "Monster Switch 7"
+            }
+        },
         "battleSwitchGlobal": {
-            "name": "Global Battle Switches",
+            "name": "Global Battle Switch",
+            "length": 160,
             "default": "Global Battle Switch %i",
             "string": {
                 "40-56": "Conditional Battle Switch %i",
@@ -9007,6 +10221,70 @@
                 "77": "<characterNames[1]> is a Green Soldier",
                 "80-96": "Doom Gaze's HP",
                 "96-104": "Cursed Shield Battle Counter"
+            }
+        },
+        "battleTargets": {
+            "length": "0x4E",
+            "default": "Target %i",
+            "string": {
+                "0x00-0x30": "<characterNames[%i]>",
+                "0x30": "Monster Slot 1",
+                "0x31": "Monster Slot 2",
+                "0x32": "Monster Slot 3",
+                "0x33": "Monster Slot 4",
+                "0x34": "Monster Slot 5",
+                "0x35": "Monster Slot 6",
+                "0x36": "Self",
+                "0x37": "All Monsters (Not Self)",
+                "0x38": "All Monsters",
+                "0x39": "Random Monster (Not Self)",
+                "0x3A": "Random Monster",
+                "0x3B": "All Dead Characters",
+                "0x3C": "Random Dead Character",
+                "0x3D": "All Dead Monsters",
+                "0x3E": "Random Dead Monster",
+                "0x3F": "All Characters with Reflect",
+                "0x40": "Random Character with Reflect",
+                "0x41": "All Monsters with Reflect",
+                "0x42": "Random Monster with Reflect",
+                "0x43": "All Characters",
+                "0x44": "Random Character",
+                "0x45": "Previous Attack",
+                "0x46": "All Targets",
+                "0x47": "Nothing",
+                "0x48": "Character Slot 1",
+                "0x49": "Character Slot 2",
+                "0x4A": "Character Slot 3",
+                "0x4B": "Character Slot 4",
+                "0x4C": "Random Target(s)",
+                "0x4D": "\"<stringTable.attackName[0xCA]>\" Target"
+            }
+        },
+        "battleVariable": {
+            "name": "Local Battle Variable",
+            "length": 37,
+            "default": "Local Battle Variable %i",
+            "string": {
+                "4-24": "<stringTable.battleVariableGlobal[%i-4]>",
+                "24": "Forcefield Elements",
+                "25": "Number of Targets",
+                "26": "Number of Types of Monsters",
+                "36": "Monster Variable"
+            }
+        },
+        "battleVariableGlobal": {
+            "name": "Global Battle Variable",
+            "length": 20,
+            "default": "Global Battle Variable %i",
+            "string": {
+                "5": "Conditional Battle Switches 1",
+                "6": "Conditional Battle Switches 2",
+                "7": "Battle Switches 1",
+                "8": "Battle Switches 2",
+                "9": "Battle Switches 3",
+                "10": "Doom Gaze's HP 1",
+                "11": "Doom Gaze's HP 2",
+                "12": "Cursed Shield Counter"
             }
         },
         "directions": {
@@ -9707,6 +10985,24 @@
                 "767": "At least one saved game"
             }
         },
+        "monsterAnimation": {
+            "name": "Monster Animation",
+            "string": {
+                "0": "Flash Red",
+                "1": "Move Back 8 (slow)",
+                "2": "Move Forward 8 (slow)",
+                "3": "Move Back 8 (instantly)",
+                "4": "Move Forward 8 (instantly)",
+                "5": "Characters Run Right",
+                "6": "Characters Run Left",
+                "7": "Move Back 64 (instantly)",
+                "8": "Move Forward 64 (instantly)",
+                "10": "Kefka Head",
+                "11": "Atma Glow (long)",
+                "12": "Atma Glow (short)",
+                "13": "Kefka Death"
+            }
+        },
         "npcSwitches": {
             "name": "NPC Switches",
             "path": "Field/Events",
@@ -10194,6 +11490,15 @@
                 "83": "Ending Theme 1",
                 "84": "Ending Theme 2",
                 "0xFF": "Continue Previous Song"
+            }
+        },
+        "statusNamesReversed": {
+            "name": "Status Names (Reverse Order)",
+            "string": {
+                "0-8": "<stringTable.statusNames[7-%i]>",
+                "8-16": "<stringTable.statusNames[23-%i]>",
+                "16-24": "<stringTable.statusNames[39-%i]>",
+                "24-32": "<stringTable.statusNames[55-%i]>"
             }
         },
         "treasureSwitches": {

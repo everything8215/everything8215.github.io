@@ -153,7 +153,7 @@ FF4Map.prototype.mouseDown = function(e) {
         } else {
             // clear trigger selection selection and select map properties
             this.selectedTrigger = null;
-            rom.select(this.mapProperties);
+            this.rom.select(this.mapProperties);
             this.isDragging = false;
         }
     } else if (this.clickButton === 2) {
@@ -345,18 +345,21 @@ FF4Map.prototype.setTiles = function() {
 
 FF4Map.prototype.selectTrigger = function(trigger) {
     this.selectedTrigger = trigger;
-    rom.select(trigger);
+    this.rom.select(trigger);
     if (!trigger) return;
     this.clickedCol = this.selectedTrigger.x.value;
     this.clickedRow = this.selectedTrigger.y.value;
 
     if (this.selectedTrigger.key === "npcProperties") {
-        var script = rom.npcScript.item(trigger.switch.value);
-        scriptList.selectScript(script);
+        var script = this.rom.npcScript.item(trigger.switch.value);
+        this.rom.select(script);
+//        scriptList.selectRef(ref.scriptPointer.value);
     } else if (this.selectedTrigger.key === "eventTriggers") {
-//        var script = rom.triggerScript.item(trigger.event.value);
-//        scriptList.selectScript(script);
+//        var ref = this.rom.triggerPointers.item(trigger.event.value);
+//        this.rom.select(this.rom.triggerScript);
+//        scriptList.selectRef(ref.scriptPointer.value);
     }
+    this.rom.select(trigger);
 }
 
 FF4Map.prototype.selectTiles = function() {
@@ -653,7 +656,7 @@ FF4Map.prototype.loadWorldMap = function(m) {
     layerButtons[2].disabled = true;
 
     this.mapProperties = null;
-    rom.select(null);
+    this.rom.select(null);
 
     // load graphics and layout
     var w = 0; // world
@@ -797,9 +800,9 @@ FF4Map.prototype.loadTriggers = function() {
         if (trigger.map.value === 0xFE) {
             trigger.key = "treasureProperties";
             trigger.name = "Treasure Properties";
-            if (this.m >= 256 && trigger.battle.offset !== 32) {
+            if (this.m >= 256 && trigger.battle.offset !== 0x01E0) {
                 trigger.battle.value += 32;
-                trigger.battle.offset = 32;
+                trigger.battle.offset = 0x01E0;
             }
         } else if (trigger.map.value === 0xFF) {
             trigger.key = "eventTriggers";
