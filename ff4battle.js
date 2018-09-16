@@ -9,6 +9,7 @@ function FF4Battle(rom) {
 
     this.b = null; // battle index
     this.bg = 0; // battle background index
+    this.altPalette = false; // use alternate background palette
     this.battleProperties = null;
     this.ppu = null;
     this.canvas = document.createElement('canvas');
@@ -381,6 +382,9 @@ FF4Battle.prototype.tintCanvas = function(canvas, color) {
     ctx.drawImage(tintCanvas, 0, 0);
 }
 
+// from 03/F7BC
+FF4Battle.altPalette = [0x16, 0x00, 0x00, 0x00, 0x11, 0x00, 0x00, 0x12, 0x14, 0x00, 0x00, 0x13, 0x15, 0x00, 0x00, 0x00, 0x00];
+
 FF4Battle.prototype.drawBackground = function() {
     
     // load graphics
@@ -411,8 +415,10 @@ FF4Battle.prototype.drawBackground = function() {
     
     var pal = new Uint32Array(0x80);
     pal[0] = 0xFF000000;
-    pal.set(this.rom.battleBackgroundPalette.item(this.bg).data.subarray(0, 8), 0x10);
-    pal.set(this.rom.battleBackgroundPalette.item(this.bg).data.subarray(8, 16), 0x20);
+    var p = this.bg;
+    if (this.altPalette && FF4Battle.altPalette[p]) p = FF4Battle.altPalette[p];
+    pal.set(this.rom.battleBackgroundPalette.item(p).data.subarray(0, 8), 0x10);
+    pal.set(this.rom.battleBackgroundPalette.item(p).data.subarray(8, 16), 0x20);
     
     // set up the ppu
     this.ppu = new GFX.PPU();

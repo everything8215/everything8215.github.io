@@ -77,6 +77,35 @@ function FF4Map(rom) {
     this.showLayer2 = document.getElementById("showLayer2").checked;
     this.showTriggers = document.getElementById("showTriggers").checked;
     document.getElementById("zoom").onchange = function() { map.changeZoom(); };
+    
+    this.initBattleGroups();
+}
+
+FF4Map.prototype.initBattleGroups = function() {
+    // set the battle offset for underground and moon maps
+    for (var m = 256; m < 512; m++) {
+        var b = this.rom.mapBattle.item(m).battleGroup.value;
+        if (b === 0) continue;
+        var battleGroup = this.rom.battleGroup.item(b);
+        for (var i = 1; i <= 8; i++) {
+            var battle = battleGroup["battle" + i.toString()];
+            if (battle.offset === 256) continue;
+            battle.offset = 256;
+            battle.value += 256;
+        }
+    }
+    
+    for (m = 64; m < 84; m++) {
+        var b = this.rom.worldBattle.item(m).battleGroup.value;
+        if (b === 0) continue;
+        var battleGroup = this.rom.battleGroupWorld.item(b);
+        for (var i = 1; i <= 8; i++) {
+            var battle = battleGroup["battle" + i.toString()];
+            if (battle.offset === 256) continue;
+            battle.offset = 256;
+            battle.value += 256;
+        }
+    }
 }
 
 FF4Map.prototype.changeZoom = function() {
@@ -151,9 +180,15 @@ FF4Map.prototype.mouseDown = function(e) {
             this.selectTrigger(triggers[0]);
             this.isDragging = true;
         } else {
-            // clear trigger selection selection and select map properties
+            // clear trigger selection
             this.selectedTrigger = null;
-            this.rom.select(this.mapProperties);
+            if (this.isWorld) {
+                // select world map battle
+                this.selectWorldBattle(this.clickedCol, this.clickedRow);
+            } else {
+                // select map properties
+                this.rom.select(this.mapProperties);
+            }
             this.isDragging = false;
         }
     } else if (this.clickButton === 2) {
@@ -280,32 +315,6 @@ FF4Map.prototype.updateMenu = function() {
     appendMenuItem("Delete Trigger", !this.selectedTrigger ? null : function() {self.deleteTrigger()});
 }
 
-//FF4Map.menuItems = [
-//    {label: "Insert Entrance Trigger", onclick: function() {map.insertTrigger()}},
-//    {label: "Insert Event Trigger", onclick: function() {map.insertTrigger('eventTriggers')}},
-//    {label: "Insert Treasure", onclick: function() {map.insertTrigger('treasureProperties')}},
-//    {label: "Insert NPC", onclick: function() {map.insertNPC()}},
-//    {label: "Delete Trigger", onclick: function() {map.deleteTrigger()}}
-//];
-//
-//FF4Map.prototype.updateMenu = function() {
-//    this.menu.innerHTML = "";
-//    for (var i = 0; i < FF4Map.menuItems.length; i++) {
-//        var li = document.createElement('li');
-//        var item = FF4Map.menuItems[i];
-//        li.classList.add("menu-item");
-//        if (item.label === "Delete Trigger" && !this.selectedTrigger) {
-//            li.classList.add("menu-item-disabled");
-//        } else if (item.label === "Insert Treasure" && this.isWorld) {
-//            li.classList.add("menu-item-disabled");
-//        } else {
-//            li.onclick = item.onclick;
-//        }
-//        li.innerHTML = item.label;
-//        this.menu.appendChild(li);
-//    }
-//}
-
 FF4Map.prototype.openMenu = function(e) {
     if (this.l !== 3) return; // no menu unless editing triggers
     this.updateMenu();
@@ -416,6 +425,34 @@ FF4Map.prototype.selectLayer = function(l) {
     
     this.showCursor = (this.l === 3);
     this.drawCursor();
+}
+
+FF4Map.prototype.selectWorldBattle = function(x, y) {
+    x >>= 5;
+    y >>= 5;
+
+    var sector;
+    if (this.m === 251) {
+        // overworld
+        x &= 7;
+        y &= 7;
+        sector = x + (y << 3);
+    } else if (this.m === 252) {
+        // underground
+        offset = 64;
+        x &= 3;
+        y &= 3;
+        sector = x + (y << 2) + 64;
+    } else if (this.m === 253) {
+        // moon
+        offset = 80;
+        x &= 1;
+        y &= 1;
+        sector = x + (y << 1) + 80;
+    }
+    
+    var battleGroup = this.rom.worldBattle.item(sector);
+    this.rom.select(battleGroup);
 }
 
 FF4Map.prototype.changeLayer = function(id) {
@@ -537,6 +574,11 @@ FF4Map.prototype.loadMap = function(m) {
     // get map properties
     var map = this.mapProperties;
     if (!map) return;
+    
+    // set the map background
+    var battleEditor = this.rom.getEditor("FF4Battle");
+    battleEditor.bg = map.battleBackground.value;
+    battleEditor.altPalette = map.battleBackgroundPalette.value;
 
     // load graphics
     var gfx = new Uint8Array(0x10000);
@@ -657,6 +699,17 @@ FF4Map.prototype.loadWorldMap = function(m) {
 
     this.mapProperties = null;
     this.rom.select(null);
+
+    // set the map background
+    var battleEditor = this.rom.getEditor("FF4Battle");
+    if (this.m === 251) {
+        battleEditor.bg = 0;
+    } else if (this.m === 252) {
+        battleEditor.bg = 15;
+    } else if (this.m === 253) {
+        battleEditor.bg = 5;
+    }
+    battleEditor.altPalette = false;
 
     // load graphics and layout
     var w = 0; // world

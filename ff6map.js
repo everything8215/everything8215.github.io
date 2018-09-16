@@ -167,11 +167,13 @@ FF6Map.prototype.mouseDown = function(e) {
                 y: this.selectedTrigger.y.value
             };
         } else {
-            // clear trigger selection selection and select map properties
+            // clear trigger selection
             this.selectedTrigger = null;
             if (this.m < 3) {
+                // select world map battle
                 this.selectWorldBattle(this.clickPoint.x, this.clickPoint.y) 
             } else {
+                // select map properties
                 this.rom.select(this.mapProperties);
             }
             this.isDragging = false;

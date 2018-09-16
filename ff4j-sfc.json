@@ -117,6 +117,29 @@
                         "begin": 3
                     }
                 }
+            },
+            "stringTable": {
+                "name": "Battle Background",
+                "default": "Battle Background %i",
+                "string": {
+                    "0": "Field",
+                    "1": "Forest",
+                    "2": "Mountains",
+                    "3": "Castle",
+                    "4": "Overworld Cave",
+                    "5": "Moon Exterior",
+                    "6": "Airship",
+                    "7": "Overworld Cave (Water)",
+                    "8": "Sealed Cave/Cave Magnes",
+                    "9": "Desert",
+                    "10": "Beach",
+                    "11": "Underground Cave",
+                    "12": "Tower of Zot/Bab-il",
+                    "13": "Moon Cave",
+                    "14": "Crystal Room",
+                    "15": "Underground Exterior",
+                    "16": "Final Boss"
+                }
             }
         },
         "battleCommandNames": {
@@ -162,6 +185,245 @@
                 "name": "Battle Dialog",
                 "length": 186,
                 "default": "<battleDialog[%i]>"
+            }
+        },
+        "battleGroup": {
+            "type": "array",
+            "name": "Battle Group",
+            "range": "0x0EC816-0x0ECA96",
+            "array": {
+                "length": 80
+            },
+            "assembly": {
+                "type": "data",
+                "length": 8,
+                "assembly": {
+                    "battle1": {
+                        "type": "property",
+                        "name": "Battle 1",
+                        "begin": 0,
+                        "link": "battleProperties[%i]",
+                        "stringTable": "battleProperties"
+                    },
+                    "battle2": {
+                        "type": "property",
+                        "name": "Battle 2",
+                        "begin": 1,
+                        "link": "battleProperties[%i]",
+                        "stringTable": "battleProperties"
+                    },
+                    "battle3": {
+                        "type": "property",
+                        "name": "Battle 3",
+                        "begin": 2,
+                        "link": "battleProperties[%i]",
+                        "stringTable": "battleProperties"
+                    },
+                    "battle4": {
+                        "type": "property",
+                        "name": "Battle 4",
+                        "begin": 3,
+                        "link": "battleProperties[%i]",
+                        "stringTable": "battleProperties"
+                    },
+                    "battle5": {
+                        "type": "property",
+                        "name": "Battle 5",
+                        "begin": 4,
+                        "link": "battleProperties[%i]",
+                        "stringTable": "battleProperties"
+                    },
+                    "battle6": {
+                        "type": "property",
+                        "name": "Battle 6",
+                        "begin": 5,
+                        "link": "battleProperties[%i]",
+                        "stringTable": "battleProperties"
+                    },
+                    "battle7": {
+                        "type": "property",
+                        "name": "Battle 7",
+                        "begin": 6,
+                        "link": "battleProperties[%i]",
+                        "stringTable": "battleProperties"
+                    },
+                    "battle8": {
+                        "type": "property",
+                        "name": "Battle 8",
+                        "begin": 7,
+                        "link": "battleProperties[%i]",
+                        "stringTable": "battleProperties"
+                    }
+                }
+            },
+            "stringTable": {
+                "name": "Battle Group",
+                "length": 80,
+                "default": "Battle Group %i",
+                "string": {
+                    "0": "Misty Cave",
+                    "1": "Watery Pass A",
+                    "2": "Watery Pass B",
+                    "3": "Watery Pass C",
+                    "4": "Watery Pass D",
+                    "5": "Antlion's Cave A",
+                    "6": "Antlion's Cave B",
+                    "7": "Mt. Hobs A",
+                    "8": "Mt. Hobs B",
+                    "9": "Mt. Hobs C",
+                    "10": "Mt. Ordeals A",
+                    "11": "Mt. Ordeals B",
+                    "12": "Mt. Ordeals C",
+                    "13": "Cave Eblana C",
+                    "14": "Old Water-way A",
+                    "15": "Old Water-way B",
+                    "16": "Old Water-way C",
+                    "17": "Cave Magnes A",
+                    "18": "Cave Magnes B",
+                    "19": "Cave Magnes C",
+                    "20": "Cave Magnes D",
+                    "21": "Tower of Zot A",
+                    "22": "Tower of Zot B",
+                    "23": "Tower of Zot C",
+                    "24": "Tower of Zot D",
+                    "25": "Tower of Zot E",
+                    "26": "Cave Eblana A",
+                    "27": "Cave Eblana B",
+                    "28": "Tower of Bab-il A",
+                    "29": "Tower of Bab-il B",
+                    "30": "Tower of Bab-il C",
+                    "31": "Tower of Bab-il D",
+                    "32": "Tower of Bab-il E",
+                    "33": "Tower of Bab-il F",
+                    "34": "Tower of Bab-il G",
+                    "35": "Tower of Bab-il H",
+                    "36": "Tower of Bab-il I",
+                    "37": "Tower of Bab-il J",
+                    "38": "Tower of Bab-il K",
+                    "39": "Tower of Bab-il L",
+                    "40": "Tower of Bab-il M",
+                    "43": "Tower of Bab-il X",
+                    "44": "Tower of Bab-il X",
+                    "45": "Tower of Bab-il X",
+                    "46": "Sylvan Cave A",
+                    "47": "Sylvan Cave B",
+                    "48": "Sealed Cave A",
+                    "49": "Sealed Cave B",
+                    "50": "Sealed Cave C",
+                    "51": "Land of Monsters A",
+                    "52": "Land of Monsters B",
+                    "53": "Land of Monsters C",
+                    "55": "Cave Bahamut A",
+                    "56": "Cave Bahamut B",
+                    "57": "Developers' Room",
+                    "58": "Giant of Bab-il A",
+                    "59": "Giant of Bab-il B",
+                    "60": "Giant of Bab-il C",
+                    "61": "Giant of Bab-il D",
+                    "62": "Giant of Bab-il E",
+                    "63": "Lunar Core C",
+                    "64": "Lunar Subterrane A",
+                    "65": "Lunar Subterrane B",
+                    "66": "Lunar Subterrane/Cave Bahamut C",
+                    "67": "Lunar Subterrane D",
+                    "68": "Lunar Subterrane E",
+                    "69": "Lunar Subterrane F",
+                    "70": "Lunar Subterrane G",
+                    "71": "Lunar Subterrane H",
+                    "72": "Lunar Core A",
+                    "73": "Lunar Core B",
+                    "74": "Lunar Path A",
+                    "75": "Lunar Path B",
+                    "76": "Lunar Subterrane (Pink Puff)"
+                }
+            }
+        },
+        "battleGroupWorld": {
+            "type": "array",
+            "name": "Battle Group (World)",
+            "range": "0x0EC796-0x0EC816",
+            "array": {
+                "length": 16
+            },
+            "assembly": {
+                "type": "data",
+                "length": 8,
+                "assembly": {
+                    "battle1": {
+                        "type": "property",
+                        "name": "Battle 1",
+                        "begin": 0,
+                        "link": "battleProperties[%i]",
+                        "stringTable": "battleProperties"
+                    },
+                    "battle2": {
+                        "type": "property",
+                        "name": "Battle 2",
+                        "begin": 1,
+                        "link": "battleProperties[%i]",
+                        "stringTable": "battleProperties"
+                    },
+                    "battle3": {
+                        "type": "property",
+                        "name": "Battle 3",
+                        "begin": 2,
+                        "link": "battleProperties[%i]",
+                        "stringTable": "battleProperties"
+                    },
+                    "battle4": {
+                        "type": "property",
+                        "name": "Battle 4",
+                        "begin": 3,
+                        "link": "battleProperties[%i]",
+                        "stringTable": "battleProperties"
+                    },
+                    "battle5": {
+                        "type": "property",
+                        "name": "Battle 5",
+                        "begin": 4,
+                        "link": "battleProperties[%i]",
+                        "stringTable": "battleProperties"
+                    },
+                    "battle6": {
+                        "type": "property",
+                        "name": "Battle 6",
+                        "begin": 5,
+                        "link": "battleProperties[%i]",
+                        "stringTable": "battleProperties"
+                    },
+                    "battle7": {
+                        "type": "property",
+                        "name": "Battle 7",
+                        "begin": 6,
+                        "link": "battleProperties[%i]",
+                        "stringTable": "battleProperties"
+                    },
+                    "battle8": {
+                        "type": "property",
+                        "name": "Battle 8",
+                        "begin": 7,
+                        "link": "battleProperties[%i]",
+                        "stringTable": "battleProperties"
+                    }
+                }
+            },
+            "stringTable": {
+                "name": "Battle Group (World)",
+                "length": 16,
+                "default": "Battle Group %i",
+                "string": {
+                    "0": "Baron Area",
+                    "1": "Mist/Kaipo Area",
+                    "2": "Damcyan Area",
+                    "3": "Fabul Area",
+                    "4": "Mysidia Area",
+                    "5": "Toroia Area",
+                    "6": "Eblan/Agart Area",
+                    "7": "Dwarf Castle Area",
+                    "8": "Tomra Area",
+                    "9": "Moon",
+                    "10": "Hidden Underground Area"
+                }
             }
         },
         "battleProperties": {
@@ -646,6 +908,48 @@
             "range": "0x1FB9C0-0x1FD208",
             "format": "snes3bpp"
         },
+        "mapBattle": {
+            "type": "array",
+            "name": "Map Battle",
+            "range": "0x0EC596-0x0EC796",
+            "array": {
+                "length": 512
+            },
+            "assembly": {
+                "type": "data",
+                "length": 1,
+                "assembly": {
+                    "battleGroup": {
+                        "type": "property",
+                        "name": "Battle Group",
+                        "link": "battleGroup[%i]",
+                        "stringTable": "battleGroup"
+                    }
+                }
+            }
+        },
+        "mapBattleProbability": {
+            "type": "array",
+            "name": "Map Battle Probability",
+            "range": "0x0EC342-0x0EC542",
+            "array": {
+                "length": 512
+            },
+            "assembly": {
+                "type": "data",
+                "length": 1,
+                "assembly": {
+                    "probability": {
+                        "type": "property",
+                        "name": "Battle Probability",
+                        "min": 1,
+                        "special": {
+                            "0": "No Battles"
+                        }
+                    }
+                }
+            }
+        },
         "mapDialog": {
             "type": "array",
             "name": "Map Dialog",
@@ -996,27 +1300,7 @@
                         "name": "Battle Background",
                         "begin": 0,
                         "mask": "0x0F",
-                        "stringTable": {
-                            "string": {
-                                "0": "Field",
-                                "1": "Forest",
-                                "2": "Mountains",
-                                "3": "Castle",
-                                "4": "Overworld Cave",
-                                "5": "Moon Exterior",
-                                "6": "Airship",
-                                "7": "Overworld Cave (Water)",
-                                "8": "Sealed Cave/Cave Magnes",
-                                "9": "Desert",
-                                "10": "Beach",
-                                "11": "Underground Cave",
-                                "12": "Tower of Zot/Bab-il",
-                                "13": "Moon Cave",
-                                "14": "Crystal Room",
-                                "15": "Underground Exterior",
-                                "16": "Final Boss"
-                            }
-                        }
+                        "stringTable": "battleBackgroundProperties"
                     },
                     "battleBackgroundPalette": {
                         "type": "property",
@@ -1024,6 +1308,14 @@
                         "begin": 0,
                         "mask": "0x40",
                         "bool": true
+                    },
+                    "battleProbability": {
+                        "type": "property",
+                        "external": "mapBattleProbability[%i].probability"
+                    },
+                    "battleGroup": {
+                        "type": "property",
+                        "external": "mapBattle[%i].battleGroup"
                     }
                 },
                 "length": 13
@@ -3159,10 +3451,134 @@
             }
         },
         "npcScript": {
-            "type": "script",
+            "type": "array",
             "name": "NPC Script",
             "range": "0x139C00-0x13A293",
-            "encoding": ["trigger", "npcDialog"]
+            "array": {
+                "length": 512
+            },
+            "assembly": {
+                "type": "script",
+                "encoding": ["trigger", "npcDialog"]
+            },
+            "pointerTable": {
+                "range": "0x139800-0x139C00",
+                "offset": "0x139C00"
+            },
+            "stringTable": {
+                "name": "NPC Script",
+                "default": "NPC %i",
+                "length": 107,
+                "string": {
+                    "0x00": "Cecil (DkKnight)",
+                    "0x01": "Kain",
+                    "0x02": "Rydia (Girl)",
+                    "0x03": "Tellah",
+                    "0x04": "Edward",
+                    "0x05": "Rosa",
+                    "0x06": "Yang",
+                    "0x07": "Palom",
+                    "0x08": "Porom",
+                    "0x09": "Cecil (Paladin)",
+                    "0x0A": "Cid",
+                    "0x0B": "Rydia (Adult)",
+                    "0x0C": "Edge",
+                    "0x0D": "FuSoYa",
+                    "0x0E": "Tiny",
+                    "0x0F": "Frog",
+                    "0x10": "Pig",
+                    "0x11": "Man",
+                    "0x12": "Woman",
+                    "0x13": "Dancer",
+                    "0x14": "Old Man",
+                    "0x15": "Old Woman",
+                    "0x16": "Boy",
+                    "0x17": "Girl",
+                    "0x18": "Soldier",
+                    "0x19": "Merchant",
+                    "0x1A": "Scholar",
+                    "0x1B": "Black Mage",
+                    "0x1C": "White Mage",
+                    "0x1D": "Engineer",
+                    "0x1E": "Chocobo",
+                    "0x1F": "Monk",
+                    "0x20": "Officer",
+                    "0x21": "Bomb",
+                    "0x22": "Monster",
+                    "0x23": "Namingway",
+                    "0x24": "Golbez",
+                    "0x25": "King",
+                    "0x26": "Elder",
+                    "0x27": "Cleric",
+                    "0x28": "Dwarf",
+                    "0x29": "Calbrena",
+                    "0x2A": "King Giott",
+                    "0x2B": "Dr. Lugae",
+                    "0x2C": "Dwarf Girl (Luca)",
+                    "0x2D": "Golbez' Hand",
+                    "0x2E": "Cecil + Rosa",
+                    "0x2F": "Crystal",
+                    "0x30": "Heart",
+                    "0x31": "Flame",
+                    "0x32": "Zzz",
+                    "0x33": "Woman Waving",
+                    "0x34": "Woman Blinking",
+                    "0x35": "Edward w/ Harp",
+                    "0x36": "Water Splash",
+                    "0x37": "Murasame/Masamune",
+                    "0x38": "Dancer w/ Dress",
+                    "0x39": "Sword",
+                    "0x3A": "Rosa (Tied Up)",
+                    "0x3B": "Rubicant",
+                    "0x3C": "Sparkle",
+                    "0x3D": "Elder (Praying)",
+                    "0x3E": "Black Mage (Praying)",
+                    "0x3F": "Zemus (Dead)",
+                    "0x40": "White Mage (Praying)",
+                    "0x41": "Sylph",
+                    "0x42": "Zeromus",
+                    "0x43": "Kain w/o Helmet",
+                    "0x44": "Lightning Bolt",
+                    "0x45": "Smoke",
+                    "0x46": "Big Chocobo 1",
+                    "0x47": "Big Chocobo 2",
+                    "0x48": "Big Chocobo 3",
+                    "0x49": "Big Chocobo 4",
+                    "0x4A": "Big Namingway 1",
+                    "0x4B": "Big Namingway 2",
+                    "0x4C": "Big Namingway 3",
+                    "0x4D": "Big Namingway 4",
+                    "0x4E": "Valvalis",
+                    "0x4F": "Dancer's Foot",
+                    "0x50": "Asura",
+                    "0x51": "Zemus",
+                    "0x52": "Tentacles",
+                    "0x53": "Magus Sisters",
+                    "0x54": "Dark Elf",
+                    "0x55": "Bahamut",
+                    "0x56": "Kainazzo",
+                    "0x57": "Dress",
+                    "0x58": "Ice",
+                    "0x59": "White Lance",
+                    "0x5A": "Rydia's Mother",
+                    "0x5B": "Big Ball",
+                    "0x5C": "Tower of Bab-il Ground",
+                    "0x5D": "Door",
+                    "0x5E": "Dead Soldier",
+                    "0x5F": "Antlion 1",
+                    "0x60": "Antlion 2",
+                    "0x61": "Anna",
+                    "0x62": "Golbez (Dead)",
+                    "0x63": "Crystal Sword",
+                    "0x64": "Anna (Dead)",
+                    "0x65": "Nothing",
+                    "0x66": "Ice",
+                    "0x67": "Big Flame 1",
+                    "0x68": "Big Flame 2",
+                    "0x69": "Stone Palom",
+                    "0x6A": "Stone Porom"
+                }
+            }
         },
         "shopProperties": {
             "type": "array",
@@ -3416,6 +3832,66 @@
                     "87": "Cave Bahamut - Behemoth Battle 2",
                     "88": "Underground - Tower of Bab-il Entrance",
                     "89": "Cave Bahamut - Behemoth Battle 2"
+                }
+            }
+        },
+        "worldBattle": {
+            "type": "array",
+            "name": "World Battle",
+            "range": "0x0EC542-0x0EC596",
+            "array": {
+                "length": 84
+            },
+            "assembly": {
+                "type": "data",
+                "length": 1,
+                "assembly": {
+                    "battleGroup": {
+                        "type": "property",
+                        "name": "Battle Group",
+                        "link": "battleGroupWorld[%i]",
+                        "stringTable": "battleGroupWorld"
+                    },
+                    "overworldProbability": {
+                        "type": "property",
+                        "name": "Probability",
+                        "external": "worldBattleProbability[%i].probability",
+                        "invalid": "this.rom.editors.FF4Map.m !== 251"
+                    },
+                    "undergroundProbability": {
+                        "type": "property",
+                        "name": "Probability",
+                        "external": "worldBattleProbability[64].probability",
+                        "invalid": "this.rom.editors.FF4Map.m !== 252"
+                    },
+                    "moonProbability": {
+                        "type": "property",
+                        "name": "Probability",
+                        "external": "worldBattleProbability[65].probability",
+                        "invalid": "this.rom.editors.FF4Map.m !== 253"
+                    }
+                }
+            }
+        },
+        "worldBattleProbability": {
+            "type": "array",
+            "name": "Map Battle Probability",
+            "range": "0x0EC300-0x0EC342",
+            "array": {
+                "length": 66
+            },
+            "assembly": {
+                "type": "data",
+                "length": 1,
+                "assembly": {
+                    "probability": {
+                        "type": "property",
+                        "name": "Battle Probability",
+                        "min": 1,
+                        "special": {
+                            "0": "No Battles"
+                        }
+                    }
                 }
             }
         },
@@ -3718,7 +4194,8 @@
                             "name": "Battle",
                             "begin": 1,
                             "link": "battleProperties[%i]",
-                            "invalid": "this.rom.editors['FF4Map'].m >= 256"
+                            "stringTable": "battleProperties",
+                            "invalid": "this.rom.editors.FF4Map.m >= 256"
                         },
                         "battle2": {
                             "type": "property",
@@ -3726,7 +4203,8 @@
                             "begin": 1,
                             "offset": 256,
                             "link": "battleProperties[%i]",
-                            "invalid": "this.rom.editors['FF4Map'].m < 256"
+                            "stringTable": "battleProperties",
+                            "invalid": "this.rom.editors.FF4Map.m < 256"
                         }
                     }
                 },
@@ -4635,8 +5113,8 @@
                             "type": "property",
                             "name": "Event",
                             "begin": 1,
-                            "link": "eventPointers[%i]",
-                            "stringTable": "eventPointers"
+                            "link": "eventScript[%i]",
+                            "stringTable": "eventScript"
                         }
                     }
                 },

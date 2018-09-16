@@ -527,7 +527,7 @@ ROMData.prototype.addAssembly = function(definition) {
                 // disassemble this assembly if it hasn't been loaded yet
                 assembly.disassemble(this.data);
             }
-            return assembly
+            return assembly;
         }
     }
 //    if (assembly.external) {
