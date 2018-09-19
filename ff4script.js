@@ -305,6 +305,7 @@ var FF4MonsterActionScript = {
                 if (v === 0xF4) variableName = "Variable 1";
                 if (v === 0xF5) variableName = "Variable 2";
                 if (v === 0xF6) variableName = "Variable 3";
+                if (v === 0xF7) variableName = "Variable 4";
                 if (o === 0) return variableName + " += " + value;
                 if (o === 1) return variableName + " -= " + value;
                 if (o === 2) return variableName + " = " + value;

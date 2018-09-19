@@ -640,6 +640,7 @@ body {
 }
 
 .tooltip .tooltiptext {
+    opacity: 0;
     display: none;
     z-index: 12;
     width: 120px;
@@ -666,9 +667,14 @@ body {
     border-color: transparent transparent black transparent;
 }
 
+/*
 .tooltip:hover .tooltiptext {
-/*    display: inline-block;*/
+    display: inline-block;
+    transition: 0.5s;
+    transition-delay: 0.25s;
+    opacity: 1;
 }
+*/
 
 .modal {
     display: none;

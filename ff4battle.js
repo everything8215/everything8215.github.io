@@ -82,8 +82,6 @@ FF4Battle.prototype.mouseDown = function(e) {
         var m = this.monsterInSlot(this.selectedMonster);
         this.rom.select(this.rom.monsterProperties.item(m));
     } else {
-//        this.bg++;
-//        if (this.bg > 16) this.bg = 0;
         this.rom.select(this.battleProperties);
     }
     
@@ -202,8 +200,8 @@ FF4Battle.prototype.positionForMonster = function(slot) {
 
     var gfxProperties = this.rom.monsterGraphicsProperties.item(m);
     
-    if (gfxProperties.boss.value) {
-        var bossProperties = this.rom.monsterBossProperties.item(gfxProperties.size.value);
+    if (gfxProperties.isBoss.value) {
+        var bossProperties = this.rom.monsterBossProperties.item(gfxProperties.bossProperties.value);
         return bossProperties;
     } else {
         // load monster position
@@ -225,10 +223,10 @@ FF4Battle.prototype.rectForMonster = function(slot) {
     // load monster size
     var w, h;
     var gfxProperties = this.rom.monsterGraphicsProperties.item(m);
-    if (gfxProperties.character.value) {
+    if (gfxProperties.isCharacter.value) {
         w = 16; h = 24;
-    } else if (gfxProperties.boss.value) {
-        var bossProperties = this.rom.monsterBossProperties.item(gfxProperties.size.value);
+    } else if (gfxProperties.isBoss.value) {
+        var bossProperties = this.rom.monsterBossProperties.item(gfxProperties.bossProperties.value);
         var size = this.rom.monsterSize.item(bossProperties.size.value);
         w = size.width.value * 8;
         h = size.height.value * 8;
@@ -276,60 +274,84 @@ FF4Battle.prototype.drawMonster = function(slot) {
     
     // load graphics properties
     var gfxProperties = this.rom.monsterGraphicsProperties.item(m);
-
-    if (gfxProperties.character.value) {
-        return;
-    } else if (gfxProperties.boss.value) {
-        var bossProperties = this.rom.monsterBossProperties.item(gfxProperties.size.value);
+    var w, h, tiles, gfx, pal;
+    
+    if (gfxProperties.isCharacter.value) {
+        var c = gfxProperties.characterIndex.value;
+        if (c > this.rom.characterGraphics.array.length) return;
+        gfx = this.rom.characterGraphics.item(c).data;
+        
+        var p = gfxProperties.palette.value;
+        if (p > this.rom.characterPalette.array.length) return;
+        pal = this.rom.characterPalette.item(p).data;
+        
+        if (this.battleProperties.flags2.value & 0x10) {
+            // enemy character
+            tiles = new Uint16Array([0x4001, 0x4000, 0x4003, 0x4002, 0x4005, 0x4004]);
+        } else {
+            tiles = new Uint16Array([0x0000, 0x0001, 0x0002, 0x0003, 0x0004, 0x0005]);
+        }
+        w = 2; h = 3;
+        
+    } else if (gfxProperties.isBoss.value) {
+        var bossProperties = this.rom.monsterBossProperties.item(gfxProperties.bossProperties.value);
+        if (!bossProperties) return;
 
         var size = this.rom.monsterSize.item(bossProperties.size.value);
-        var tiles = new Uint16Array(size.width.value * size.height.value);
-        var map = this.rom.monsterBossMap.item(bossProperties.map.value).data;
+        w = size.width.value;
+        h = size.height.value;
+        tiles = new Uint16Array(w * h);
+        tiles.fill(0x0200);
+        
+        var m = bossProperties.map.value;
+        if (gfxProperties.bossProperties.value === 63) m = 55; // zeromus map
+        var map = this.rom.monsterBossMap.item(m).data;
         var p = bossProperties.palette.value;
 
         for (var t = 0, i = 0; i < map.length; i++) {
             var m = map[i];
             if (m === 0xFF) {
-                t++;
-                continue;
-
+                t++; continue;
             } else if (m === 0xFE) {
-                t += map[++i];
-                continue;
-
+                t += map[++i]; continue;
             }
 
-            tiles[t++] = m | 0x0200;
+            tiles[t++] = m;
         }
     } else {
         var size = this.rom.monsterSize.item(gfxProperties.size.value);
-        var tiles = new Uint16Array(size.width.value * size.height.value);
-        for (var t = 0; t < tiles.length; t++) tiles[t] = t | 0x0200;
+        if (!size) return;
+        w = size.width.value;
+        h = size.height.value;
+        tiles = new Uint16Array(w * h);
+        for (var t = 0; t < tiles.length; t++) tiles[t] = t;
         var p = gfxProperties.palette.value;
     }
 
-    // decode the graphics
-    var bytesPerTile = gfxProperties.is3bpp.value ? 24 : 32;
-    var decode = gfxProperties.is3bpp.value ? GFX.decodeSNES3bpp : GFX.decodeSNES4bpp;
-    var begin = this.rom.mapAddress(this.rom.monsterGraphics.range.begin) + gfxProperties.graphicsPointer.value;
-    var end = begin + 256 * bytesPerTile;
-    var gfx = decode(this.rom.data.subarray(begin, end));
-    
-    // load palette (use palette 1, palette 0 is for transparent tiles)
-    var pal = new Uint32Array(32);
-    pal.set(this.rom.monsterPalette.item(p).data, 16);
-    if (this.rom.isGBA || !gfxProperties.is3bpp.value) pal.set(this.rom.monsterPalette.item(p + 1).data, 24);
-    
+    if (!gfxProperties.isCharacter.value) {
+        // decode the graphics
+        var bytesPerTile = gfxProperties.is3bpp.value ? 24 : 32;
+        var decode = gfxProperties.is3bpp.value ? GFX.decodeSNES3bpp : GFX.decodeSNES4bpp;
+        var begin = this.rom.mapAddress(this.rom.monsterGraphics.range.begin) + gfxProperties.graphicsPointer.value;
+        var end = begin + 256 * bytesPerTile;
+        gfx = decode(this.rom.data.subarray(begin, end));
+
+        // load palette (use palette 1, palette 0 is for transparent tiles)
+        pal = new Uint32Array(17);
+        pal.set(this.rom.monsterPalette.item(p).data);
+        if (this.rom.isGBA || !gfxProperties.is3bpp.value) pal.set(this.rom.monsterPalette.item(p + 1).data, 8);
+    }
+
     // set up the ppu
     var ppu = new GFX.PPU();
     ppu.pal = pal;
-    ppu.width = size.width.value * 8;
-    ppu.height = size.height.value * 8;
+    ppu.width = w * 8;
+    ppu.height = h * 8;
 
     // layer 1
     ppu.layers[0].format = GFX.TileFormat.snesSpriteTile;
-    ppu.layers[0].cols = size.width.value;
-    ppu.layers[0].rows = size.height.value;
+    ppu.layers[0].cols = w;
+    ppu.layers[0].rows = h;
     ppu.layers[0].z[0] = GFX.Z.snesS0;
     ppu.layers[0].z[1] = GFX.Z.snesS1;
     ppu.layers[0].z[2] = GFX.Z.snesS2;
@@ -388,10 +410,11 @@ FF4Battle.altPalette = [0x16, 0x00, 0x00, 0x00, 0x11, 0x00, 0x00, 0x12, 0x14, 0x
 FF4Battle.prototype.drawBackground = function() {
     
     // load graphics
+    var bg = (this.b === 439) ? 16 : this.bg;
     var gfx = new Uint8Array(0x10000);
-    gfx.set(this.rom.battleBackgroundGraphics.item(this.bg).data, 0x8040);
+    gfx.set(this.rom.battleBackgroundGraphics.item(bg).data, 0x8040);
     
-    var properties = this.rom.battleBackgroundProperties.item(this.bg);
+    var properties = this.rom.battleBackgroundProperties.item(bg);
     var tiles = new Uint16Array(0x0400);
     
     // load lower layout
@@ -415,7 +438,7 @@ FF4Battle.prototype.drawBackground = function() {
     
     var pal = new Uint32Array(0x80);
     pal[0] = 0xFF000000;
-    var p = this.bg;
+    var p = bg;
     if (this.altPalette && FF4Battle.altPalette[p]) p = FF4Battle.altPalette[p];
     pal.set(this.rom.battleBackgroundPalette.item(p).data.subarray(0, 8), 0x10);
     pal.set(this.rom.battleBackgroundPalette.item(p).data.subarray(8, 16), 0x20);

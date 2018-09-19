@@ -589,6 +589,51 @@
                 "default": "Battle %i"
             }
         },
+        "characterGraphics": {
+            "type": "array",
+            "name": "Character Graphics",
+            "range": "0x1A8000-0x1AF000",
+            "array": {
+                "length": 14
+            },
+            "assembly": {
+                "length": "0x0800",
+                "format": "snes4bpp"
+            },
+            "stringTable": {
+                "name": "Character Graphics",
+                "length": 14,
+                "default": "Character Graphics %i",
+                "string": {
+                    "0": "Cecil (Dark Knight)",
+                    "1": "Kain",
+                    "2": "Rydia (Girl)",
+                    "3": "Tellah",
+                    "4": "Edward",
+                    "5": "Rosa",
+                    "6": "Yang",
+                    "7": "Palom",
+                    "8": "Porom",
+                    "9": "Cecil (Paladin)",
+                    "10": "Cid",
+                    "11": "Rydia (Adult)",
+                    "12": "Edge",
+                    "13": "FuSoYa"
+                }
+            }
+        },
+        "characterPalette": {
+            "type": "array",
+            "name": "Character Palette",
+            "range": "0x1CFD00-0x1CFF00",
+            "array": {
+                "length": 16
+            },
+            "assembly": {
+                "length": "0x20",
+                "format": "bgr555"
+            }
+        },
         "characterItems": {
             "type": "array",
             "name": "Character Items",
@@ -2196,7 +2241,9 @@
                         "type": "property",
                         "name": "Size",
                         "begin": 1,
-                        "mask": "0x3F"
+                        "mask": "0x3F",
+                        "link": "monsterSize[%i]",
+                        "stringTable": "monsterSize"
                     },
                     "palette": {
                         "type": "property",
@@ -2208,6 +2255,75 @@
                         "name": "Map",
                         "begin": 4
                     }
+                }
+            },
+            "stringTable": {
+                "name": "Boss Graphics Properties",
+                "length": 64,
+                "default": "Boss Graphics %i",
+                "string": {
+                    "0": "D.Mist A",
+                    "1": "D.Mist B",
+                    "2": "Titan A",
+                    "3": "Titan B",
+                    "4": "Octomamm A",
+                    "5": "Octomamm B",
+                    "6": "Octomamm C",
+                    "7": "Octomamm D",
+                    "8": "Octomamm E",
+                    "9": "Octomamm F",
+                    "10": "Octomamm G",
+                    "11": "Octomamm H",
+                    "12": "Antlion",
+                    "13": "MomBomb A",
+                    "14": "Milon",
+                    "15": "MilonZ.",
+                    "16": "Rubicant A",
+                    "17": "Rubicant B",
+                    "18": "Kainazzo A",
+                    "19": "Kainazzo B",
+                    "20": "Kainazzo C",
+                    "21": "Valvalis A",
+                    "22": "Valvalis B",
+                    "23": "DarkElf",
+                    "24": "Sandy",
+                    "25": "Cindy",
+                    "26": "Mindy",
+                    "27": "Calbrena",
+                    "28": "EvilWall",
+                    "29": "K.Eblan A",
+                    "30": "Q.Eblan A",
+                    "31": "K.Eblan B",
+                    "32": "Q.Eblan B",
+                    "33": "Baigan",
+                    "34": "RightArm",
+                    "35": "LeftArm",
+                    "36": "MomBomb B",
+                    "37": "Dr.Lugae A",
+                    "38": "Balnab",
+                    "39": "Balnab-Z",
+                    "40": "Dr.Lugae B",
+                    "41": "Golbez",
+                    "42": "Odin A",
+                    "43": "Odin B",
+                    "44": "Odin C",
+                    "45": "Leviatan A",
+                    "46": "Leviatan B",
+                    "47": "Bahamut A",
+                    "48": "Bahamut B",
+                    "51": "Elements A",
+                    "52": "Elements B",
+                    "53": "Asura A",
+                    "54": "Asura B",
+                    "55": "Asura C",
+                    "56": "CPU",
+                    "57": "Zeromus B",
+                    "58": "Defender",
+                    "59": "Wyvern",
+                    "60": "Attacker",
+                    "61": "Ogopogo",
+                    "62": "Zemus",
+                    "63": "Zeromus A"
                 }
             }
         },
@@ -2335,7 +2451,8 @@
                             "string": {
                                 "0": "Variable 1",
                                 "1": "Variable 2",
-                                "2": "Variable 3"
+                                "2": "Variable 3",
+                                "3": "Variable 4"
                             }
                         }
                     },
@@ -2595,26 +2712,40 @@
                         "type": "property",
                         "name": "Size",
                         "mask": "0x3F",
-                        "invalid": "this.parent.boss.value"
+                        "disabled": "this.parent.isBoss.value || this.parent.isCharacter.value",
+                        "hidden": "this.parent.isBoss.value || this.parent.isCharacter.value",
+                        "stringTable": "monsterSize"
                     },
                     "bossProperties": {
                         "type": "property",
                         "name": "Boss Properties",
                         "mask": "0x3F",
-                        "invalid": "!this.parent.boss.value",
-                        "link": "monsterBossProperties[%i]"
+                        "disabled": "!this.parent.isBoss.value",
+                        "hidden": "!this.parent.isBoss.value",
+                        "link": "monsterBossProperties[%i]",
+                        "stringTable": "monsterBossProperties"
                     },
-                    "character": {
+                    "characterIndex": {
                         "type": "property",
                         "name": "Character",
-                        "mask": "0x40",
-                        "bool": true
+                        "mask": "0x3F",
+                        "disabled": "!this.parent.isCharacter.value",
+                        "hidden": "!this.parent.isCharacter.value",
+                        "stringTable": "characterGraphics"
                     },
-                    "boss": {
+                    "isCharacter": {
                         "type": "property",
-                        "name": "Boss",
+                        "name": "Use Character Graphics",
+                        "mask": "0x40",
+                        "bool": true,
+                        "disabled": "this.parent.isBoss.value"
+                    },
+                    "isBoss": {
+                        "type": "property",
+                        "name": "Use Boss Graphics",
                         "mask": "0x80",
-                        "bool": true
+                        "bool": true,
+                        "disabled": "this.parent.isCharacter.value"
                     },
                     "palette": {
                         "type": "property",
@@ -2894,6 +3025,38 @@
                         "begin": 18,
                         "flag": true,
                         "stringTable": "monsterType"
+                    },
+                    "size": {
+                        "type": "property",
+                        "external": "monsterGraphicsProperties[%i].size"
+                    },
+                    "bossProperties": {
+                        "type": "property",
+                        "external": "monsterGraphicsProperties[%i].bossProperties"
+                    },
+                    "characterIndex": {
+                        "type": "property",
+                        "external": "monsterGraphicsProperties[%i].characterIndex"
+                    },
+                    "isBoss": {
+                        "type": "property",
+                        "external": "monsterGraphicsProperties[%i].isBoss"
+                    },
+                    "isCharacter": {
+                        "type": "property",
+                        "external": "monsterGraphicsProperties[%i].isCharacter"
+                    },
+                    "palette": {
+                        "type": "property",
+                        "external": "monsterGraphicsProperties[%i].palette"
+                    },
+                    "graphicsPointer": {
+                        "type": "property",
+                        "external": "monsterGraphicsProperties[%i].graphicsPointer"
+                    },
+                    "is3bpp": {
+                        "type": "property",
+                        "external": "monsterGraphicsProperties[%i].is3bpp"
                     }
                 }
             },
@@ -3180,6 +3343,56 @@
                         "name": "Height",
                         "begin": 1
                     }
+                }
+            },
+            "stringTable": {
+                "name": "Monster Size",
+                "length": 43,
+                "default": "Monster Size %i",
+                "string": {
+                    "0": "2×2",
+                    "1": "4×4",
+                    "2": "4×6",
+                    "3": "6×4",
+                    "4": "6×6",
+                    "5": "6×8",
+                    "6": "8×6",
+                    "7": "8×8",
+                    "8": "6×12",
+                    "9": "12×6",
+                    "10": "20×18",
+                    "11": "10×6",
+                    "12": "5×3",
+                    "13": "2×3",
+                    "14": "3×3",
+                    "15": "4×3",
+                    "16": "4×2",
+                    "17": "10×8",
+                    "18": "18×12",
+                    "19": "5×5",
+                    "20": "7×14",
+                    "21": "10×6",
+                    "22": "11×7",
+                    "23": "8×5",
+                    "24": "8×10",
+                    "25": "4×11",
+                    "26": "16×18",
+                    "27": "3×4",
+                    "28": "2×3",
+                    "29": "18×13",
+                    "30": "17×8",
+                    "31": "5×9",
+                    "32": "9×13",
+                    "33": "10×9",
+                    "34": "6×10",
+                    "35": "8×12",
+                    "36": "9×9",
+                    "37": "3×3",
+                    "38": "8×14",
+                    "39": "11×16",
+                    "40": "12×8",
+                    "41": "19×16",
+                    "42": "2×4"
                 }
             }
         },
@@ -4933,7 +5146,9 @@
                         "graphics": {
                             "type": "property",
                             "name": "Graphics",
-                            "begin": 1
+                            "begin": 1,
+                            "mask": "0x3F",
+                            "stringTable": "monsterBossProperties"
                         }
                     }
                 },
@@ -4945,7 +5160,8 @@
                         "song": {
                             "type": "property",
                             "name": "Song",
-                            "begin": 1
+                            "begin": 1,
+                            "stringTable": "song"
                         }
                     }
                 },
@@ -4966,7 +5182,7 @@
                                     "0xEB": "Magic Defense",
                                     "0xEC": "Speed",
                                     "0xED": "Elemental Defense",
-                                    "0xEE": "Wisdom"
+                                    "0xEE": "Magic Attack"
                                 }
                             }
                         },
@@ -5017,7 +5233,7 @@
                 },
                 "variable": {
                     "name": "Change Variable",
-                    "opcode": "0xF4-0xF7",
+                    "opcode": "0xF4-0xF8",
                     "length": 2,
                     "assembly": {
                         "variable": {
@@ -5027,7 +5243,8 @@
                                 "string": {
                                     "0xF4": "Variable 1",
                                     "0xF5": "Variable 2",
-                                    "0xF6": "Variable 3"
+                                    "0xF6": "Variable 3",
+                                    "0xF7": "Variable 4"
                                 }
                             }
                         },
