@@ -2387,6 +2387,7 @@ function ROMArray(rom, definition, parent) {
     this.isSequential = (definition.isSequential === true);
     this.autoBank = (definition.autoBank === true);
     this.terminator = definition.terminator;
+    this.indexMod = definition.indexMod;
     
     // create the prototype assembly
     if (!definition.assembly) definition.assembly = { type: ROMObject.Type.assembly };
@@ -2427,6 +2428,7 @@ Object.defineProperty(ROMArray.prototype, "definition", { get: function() {
     if (this.isSequential) definition.isSequential = true;
     if (this.autoBank) definition.autoBank = true;
     if (this.terminator !== undefined) definition.terminator = this.terminator;
+    if (this.indexMod !== undefined) definition.indexMod = this.indexMod;
     
     definition.assembly = this.assembly.definition;
     
@@ -2721,6 +2723,11 @@ ROMArray.prototype.removeAssembly = function(i) {
 }
 
 ROMArray.prototype.item = function(i) {
+    
+    if (this.indexMod) {
+        var indexMod = this.indexMod.replace(/%i/g, i);
+        i = eval(indexMod);
+    }
     
     var assembly = this.array[i];
     if (!assembly) {
@@ -3933,7 +3940,7 @@ ROMTextEncoding.prototype.decode = function(data) {
         } else if (c.endsWith("[")) {
             text += c;
             b1 = data[i++] || 0;
-            text += b1.toString();
+            text += hexString(b1, 2);
             text += "]";
         } else {
             text += c;

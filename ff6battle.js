@@ -10,7 +10,7 @@ function FF6Battle(rom) {
     this.b = null; // battle index
     this.bg = 0; // battle background index
     this.battleProperties = null;
-    this.battlePropertiesAux = null;
+    this.characterAI = null;
     this.ppu = null;
     this.canvas = document.createElement('canvas');
     this.battleCanvas = document.createElement('canvas');
@@ -25,6 +25,7 @@ function FF6Battle(rom) {
     this.zoom = 2.5;
 
     this.selectedMonster = null;
+    this.selectedCharacter = null;
     
     this.observer = new ROMObserver(rom, this, {sub: true, link: true, array: true});
 
@@ -68,8 +69,10 @@ FF6Battle.prototype.mouseDown = function(e) {
     var x = Math.floor(e.offsetX / this.zoom) + this.battleRect.l;
     var y = Math.floor(e.offsetY / this.zoom) + this.battleRect.t;
     this.selectedMonster = this.monsterAtPoint(x, y);
+    this.selectedCharacter = this.characterAtPoint(x, y);
 
     if (this.selectedMonster) {
+        this.selectedCharacter = null;
         this.clickedPoint = {x: x, y: y};
         var monsterX = this.battleProperties["monster" + this.selectedMonster + "X"].value;
         var monsterY = this.battleProperties["monster" + this.selectedMonster + "Y"].value;
@@ -77,9 +80,15 @@ FF6Battle.prototype.mouseDown = function(e) {
         
         var m = this.monsterInSlot(this.selectedMonster);
         this.rom.select(this.rom.monsterProperties.item(m));
+    } else if (this.selectedCharacter) {
+        this.clickedPoint = {x: x, y: y};
+        var characterX = this.characterAI["x" + this.selectedCharacter].value;
+        var characterY = this.characterAI["y" + this.selectedCharacter].value;
+        this.characterPoint = { x: characterX, y: characterY };
+        
+        var c = this.characterInSlot(this.selectedCharacter);
+        this.rom.select(this.rom.monsterProperties.item(c.script));
     } else {
-//        this.bg++;
-//        if (this.bg >= 56) this.bg = 0;
         this.rom.select(this.battleProperties);
     }
     
@@ -156,21 +165,39 @@ FF6Battle.prototype.loadBattle = function(b) {
     if (isNumber(b) && this.b !== b) {
         // battle index has changed
         this.observer.stopObserving(this.battleProperties);
+        this.observer.stopObserving(this.characterAI);
         this.b = b;
         this.battleProperties = this.rom.battleProperties.item(b);
         this.observer.startObserving(this.battleProperties, this.drawBattle);
+        var ai = this.battleProperties.characterAI.value;
+        this.characterAI = this.rom.characterAI.item(ai);
+        this.observer.startObserving(this.characterAI, this.drawBattle);
     }
     
     this.selectedMonster = null;
+    this.selectedCharacter = null;
     this.drawBattle();
 }
 
 FF6Battle.prototype.monsterInSlot = function(slot) {
     var m = this.battleProperties["monster" + slot].value;
-//    if (this.battleProperties["monster" + slot + "MSB"].value) m += 256;
     if (m === 0x01FF) return null; // slot is empty
 
     return m;
+}
+
+FF6Battle.prototype.characterInSlot = function(slot) {
+    if (!this.characterAI) return null;
+    var c = this.characterAI["character" + slot].value;
+    if (c === 0xFF) return null; // slot is empty
+
+    return {
+        "character": c,
+        "graphics": this.characterAI["graphics" + slot].value,
+        "script": this.characterAI["script" + slot].value,
+        "x": this.characterAI["x" + slot].value,
+        "y": this.characterAI["y" + slot].value
+    };
 }
 
 FF6Battle.prototype.monstersSortedByPriority = function() {
@@ -182,6 +209,19 @@ FF6Battle.prototype.monstersSortedByPriority = function() {
         if (m2 === null) return true;
         var y1 = self.rectForMonster(a).b + self.rom.monsterProperties.item(m1).verticalOffset.value;
         var y2 = self.rectForMonster(b).b + self.rom.monsterProperties.item(m2).verticalOffset.value;
+        return y1 < y2;
+    });
+}
+
+FF6Battle.prototype.charactersSortedByPriority = function() {
+    var self = this;
+    return [1, 2, 3, 4].sort(function(a, b) {
+        var c1 = self.characterInSlot(a);
+        if (c1 === null) return false;
+        var c2 = self.characterInSlot(b);
+        if (c2 === null) return true;
+        var y1 = self.rectForCharacter(a).b;
+        var y2 = self.rectForCharacter(b).b;
         return y1 < y2;
     });
 }
@@ -206,6 +246,20 @@ FF6Battle.prototype.rectForMonster = function(slot) {
     return new Rect(x, x + w * 8, y, y + h * 8);
 }
 
+FF6Battle.prototype.rectForCharacter = function(slot) {
+    if (!this.characterAI) return Rect.emptyRect;
+    var c = this.characterInSlot(slot);
+    if (c === null) return Rect.emptyRect;
+
+    // load graphics properties
+    var x = this.characterAI["x" + slot].value;
+    var y = this.characterAI["y" + slot].value;
+    var w = 16;
+    var h = 24;
+    
+    return new Rect(x, x + w, y, y + h);
+}
+
 FF6Battle.prototype.monsterAtPoint = function(x, y) {
     
     var sorted = this.monstersSortedByPriority();
@@ -216,11 +270,24 @@ FF6Battle.prototype.monsterAtPoint = function(x, y) {
     return null;
 }
 
+FF6Battle.prototype.characterAtPoint = function(x, y) {
+    
+    var sorted = this.charactersSortedByPriority();
+    for (var i = 0; i < 4; i++) {
+        var slot = sorted[i]
+        if (this.rectForCharacter(slot).containsPoint(x, y)) return slot;
+    }
+    return null;
+}
+
 FF6Battle.prototype.drawBattle = function() {
     this.drawBackground();
     var self = this;
     this.monstersSortedByPriority().reverse().forEach(function(m) {
         self.drawMonster(m);
+    });
+    this.charactersSortedByPriority().reverse().forEach(function(c) {
+        self.drawCharacter(c);
     });
     
     this.zoom = this.div.clientWidth / this.battleRect.w;
@@ -356,6 +423,83 @@ FF6Battle.prototype.drawMonster = function(slot) {
     ctx.webkitImageSmoothingEnabled = false;
     monsterRect = this.rectForMonster(slot);
     ctx.drawImage(this.monsterCanvas, 0, 0, monsterRect.w, monsterRect.h, monsterRect.l, monsterRect.t, monsterRect.w, monsterRect.h);
+}
+
+// from C2/CE2B
+FF6Battle.characterPaletteIndex = [2, 1, 4, 4, 0, 0, 0, 3, 3, 4, 5, 3, 3, 5, 1, 0, 0, 3, 6, 1, 0, 3, 3, 0, 0, 0]
+
+FF6Battle.prototype.drawCharacter = function(slot) {
+    var c = this.characterInSlot(slot);
+    if (!c) return;
+    
+    // load graphics
+    var g = c.graphics;
+    if (g === 0xFF) {
+        g = c.character;
+    } else {
+        g &= 0x3F;
+    }
+    var graphics = this.rom.mapSpriteGraphics.item(g).data;
+    
+    // load palette
+    var p = FF6Battle.characterPaletteIndex[g];
+    var pal = this.rom.characterPalettes.item(p).data;
+    
+    var tiles;
+    if (c.character & 0x40) {
+        // enemy character
+        tiles = new Uint16Array([0x401F, 0x401E, 0x4029, 0x4028, 0x402B, 0x402A]);
+    } else {
+        // friendly character
+        tiles = new Uint16Array([0x001E, 0x001F, 0x0028, 0x0029, 0x002A, 0x002B]);
+    }
+    
+    // set up the ppu
+    var ppu = new GFX.PPU();
+    ppu.pal = pal;
+    ppu.width = 2 * 8;
+    ppu.height = 3 * 8;
+
+    // layer 1
+    ppu.layers[0].format = GFX.TileFormat.snesSpriteTile;
+    ppu.layers[0].cols = 2;
+    ppu.layers[0].rows = 3;
+    ppu.layers[0].z[0] = GFX.Z.snesS0;
+    ppu.layers[0].z[1] = GFX.Z.snesS1;
+    ppu.layers[0].z[2] = GFX.Z.snesS2;
+    ppu.layers[0].z[3] = GFX.Z.snesS3;
+    ppu.layers[0].gfx = graphics;
+    ppu.layers[0].tiles = tiles;
+    ppu.layers[0].main = true;
+
+    // draw the monster
+    this.monsterCanvas.width = ppu.width;
+    this.monsterCanvas.height = ppu.height;
+    var context = this.monsterCanvas.getContext('2d');
+    var imageData = context.createImageData(ppu.width, ppu.height);
+    ppu.renderPPU(imageData.data);
+    context.putImageData(imageData, 0, 0);
+    
+    // tint the selected monster
+    if (this.selectedCharacter === slot) {
+        // create an offscreen canvas filled with the color
+        var tintCanvas = document.createElement('canvas');
+        tintCanvas.width = ppu.width;
+        tintCanvas.height = ppu.height;
+        var ctx = tintCanvas.getContext('2d');
+        ctx.fillStyle = 'hsla(210, 100%, 50%, 0.5)';
+        ctx.fillRect(0, 0, ppu.width, ppu.height);
+
+        ctx = this.monsterCanvas.getContext('2d');
+        ctx.globalCompositeOperation = 'source-atop';
+        ctx.drawImage(tintCanvas, 0, 0);
+    }
+    
+    var ctx = this.battleCanvas.getContext('2d');
+    ctx.imageSmoothingEnabled = false;
+    ctx.webkitImageSmoothingEnabled = false;
+    characterRect = this.rectForCharacter(slot);
+    ctx.drawImage(this.monsterCanvas, 0, 0, characterRect.w, characterRect.h, characterRect.l, characterRect.t, characterRect.w, characterRect.h);
 }
 
 FF6Battle.prototype.tintCanvas = function(canvas, color) {

@@ -32,7 +32,7 @@
 //
 //                    loadBuiltInDefinition();
 //                };
-//                localROM.open("get", "roms\\ff6j.sfc");
+//                localROM.open("get", "roms\\ff6j.gba");
 //                localROM.responseType = "arraybuffer";
 //                localROM.send();
                 /////////////////////////////////////////
@@ -180,6 +180,9 @@
                     case 0xD708F5AB:
                         url = "ff6u-gba.json";
                         break;
+                    case 0x9CAE03AC:
+                        url = "ff6j-gba.json";
+                        break;
                     default:
                         return false;
                 }
@@ -240,6 +243,14 @@
 
                 // create the script list
                 scriptList = new ROMScriptList(rom);
+                
+//                // output dialog to the console
+//                var bigString = "";
+//                for (var d = 0; d < rom.text.array.length; d++) {
+//                    var dialogString = rom.text.item(d).text;
+//                    bigString += hexString(d >> 1, 4) + ": " + dialogString.replace(/\\n/g, "\n        ").replace(/\\page/g, "\n        ") + "\n";
+//                }
+//                console.log(bigString);
             }
 
             function saveROM() {

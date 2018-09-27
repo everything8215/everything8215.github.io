@@ -23,9 +23,10 @@ FF6Script.description = function(command) {
             break;
         case "dialog":
             var d = command.dialog.value;
-            var dialog = command.rom.dialog.item(d);
+//            var dialog = command.rom.dialog.item(d);
+            var dialog = command.rom.stringTable.dialog.fString(d);
             if (dialog) {
-                return "Display Dialog:<br/>" + dialog.htmlText;
+                return "Display Dialog:<br/>" + dialog.replace(/\n/g, "<br/>");
             } else {
                 return "Display Dialog:<br/>Invalid Dialog Message";
             }
@@ -175,6 +176,8 @@ FF6Script.didDisassemble = function(command, data) {
                 
                 // get the previous dialog text
                 var d = previous.dialog.value;
+//                var dialog = command.rom.stringTable.dialog.fString(d);
+//                if (!dialog) continue;
                 var dialog = command.rom.dialog.item(d);
                 if (!dialog || !dialog.text) continue;
 
