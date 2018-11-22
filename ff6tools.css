@@ -262,6 +262,10 @@ body {
     border-bottom: 1px solid #ccc;
 }
 
+#map-controls.hidden {
+    display: none;
+}
+
 #map-controls input {
 /*    float: left;*/
 }
@@ -399,7 +403,12 @@ body {
     display: none;
 }
 
+#zoom {
+/*    margin-left: auto;*/
+}
+
 #zoom-value {
+    margin-left: auto;
     font-size: small;
 }
 
@@ -518,9 +527,34 @@ body {
 }
 
 .property-heading {
-    padding: 4px 0px;
-    margin: 4px;
-    border-bottom: 1px solid #ccc;
+    padding: 0px;
+    margin: 0px 4px;
+/*    border-bottom: 1px solid #ccc;*/
+    flex: 1 1 0;
+}
+
+.property-heading p {
+    padding: 0px;
+    margin: 4px 0px;
+    font-weight: bold;
+}
+
+.property-heading select {
+    padding: 0px;
+    margin-top: 4px;
+    width: 100%;
+}
+
+.property-category {
+    padding: 0px;
+    margin: 0px 4px;
+    border-top: 1px solid #ccc;
+    flex: 1 1 0;
+}
+
+.property-category p {
+    padding: 0px;
+    margin: 4px 0px;
     font-weight: bold;
 }
 
@@ -553,11 +587,16 @@ body {
 }
 
 .property-text {
-    resize: vertical;
-    vertical-align: middle;
-    overflow-y: visible;
     font-family: monospace;
     font-size: medium;
+}
+
+.property-textarea {
+    font-family: monospace;
+    font-size: medium;
+    overflow-y: visible;
+    vertical-align: middle;
+    resize: vertical;    
 }
 
 .property-check-div {
@@ -723,4 +762,28 @@ body {
     color: black;
     text-decoration: none;
     cursor: pointer;
+}
+
+.def-list {
+    background-color: white;
+    border: 1px solid #ccc;
+    padding: 0;
+}
+
+.def-list li {
+    color: black;
+    font-size: small;
+    list-style: none;
+    cursor: default;
+    padding: 1px 0px 1px 4px;
+}
+
+.def-list li:hover {
+    background-color: hsl(210, 100%, 90%);
+}
+
+.def-list li:active {
+    background-color: hsl(210, 100%, 40%);
+    color: hsl(0, 0%, 95%);
+    transition: 0.1s;
 }

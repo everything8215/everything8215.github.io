@@ -24,9 +24,9 @@ FF6Script.description = function(command) {
         case "dialog":
             var d = command.dialog.value;
 //            var dialog = command.rom.dialog.item(d);
-            var dialog = command.rom.stringTable.dialog.fString(d);
+            var dialog = command.rom.stringTable.dialog.string[d];
             if (dialog) {
-                return "Display Dialog:<br/>" + dialog.replace(/\n/g, "<br/>");
+                return "Display Dialog:<br/>" + dialog.htmlString();
             } else {
                 return "Display Dialog:<br/>Invalid Dialog Message";
             }
@@ -79,7 +79,13 @@ FF6Script.description = function(command) {
 }
 
 FF6Script.string = function(command, key, stringKey) {
-    return command.rom.stringTable[stringKey].fString(command[key].value);
+    var stringTable = command.rom.stringTable[stringKey];
+    if (!stringTable) return "Invalid String";
+    var i = command[key].value;
+    if (!isNumber(i)) return "Invalid String";
+    var string = stringTable.string[i];
+    if (!string) return "Invalid String";
+    return string.fString();
 }
 
 FF6Script.label = function(script, offset) {
@@ -117,14 +123,14 @@ FF6Script.initScript = function(script) {
     // startup event
     for (m = 3; m < script.rom.mapProperties.array.length; m++) {
         offset = script.rom.mapProperties.item(m).scriptPointer.value;
-        label = script.rom.stringTable.mapProperties.fString(m);
+        label = script.rom.stringTable.mapProperties.string[m].fString();
         script.addPlaceholder(script.rom.mapProperties.item(m).scriptPointer, offset, "event", label);
     }
     
     // add references for vehicle events
     for (var e = 0; e < script.rom.vehicleEvents.array.length; e++) {
         offset = script.rom.vehicleEvents.item(e).scriptPointer.value;
-        label = script.rom.stringTable.vehicleEvents.fString(e);
+        label = script.rom.stringTable.vehicleEvents.string[e].fString();
         script.addPlaceholder(script.rom.vehicleEvents.item(e).scriptPointer, offset, "vehicle", label);
     }
 
@@ -176,10 +182,21 @@ FF6Script.didDisassemble = function(command, data) {
                 
                 // get the previous dialog text
                 var d = previous.dialog.value;
-//                var dialog = command.rom.stringTable.dialog.fString(d);
+                var dialog
+//                var dialog = command.rom.stringTable.dialog.string[d];
 //                if (!dialog) continue;
-                var dialog = command.rom.dialog.item(d);
-                if (!dialog || !dialog.text) continue;
+                if (command.rom.dialog) {
+                    dialog = command.rom.dialog.item(d);
+                    if (!dialog || !dialog.text) continue;
+                } else if (command.rom.stringTable.dialog) {
+                    var language = command.rom.stringTable.dialog.language;
+                    if (!language) break;
+                    var firstLanguage = Object.keys(language)[0];
+                    var link = language[firstLanguage].link;
+                    var dialog = command.rom.parseLink(link.replace(/%i/g, d.toString()));
+                } else {
+                    break;
+                }
 
                 // count the number of dialog choices
                 var matches = dialog.text.match(/\\choice/g);
@@ -191,19 +208,6 @@ FF6Script.didDisassemble = function(command, data) {
             }
             command.range.end += choices * 3;
             command.count.value = choices;
-            
-//            var scriptPointerDefinition = {
-//                "type": "property",
-//                "mask": "0xFFFFFF",
-//                "script": "eventScript"
-//            }
-//            
-//            for (c = 1; c <= choices; c++) {
-//                scriptPointerDefinition.begin = c * 3 - 2;
-//                scriptPointerDefinition.name = "Script Pointer " + c;
-//                scriptPointerDefinition.key = "scriptPointer" + c;
-//                command.addAssembly(scriptPointerDefinition);
-//            }
             
             ROMData.prototype.disassemble.call(command, data);
             for (c = 1; c <= choices; c++) {
@@ -317,14 +321,16 @@ var FF6MonsterScript = {
         // add references for monsters
         for (var e = 0; e < script.rom.monsterScriptPointers.array.length; e++) {
             var offset = script.rom.monsterScriptPointers.item(e).value;
-            var label = script.rom.stringTable.monsterName.fString(e);
+            var label = script.rom.stringTable.monsterName.string[e].fString();
             if (!label || label.length === 0) continue;
             script.addPlaceholder(script.rom.monsterScriptPointers.item(e), offset, "monster", label);
         }
     },
     
     string: function(command, key, stringKey) {
-        return command.rom.stringTable[stringKey].fString(command[key].value);
+        var string = command.rom.stringTable[stringKey].string[command[key].value];
+        if (!string) return null;
+        return string.fString();
     },
     
     attackString: function(command, key) {
@@ -353,7 +359,7 @@ var FF6MonsterScript = {
                 if (count === 2) element += " or ";
                 else element += (e ? ", " : ", or ");
             }
-            element += command.rom.stringTable.element.fString(i);
+            element += command.rom.stringTable.element.string[i].fString();
         }
         return element;
     },
@@ -462,7 +468,7 @@ var FF6MonsterScript = {
                 return "If " + target + " is a Valid Target";
 
             case 24: // gau present
-                return "If " + command.rom.stringTable.characterNames.fString(11) + " is Present";
+                return "If " + command.rom.stringTable.characterNames.string[11].fString() + " is Present";
 
             case 25: // monster slot
                 return "If This Monster is " + this.slotString(command, "or");
@@ -504,9 +510,9 @@ var FF6MonsterScript = {
 
             case "dialog":
                 var d = command.dialog.value;
-                var dialog = command.rom.monsterDialog.item(d);
+                var dialog = command.rom.stringTable.monsterDialog.string[d];
                 if (dialog) {
-                    return "Display Monster Dialog:<br/>" + dialog.htmlText;
+                    return "Display Monster Dialog:<br/>" + dialog.htmlString();
                 } else {
                     return "Display Monster Dialog:<br/>Invalid Dialog Message";
                 }

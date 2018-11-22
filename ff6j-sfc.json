@@ -711,6 +711,7 @@
                         "type": "property",
                         "name": "Character A.I.",
                         "begin": 2,
+                        "stringTable": "characterAI",
                         "link": "characterAI[%i]"
                     },
                     "enableCharacterAI": {
@@ -792,7 +793,10 @@
                         "begin": 6,
                         "offset": 256,
                         "stringTable": "monsterName",
-                        "link": "monsterProperties[%i]"
+                        "link": "monsterProperties[%i]",
+                        "special": {
+                            "0x1FF": "None"
+                        }
                     },
                     "x1": {
                         "type": "property",
@@ -825,7 +829,10 @@
                         "begin": 11,
                         "offset": 256,
                         "stringTable": "monsterName",
-                        "link": "monsterProperties[%i]"
+                        "link": "monsterProperties[%i]",
+                        "special": {
+                            "0x1FF": "None"
+                        }
                     },
                     "x2": {
                         "type": "property",
@@ -858,7 +865,10 @@
                         "begin": 16,
                         "offset": 256,
                         "stringTable": "monsterName",
-                        "link": "monsterProperties[%i]"
+                        "link": "monsterProperties[%i]",
+                        "special": {
+                            "0x1FF": "None"
+                        }
                     },
                     "x3": {
                         "type": "property",
@@ -891,7 +901,10 @@
                         "begin": 21,
                         "offset": 256,
                         "stringTable": "monsterName",
-                        "link": "monsterProperties[%i]"
+                        "link": "monsterProperties[%i]",
+                        "special": {
+                            "0x1FF": "None"
+                        }
                     },
                     "x4": {
                         "type": "property",
@@ -907,6 +920,33 @@
                         "multiplier": 2,
                         "hidden": true
                     }
+                }
+            },
+            "stringTable": {
+                "name": "Character A.I.",
+                "length": 32,
+                "default": "Character A.I. %i",
+                "string": {
+                    "0": "None",
+                    "1": "Shadow at Colosseum",
+                    "2": "Kefka/Terra Flashback",
+                    "3": "Vargas Battle",
+                    "4": "Kefka vs. Sabin",
+                    "5": "Cyan at Imperial Camp 1",
+                    "6": "Cyan at Imperial Camp 2",
+                    "7": "Piranha Battle",
+                    "8": "Kefka vs. Sabin",
+                    "9": "Kefka vs. Terra",
+                    "10": "Gau on the Veldt",
+                    "12": "Sealed Gate 1",
+                    "13": "Sealed Gate 2",
+                    "14": "Espers on Blackjack",
+                    "15": "Ultros vs. Relm",
+                    "16": "Espers go to Thamasa",
+                    "17": "Blitz Instructions (Unused)",
+                    "18": "Kefka vs. Esper",
+                    "19": "Kefka vs. Gestahl",
+                    "20": "Kefka vs. Leo"
                 }
             }
         },
@@ -967,7 +1007,8 @@
             },
             "assembly": {
                 "type": "text",
-                "encoding": "dialog"
+                "encoding": "dialog",
+                "multiLine": true
             },
             "pointerTable": {
                 "range": "0xCCE602-0xCD0000",
@@ -1173,7 +1214,8 @@
             "assembly": {
                 "type": "text",
                 "name": "Attack Desc.",
-                "encoding": "nullTerminated"
+                "encoding": "nullTerminated",
+                "multiLine": true
             },
             "pointerTable": {
                 "range": "0xCFFE40-0xCFFE80",
@@ -2004,13 +2046,189 @@
                             "string": {
                                 "0": "Enable X-Zone",
                                 "1": "Enable Warp",
-                                "2": "Wavy Layer 3",
-                                "3": "Wavy Layer 2",
-                                "4": "Wavy Layer 1",
-                                "5": "Spotlights",
                                 "7": "Show Timer"
                             }
                         }
+                    },
+                    "category-layer1": "Layer 1",
+                    "layout1": {
+                        "type": "property",
+                        "name": "Tile Layout",
+                        "begin": 13,
+                        "mask": "0x03FF"
+                    },
+                    "tileset1": {
+                        "type": "property",
+                        "name": "Tileset",
+                        "begin": 11,
+                        "mask": "0x01FC"
+                    },
+                    "hSize1": {
+                        "type": "property",
+                        "name": "Layer Width",
+                        "begin": 23,
+                        "mask": "0xC0",
+                        "stringTable": {
+                            "string": {
+                                "0": "16 Tiles",
+                                "1": "32 Tiles",
+                                "2": "64 Tiles",
+                                "3": "128 Tiles"
+                            }
+                        }
+                    },
+                    "vSize1": {
+                        "type": "property",
+                        "name": "Layer Height",
+                        "begin": 23,
+                        "mask": "0x30",
+                        "stringTable": {
+                            "string": {
+                                "0": "16 Tiles",
+                                "1": "32 Tiles",
+                                "2": "64 Tiles"
+                            }
+                        }
+                    },
+                    "tileProperties": {
+                        "type": "property",
+                        "name": "Tile Properties",
+                        "begin": 4,
+                        "stringTable": "mapTileProperties"
+                    },
+                    "overlay": {
+                        "type": "property",
+                        "name": "Sprite Overlay",
+                        "begin": 17
+                    },
+                    "wavyLayer1": {
+                        "type": "property",
+                        "name": "Wavy Effect",
+                        "begin": 1,
+                        "mask": "0x10",
+                        "bool": true
+                    },
+                    "category-layer2": "Layer 2",
+                    "layout2": {
+                        "type": "property",
+                        "name": "Tile Layout",
+                        "begin": 14,
+                        "mask": "0x0FFC"
+                    },
+                    "tileset2": {
+                        "type": "property",
+                        "name": "Tileset",
+                        "begin": 12,
+                        "mask": "0xFE"
+                    },
+                    "hSize2": {
+                        "type": "property",
+                        "name": "Layer Width",
+                        "begin": 23,
+                        "mask": "0x0C",
+                        "stringTable": "mapProperties.hSize1"
+                    },
+                    "vSize2": {
+                        "type": "property",
+                        "name": "Layer Height",
+                        "begin": 23,
+                        "mask": "0x03",
+                        "stringTable": "mapProperties.vSize1"
+                    },
+                    "hOffset2": {
+                        "type": "property",
+                        "name": "Horizontal Shift",
+                        "begin": 18,
+                        "signed": true
+                    },
+                    "vOffset2": {
+                        "type": "property",
+                        "name": "Vertical Shift",
+                        "begin": 19,
+                        "signed": true
+                    },
+                    "wavyLayer2": {
+                        "type": "property",
+                        "name": "Wavy Effect",
+                        "begin": 1,
+                        "mask": "0x08",
+                        "bool": true
+                    },
+                    "category-layer12Graphics": "Layer 1 & 2 Graphics",
+                    "gfx1": {
+                        "type": "property",
+                        "name": "Graphic Set 1",
+                        "begin": 7,
+                        "mask": "0x7F"
+                    },
+                    "gfx2": {
+                        "type": "property",
+                        "name": "Graphic Set 2",
+                        "begin": 7,
+                        "mask": "0x3F80"
+                    },
+                    "gfx3": {
+                        "type": "property",
+                        "name": "Graphic Set 3",
+                        "begin": 8,
+                        "mask": "0x1FC0"
+                    },
+                    "gfx4": {
+                        "type": "property",
+                        "name": "Graphic Set 4",
+                        "begin": 9,
+                        "mask": "0x0FE0"
+                    },
+                    "animation": {
+                        "type": "property",
+                        "name": "Animated Tiles",
+                        "begin": 27,
+                        "mask": "0x1F"
+                    },
+                    "category-layer3": "Layer 3",
+                    "layout3": {
+                        "type": "property",
+                        "name": "Tile Layout",
+                        "begin": 15,
+                        "mask": "0x3FF0"
+                    },
+                    "hSize3": {
+                        "type": "property",
+                        "name": "Layer Width",
+                        "begin": 24,
+                        "mask": "0xC0",
+                        "stringTable": "mapProperties.hSize1"
+                    },
+                    "vSize3": {
+                        "type": "property",
+                        "name": "Layer Height",
+                        "begin": 24,
+                        "mask": "0x30",
+                        "stringTable": "mapProperties.vSize1"
+                    },
+                    "hOffset3": {
+                        "type": "property",
+                        "name": "Horizontal Shift",
+                        "begin": 20,
+                        "signed": true
+                    },
+                    "vOffset3": {
+                        "type": "property",
+                        "name": "Vertical Shift",
+                        "begin": 21,
+                        "signed": true
+                    },
+                    "gfxLayer3": {
+                        "type": "property",
+                        "name": "Graphic Set",
+                        "begin": 10,
+                        "mask": "0x03F0"
+                    },
+                    "animationLayer3": {
+                        "type": "property",
+                        "name": "Animated Tiles",
+                        "begin": 27,
+                        "mask": "0xE0"
                     },
                     "layer3Priority": {
                         "type": "property",
@@ -2019,12 +2237,32 @@
                         "mask": "0x80",
                         "bool": true
                     },
-                    "tileProperties": {
+                    "wavyLayer3": {
                         "type": "property",
-                        "name": "Tile Properties",
-                        "begin": 4,
-                        "stringTable": "mapTileProperties"
+                        "name": "Wavy Effect",
+                        "begin": 1,
+                        "mask": "0x04",
+                        "bool": true
                     },
+                    "category-palette": "Palette",
+                    "palette": {
+                        "type": "property",
+                        "name": "Palette",
+                        "begin": 25
+                    },
+                    "paletteAnimation": {
+                        "type": "property",
+                        "name": "Animation",
+                        "begin": 26
+                    },
+                    "colorMath": {
+                        "type": "property",
+                        "name": "Color Math",
+                        "begin": 32,
+                        "stringTable": "mapColorMath",
+                        "link": "mapColorMath[%i]"
+                    },
+                    "category-windowMask": "Window Mask",
                     "windowMask": {
                         "type": "property",
                         "name": "Window Mask",
@@ -2039,167 +2277,14 @@
                             }
                         }
                     },
-                    "gfx1": {
+                    "spotlights": {
                         "type": "property",
-                        "name": "Graphics 1",
-                        "begin": 7,
-                        "mask": "0x7F"
+                        "name": "Enable Spotlights",
+                        "begin": 1,
+                        "mask": "0x20",
+                        "bool": true
                     },
-                    "gfx2": {
-                        "type": "property",
-                        "name": "Graphics 2",
-                        "begin": 7,
-                        "mask": "0x3F80"
-                    },
-                    "gfx3": {
-                        "type": "property",
-                        "name": "Graphics 3",
-                        "begin": 8,
-                        "mask": "0x1FC0"
-                    },
-                    "gfx4": {
-                        "type": "property",
-                        "name": "Graphics 4",
-                        "begin": 9,
-                        "mask": "0x0FE0"
-                    },
-                    "gfxLayer3": {
-                        "type": "property",
-                        "name": "Layer 3 Graphics",
-                        "begin": 10,
-                        "mask": "0x03F0"
-                    },
-                    "tileset1": {
-                        "type": "property",
-                        "name": "Layer 1 Tileset",
-                        "begin": 11,
-                        "mask": "0x01FC"
-                    },
-                    "tileset2": {
-                        "type": "property",
-                        "name": "Layer 2 Tileset",
-                        "begin": 12,
-                        "mask": "0xFE"
-                    },
-                    "layout1": {
-                        "type": "property",
-                        "name": "Layer 1 Layout",
-                        "begin": 13,
-                        "mask": "0x03FF"
-                    },
-                    "layout2": {
-                        "type": "property",
-                        "name": "Layer 2 Layout",
-                        "begin": 14,
-                        "mask": "0x0FFC"
-                    },
-                    "layout3": {
-                        "type": "property",
-                        "name": "Layer 3 Layout",
-                        "begin": 15,
-                        "mask": "0x3FF0"
-                    },
-                    "hOffset2": {
-                        "type": "property",
-                        "name": "Layer 2 H-Offset",
-                        "begin": 18,
-                        "signed": true
-                    },
-                    "vOffset2": {
-                        "type": "property",
-                        "name": "Layer 2 V-Offset",
-                        "begin": 19,
-                        "signed": true
-                    },
-                    "hOffset3": {
-                        "type": "property",
-                        "name": "Layer 3 H-Offset",
-                        "begin": 20,
-                        "signed": true
-                    },
-                    "vOffset3": {
-                        "type": "property",
-                        "name": "Layer 3 V-Offset",
-                        "begin": 21,
-                        "signed": true
-                    },
-                    "hSize1": {
-                        "type": "property",
-                        "name": "Layer 1 H-Size",
-                        "begin": 23,
-                        "mask": "0xC0",
-                        "stringTable": {
-                            "string": {
-                                "0": "16 Tiles",
-                                "1": "32 Tiles",
-                                "2": "64 Tiles",
-                                "3": "128 Tiles"
-                            }
-                        }
-                    },
-                    "vSize1": {
-                        "type": "property",
-                        "name": "Layer 1 V-Size",
-                        "begin": 23,
-                        "mask": "0x30",
-                        "stringTable": {
-                            "string": {
-                                "0": "16 Tiles",
-                                "1": "32 Tiles",
-                                "2": "64 Tiles"
-                            }
-                        }
-                    },
-                    "hSize2": {
-                        "type": "property",
-                        "name": "Layer 2 H-Size",
-                        "begin": 23,
-                        "mask": "0x0C",
-                        "stringTable": "mapProperties.hSize1"
-                    },
-                    "vSize2": {
-                        "type": "property",
-                        "name": "Layer 2 V-Size",
-                        "begin": 23,
-                        "mask": "0x03",
-                        "stringTable": "mapProperties.vSize1"
-                    },
-                    "hSize3": {
-                        "type": "property",
-                        "name": "Layer 3 H-Size",
-                        "begin": 24,
-                        "mask": "0xC0",
-                        "stringTable": "mapProperties.hSize1"
-                    },
-                    "vSize3": {
-                        "type": "property",
-                        "name": "Layer 3 V-Size",
-                        "begin": 24,
-                        "mask": "0x30",
-                        "stringTable": "mapProperties.vSize1"
-                    },
-                    "palette": {
-                        "type": "property",
-                        "name": "Palette",
-                        "begin": 25
-                    },
-                    "paletteAnimation": {
-                        "type": "property",
-                        "name": "Palette Animation",
-                        "begin": 26
-                    },
-                    "animation": {
-                        "type": "property",
-                        "name": "Map Animation",
-                        "begin": 27,
-                        "mask": "0x1F"
-                    },
-                    "animationLayer3": {
-                        "type": "property",
-                        "name": "Layer 3 Animation",
-                        "begin": 27,
-                        "mask": "0xE0"
-                    },
+                    "category-scrolling": "Scrolling",
                     "width": {
                         "type": "property",
                         "name": "Map Width",
@@ -2225,18 +2310,7 @@
                         "stringTable": "mapParallax",
                         "link": "mapParallax[%i]"
                     },
-                    "overlay": {
-                        "type": "property",
-                        "name": "Sprite Overlay",
-                        "begin": 17
-                    },
-                    "colorMath": {
-                        "type": "property",
-                        "name": "Color Math",
-                        "begin": 32,
-                        "stringTable": "mapColorMath",
-                        "link": "mapColorMath[%i]"
-                    },
+                    "category-battle": "Battle",
                     "enableBattles": {
                         "type": "property",
                         "name": "Enable Battles",
@@ -2244,32 +2318,23 @@
                         "mask": "0x80",
                         "bool": true
                     },
-                    "battleBackground": {
-                        "type": "property",
-                        "name": "Battle Background",
-                        "begin": 2,
-                        "mask": "0x7F",
-                        "stringTable": "battleBackground"
-                    },
                     "battleGroup": {
                         "type": "assembly",
                         "external": "mapBattleGroups[%i]"
                     },
-                    "battleProbability": {
+                    "battleBackground": {
                         "type": "property",
-                        "name": "Battle Probability",
-                        "begin": 0,
-                        "mask": "0x03",
-                        "external": "mapBattleProbability[%i]",
-                        "stringTable": {
-                            "string": {
-                                "0": "Normal",
-                                "1": "Low",
-                                "2": "High",
-                                "3": "Very High"
-                            }
-                        }
+                        "name": "Background",
+                        "begin": 2,
+                        "mask": "0x7F",
+                        "stringTable": "battleBackground"
                     },
+                    "battleProbability": {
+                        "type": "assembly",
+                        "name": "Probability",
+                        "external": "mapBattleProbability[%i]"
+                    },
+                    "category-unknown": "Unknown",
                     "unknown6_7": {
                         "type": "property",
                         "name": "Unknown 6.7",
@@ -3144,7 +3209,8 @@
             },
             "assembly": {
                 "type": "text",
-                "encoding": "nullTerminated"
+                "encoding": "nullTerminated",
+                "multiLine": true
             },
             "pointerTable": {
                 "range": "0xCFE000-0xCFE200",
@@ -3423,104 +3489,16 @@
                         "begin": 14,
                         "mask": "0xFFFF"
                     },
-                    "flags": {
-                        "type": "property",
-                        "name": "Flags",
-                        "begin": 18,
-                        "mask": "0xFFFF",
-                        "flag": true,
-                        "stringTable": {
-                            "string": {
-                                "0": "Dies at Zero MP",
-                                "2": "Hide Name",
-                                "4": "Human",
-                                "6": "Imp Critical",
-                                "7": "Undead",
-                                "8": "Harder to Run",
-                                "9": "First Strike",
-                                "10": "Can't Suplex",
-                                "11": "Can't Run",
-                                "12": "Can't Scan",
-                                "13": "Can't Sketch",
-                                "14": "Special Event",
-                                "15": "Can't Control"
-                            }
-                        }
-                    },
+                    "category-attacks": "Attacks",
                     "script": {
                         "type": "property",
                         "external": "monsterScriptPointers[%i]"
-                    },
-                    "special": {
-                        "type": "property",
-                        "name": "Special",
-                        "begin": 30,
-                        "mask": "0x82",
-                        "flag": true,
-                        "stringTable": {
-                            "string": {
-                                "0": "Speck",
-                                "6": "Piranha"
-                            }
-                        }
                     },
                     "fightAnimation": {
                         "type": "property",
                         "name": "Fight Animation",
                         "begin": 26,
                         "stringTable": "itemNames"
-                    },
-                    "attackName": {
-                        "type": "assembly",
-                        "external": "monsterAttackName[%i]"
-                    },
-                    "attackAnimation": {
-                        "type": "assembly",
-                        "external": "monsterAttack[%i]"
-                    },
-                    "attackEffect": {
-                        "type": "property",
-                        "name": "Attack Effect",
-                        "begin": 31,
-                        "mask": "0x3F",
-                        "stringTable": {
-                            "length": 51,
-                            "string": {
-                                "0-32": "Inflict <stringTable.statusNamesReversed[%i]>",
-                                "32": "1.5× Damage",
-                                "33": "2.0× Damage",
-                                "34": "2.5× Damage",
-                                "35": "3.0× Damage",
-                                "36": "3.5× Damage",
-                                "37": "4.0× Damage",
-                                "38": "4.5× Damage",
-                                "39": "5.0× Damage",
-                                "40": "5.5× Damage",
-                                "41": "6.0× Damage",
-                                "42": "6.5× Damage",
-                                "43": "7.0× Damage",
-                                "44": "7.5× Damage",
-                                "45": "8.0× Damage",
-                                "46": "8.5× Damage",
-                                "47": "9.0× Damage",
-                                "48": "Drain HP",
-                                "49": "Drain MP",
-                                "50": "Remove <stringTable.statusNames[16]>"
-                            }
-                        }
-                    },
-                    "attackFlags": {
-                        "type": "property",
-                        "name": "Attack Flags",
-                        "begin": 31,
-                        "mask": "0xC0",
-                        "flag": true,
-                        "stringTable": {
-                            "string": {
-                                "0": "No Damage",
-                                "1": "Can't Miss"
-                            }
-                        }
                     },
                     "sketch1": {
                         "type": "assembly",
@@ -3561,6 +3539,60 @@
                         "external": "initialRage[%i]",
                         "invalid": "this.parent.i > 0xFF"
                     },
+                    "category-special": "Special Attack",
+                    "attackName": {
+                        "type": "assembly",
+                        "external": "monsterAttackName[%i]"
+                    },
+                    "attackAnimation": {
+                        "type": "assembly",
+                        "external": "monsterAttack[%i]"
+                    },
+                    "attackEffect": {
+                        "type": "property",
+                        "name": "Effect",
+                        "begin": 31,
+                        "mask": "0x3F",
+                        "stringTable": {
+                            "length": 51,
+                            "string": {
+                                "0-32": "Inflict <stringTable.statusNamesReversed[%i]>",
+                                "32": "1.5× Damage",
+                                "33": "2.0× Damage",
+                                "34": "2.5× Damage",
+                                "35": "3.0× Damage",
+                                "36": "3.5× Damage",
+                                "37": "4.0× Damage",
+                                "38": "4.5× Damage",
+                                "39": "5.0× Damage",
+                                "40": "5.5× Damage",
+                                "41": "6.0× Damage",
+                                "42": "6.5× Damage",
+                                "43": "7.0× Damage",
+                                "44": "7.5× Damage",
+                                "45": "8.0× Damage",
+                                "46": "8.5× Damage",
+                                "47": "9.0× Damage",
+                                "48": "Drain HP",
+                                "49": "Drain MP",
+                                "50": "Remove <stringTable.statusNames[16]>"
+                            }
+                        }
+                    },
+                    "attackFlags": {
+                        "type": "property",
+                        "name": "Flags",
+                        "begin": 31,
+                        "mask": "0xC0",
+                        "flag": true,
+                        "stringTable": {
+                            "string": {
+                                "0": "No Damage",
+                                "1": "Can't Miss"
+                            }
+                        }
+                    },
+                    "category-status": "Flags",
                     "statusImmunity": {
                         "type": "property",
                         "name": "Immune",
@@ -3607,6 +3639,43 @@
                         "flag": true,
                         "stringTable": "element"
                     },
+                    "flags": {
+                        "type": "property",
+                        "name": "Misc.",
+                        "begin": 18,
+                        "mask": "0xFFFF",
+                        "flag": true,
+                        "stringTable": {
+                            "string": {
+                                "0": "Dies at Zero MP",
+                                "2": "Hide Name",
+                                "4": "Human",
+                                "6": "Imp Critical",
+                                "7": "Undead",
+                                "8": "Harder to Run",
+                                "9": "First Strike",
+                                "10": "Can't Suplex",
+                                "11": "Can't Run",
+                                "12": "Can't Scan",
+                                "13": "Can't Sketch",
+                                "14": "Special Event",
+                                "15": "Can't Control"
+                            }
+                        }
+                    },
+                    "flags2": {
+                        "type": "property",
+                        "begin": 30,
+                        "mask": "0x82",
+                        "flag": true,
+                        "stringTable": {
+                            "string": {
+                                "0": "Speck",
+                                "6": "Piranha"
+                            }
+                        }
+                    },
+                    "category-items": "Items",
                     "rareSteal": {
                         "type": "assembly",
                         "external": "monsterItems[%i].rareSteal"
@@ -3646,6 +3715,11 @@
                                 "7": "0 (0%)"
                             }
                         }
+                    },
+                    "category-graphics": "Graphics",
+                    "palette": {
+                        "type": "property",
+                        "external": "monsterGraphicsProperties[%i].palette"
                     },
                     "verticalOffset": {
                         "type": "assembly",
@@ -4638,7 +4712,7 @@
                             "name": "Background",
                             "begin": 1,
                             "mask": "0x07",
-                            "invalid": "map.m !== 0",
+                            "invalid": "this.rom.editors.FF6Map.m !== 0",
                             "stringTable": {
                                 "string": {
                                     "0": "Field (WoB)",
@@ -4657,7 +4731,7 @@
                             "name": "Background",
                             "begin": 1,
                             "mask": "0x07",
-                            "invalid": "map.m !== 1",
+                            "invalid": "this.rom.editors.FF6Map.m !== 1",
                             "stringTable": {
                                 "string": {
                                     "0": "Field (WoB)",

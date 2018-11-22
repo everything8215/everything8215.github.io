@@ -1,0 +1,16 @@
++------+
+| TODO |
++------+
+
+data relocation
+update ff6u-gba and ff6j-gba text
+add battle/event editors for ff5
+make a better navigator
+fix ff6 character ai special values
+add english string tables for steam version
+music editor
+battle animation editor
+patch/asm support
+battle vram viewer
+custom property controls (entrance trigger destination, rendered text)
+grid check boxes (for element/status)

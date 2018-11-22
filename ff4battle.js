@@ -53,19 +53,23 @@ FF4Battle.prototype.battleName = function(b) {
 
     var battleName = "";
     if (m1 !== 0) {
-        battleName += this.rom.stringTable.monsterName.fString(monster1);
+        battleName += "<monsterName[" + monster1.toString() + "]>"
+//        battleName += this.rom.stringTable.monsterName.fString(monster1);
         if (m1 !== 1) battleName += " ×" + m1;
     }
     if (m2 !== 0) {
         if (battleName !== "") battleName += ", ";
-        battleName += this.rom.stringTable.monsterName.fString(monster2);
+        battleName += "<monsterName[" + monster2.toString() + "]>"
+//        battleName += this.rom.stringTable.monsterName.fString(monster2);
         if (m2 !== 1) battleName += " ×" + m2;
     }
     if (m3 !== 0) {
         if (battleName !== "") battleName += ", ";
-        battleName += this.rom.stringTable.monsterName.fString(monster3);
+        battleName += "<monsterName[" + monster3.toString() + "]>"
+//        battleName += this.rom.stringTable.monsterName.fString(monster3);
         if (m3 !== 1) battleName += " ×" + m3;
     }
+    if (battleName === "") battleName = "Battle %i";
     return battleName;
 }
 
@@ -150,6 +154,7 @@ FF4Battle.prototype.mouseLeave = function(e) {
 FF4Battle.prototype.selectObject = function(object) {
     document.getElementById("tileset-div").classList.add('hidden');
     document.getElementById("tileset-layers").classList.add('hidden');
+    document.getElementById("map-controls").classList.add('hidden');
     this.loadBattle(object.i);
 }
 
@@ -332,7 +337,7 @@ FF4Battle.prototype.drawMonster = function(slot) {
         // decode the graphics
         var bytesPerTile = gfxProperties.is3bpp.value ? 24 : 32;
         var decode = gfxProperties.is3bpp.value ? GFX.decodeSNES3bpp : GFX.decodeSNES4bpp;
-        var begin = this.rom.mapAddress(this.rom.monsterGraphics.range.begin) + gfxProperties.graphicsPointer.value;
+        var begin = this.rom.monsterGraphics.range.begin + gfxProperties.graphicsPointer.value;
         var end = begin + 256 * bytesPerTile;
         gfx = decode(this.rom.data.subarray(begin, end));
 
@@ -369,19 +374,7 @@ FF4Battle.prototype.drawMonster = function(slot) {
     context.putImageData(imageData, 0, 0);
     
     // tint the selected monster
-    if (this.selectedMonster === slot) {
-        // create an offscreen canvas filled with the color
-        var tintCanvas = document.createElement('canvas');
-        tintCanvas.width = ppu.width;
-        tintCanvas.height = ppu.height;
-        var ctx = tintCanvas.getContext('2d');
-        ctx.fillStyle = 'hsla(210, 100%, 50%, 0.5)';
-        ctx.fillRect(0, 0, ppu.width, ppu.height);
-
-        ctx = this.monsterCanvas.getContext('2d');
-        ctx.globalCompositeOperation = 'source-atop';
-        ctx.drawImage(tintCanvas, 0, 0);
-    }
+    if (this.selectedMonster === slot) this.tintMonster();
     
     var ctx = this.battleCanvas.getContext('2d');
     ctx.imageSmoothingEnabled = false;
@@ -390,16 +383,16 @@ FF4Battle.prototype.drawMonster = function(slot) {
     ctx.drawImage(this.monsterCanvas, 0, 0, monsterRect.w, monsterRect.h, monsterRect.l, monsterRect.t, monsterRect.w, monsterRect.h);
 }
 
-FF4Battle.prototype.tintCanvas = function(canvas, color) {
+FF4Battle.prototype.tintMonster = function() {
     // create an offscreen canvas filled with the color
     var tintCanvas = document.createElement('canvas');
-    tintCanvas.width = canvas.width;
-    tintCanvas.height = canvas.height;
+    tintCanvas.width = this.monsterCanvas.width;
+    tintCanvas.height = this.monsterCanvas.height;
     var ctx = tintCanvas.getContext('2d');
-    ctx.fillStyle = color;
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = 'hsla(210, 100%, 50%, 0.5)';
+    ctx.fillRect(0, 0, this.monsterCanvas.width, this.monsterCanvas.height);
     
-    ctx = canvas.getContext('2d');
+    ctx = this.monsterCanvas.getContext('2d');
     ctx.globalCompositeOperation = 'source-atop';
     ctx.drawImage(tintCanvas, 0, 0);
 }

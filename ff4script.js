@@ -10,7 +10,7 @@ FF4Script.initScript = function(script) {
     var offset, label, e;
 
     if (script.key === "npcScript") {
-        script.addPlaceholder(null, 0, "npc", script.rom.stringTable.npcSwitch.fString(script.i));
+        script.addPlaceholder(null, 0, "npc", script.rom.stringTable.npcSwitch.string[script.i].fString());
         
         // look for npc dialog
         var i = script.data.length - 1;
@@ -27,7 +27,7 @@ FF4Script.initScript = function(script) {
 //        }
     } else if (script.key === "eventScript") {
         // add references for events
-        script.addPlaceholder(null, 0, "event", script.rom.stringTable.eventScript.fString(script.i));
+        script.addPlaceholder(null, 0, "event", script.rom.stringTable.eventScript.string[script.i].fString());
 //        for (e = 1; e < script.rom.eventPointers.array.length; e++) {
 //            offset = script.rom.eventPointers.item(e).scriptPointer.value;
 //            label = script.rom.stringTable.eventPointers.fString(e);
@@ -170,7 +170,7 @@ FF4Script.string = function(command, key, stringKey) {
     } else {
         stringTable = command.rom.stringTable[command[key].stringTable];
     }
-    return stringTable.fString(command[key].value);
+    return stringTable.string[command[key].value].fString();
 }
 
 FF4Script.fixSwitch = function(switchProperty) {
@@ -224,7 +224,7 @@ var FF4MonsterScript = {
 
         var encoding = (this.moonScripts.includes(script.i)) ? "monsterMoon" : "monster";
         script.encoding = encoding;
-        script.addPlaceholder(null, 0, encoding, script.rom.stringTable.monsterScript.fString(script.i));
+        script.addPlaceholder(null, 0, encoding, script.rom.stringTable.monsterScript.string[script.i].fString());
     },
     
     initMoon: function(rom) {
@@ -249,9 +249,9 @@ var FF4MonsterScript = {
         if (command.key !== "action") return command.name;
         var c = command.condition.value;
         var a = command.action.value;
-        var condition = command.rom.stringTable["monsterConditionScript"].fString(c);
+        var condition = command.rom.stringTable["monsterConditionScript"].string[c].fString();
         var actionKey = (command.encoding === "monsterMoon") ? "monsterActionMoon" : "monsterAction";
-        var action = command.rom.stringTable[actionKey].fString(a);
+        var action = command.rom.stringTable[actionKey].string[a].fString();
         return condition + ":<br/>" + action;
     }
 };
@@ -260,7 +260,9 @@ var FF4MonsterActionScript = {
     name: "FF4MonsterActionScript",
     
     initScript: function(script) {
-        script.addPlaceholder(null, 0, "monsterAction", script.rom.stringTable[script.key].fString(script.i));
+        var string = script.rom.stringTable[script.key].string[script.i];
+        if (!string) return;
+        script.addPlaceholder(null, 0, "monsterAction", string.fString());
     },
     
     description: function(command) {
@@ -268,7 +270,7 @@ var FF4MonsterActionScript = {
 
             case "attack":
                 var a = command.attack.value;
-                return "Attack: " + command.rom.stringTable["attackNames"].fString(a);
+                return "Attack: " + command.rom.stringTable["attackNames"].string[a].fString();
 
             case "chain":
                 var chain = command.chain.value;
@@ -279,7 +281,7 @@ var FF4MonsterActionScript = {
 
             case "command":
                 var c = command.command.value;
-                return "Command: " + command.rom.stringTable["battleCommandNames"].fString(c);
+                return "Command: " + command.rom.stringTable["battleCommandNames"].string[c].fString();
 
             case "dialog":
                 var d = command.dialog.value;
@@ -295,7 +297,7 @@ var FF4MonsterActionScript = {
 
             case "target":
                 var t = command.target.value;
-                return "Change Target: " + command.rom.stringTable["monsterAction.monsterAction.target.target"].fString(t);
+                return "Change Target: " + command.rom.stringTable["monsterAction.monsterAction.target.target"].string[t].fString();
 
             case "variable":
                 var v = command.variable.value;
@@ -326,17 +328,19 @@ var FF4MonsterConditionScript = {
             var c = script.data[i];
             if (c === 0xFF) break;
             if (name !== "") name += " && ";
-            name += script.rom.stringTable.monsterCondition.fString(c);
+            name += script.rom.stringTable.monsterCondition.string[c].fString();
         }
         if (name === "") name = "Always";
-        script.rom.stringTable.monsterConditionScript.string[script.i] = (name === "Always") ? name : "If " + name;
+        var string = script.rom.stringTable.monsterConditionScript.string[script.i];
+        if (!string) return;
+        string.value = (name === "Always") ? name : "If " + name;
         script.addPlaceholder(null, 0, "monsterCondition", name);
     },
     
     description: function(command) {
         if (command.key !== "condition") return command.name;
         var c = command.condition.value;
-        var name = command.rom.stringTable["monsterCondition"].fString(c);
+        var name = command.rom.stringTable["monsterCondition"].string[c].fString();
         return (name === "Always") ? name : "If " + name;
     }
 };

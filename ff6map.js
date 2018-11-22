@@ -70,14 +70,38 @@ function FF6Map(rom) {
     this.scrollDiv.onmouseleave = function(e) { map.mouseLeave(e) };
     this.scrollDiv.oncontextmenu = function(e) { map.openMenu(e); return false; };
 
-    document.getElementById("showLayer1").onchange = function() { map.changeLayer("showLayer1"); twoState(this); };
-    document.getElementById("showLayer2").onchange = function() { map.changeLayer("showLayer2"); twoState(this); };
-    document.getElementById("showLayer3").onchange = function() { map.changeLayer("showLayer3"); twoState(this); };
-    document.getElementById("showTriggers").onchange = function() { map.changeLayer("showTriggers"); twoState(this); };
-    this.showLayer1 = document.getElementById("showLayer1").checked;
-    this.showLayer2 = document.getElementById("showLayer2").checked;
-    this.showLayer3 = document.getElementById("showLayer3").checked;
-    this.showTriggers = document.getElementById("showTriggers").checked;
+    var buttonLayer1 = document.getElementById("showLayer1");
+    buttonLayer1.onchange = function() { map.changeLayer("showLayer1"); twoState(this); };
+    buttonLayer1.parentElement.childNodes[1].nodeValue = "Layer 1";
+    buttonLayer1.parentElement.style.display = "inline-block";
+    this.showLayer1 = buttonLayer1.checked;
+
+    var buttonLayer2 = document.getElementById("showLayer2");
+    buttonLayer2.onchange = function() { map.changeLayer("showLayer2"); twoState(this); };
+    buttonLayer2.parentElement.childNodes[1].nodeValue = "Layer 2";
+    buttonLayer2.parentElement.style.display = "inline-block";
+    this.showLayer2 = buttonLayer2.checked;
+
+    var buttonLayer3 = document.getElementById("showLayer3");
+    buttonLayer3.onchange = function() { map.changeLayer("showLayer3"); twoState(this); };
+    buttonLayer3.parentElement.childNodes[1].nodeValue = "Layer 3";
+    buttonLayer3.parentElement.style.display = "inline-block";
+    this.showLayer3 = buttonLayer3.checked;
+
+    var buttonTriggers = document.getElementById("showTriggers");
+    buttonTriggers.onchange = function() { map.changeLayer("showTriggers"); twoState(this); };
+    buttonTriggers.parentElement.childNodes[1].nodeValue = "Triggers";
+    buttonTriggers.parentElement.style.display = "inline-block";
+    this.showTriggers = buttonTriggers.checked;
+
+//    document.getElementById("showLayer1").onchange = function() { map.changeLayer("showLayer1"); twoState(this); };
+//    document.getElementById("showLayer2").onchange = function() { map.changeLayer("showLayer2"); twoState(this); };
+//    document.getElementById("showLayer3").onchange = function() { map.changeLayer("showLayer3"); twoState(this); };
+//    document.getElementById("showTriggers").onchange = function() { map.changeLayer("showTriggers"); twoState(this); };
+//    this.showLayer1 = document.getElementById("showLayer1").checked;
+//    this.showLayer2 = document.getElementById("showLayer2").checked;
+//    this.showLayer3 = document.getElementById("showLayer3").checked;
+//    this.showTriggers = document.getElementById("showTriggers").checked;
     document.getElementById("zoom").onchange = function() { map.changeZoom(); };
 }
 
@@ -515,6 +539,7 @@ FF6Map.prototype.drawCursor = function() {
 FF6Map.prototype.selectObject = function(object) {
     document.getElementById("tileset-div").classList.remove('hidden');
     document.getElementById("tileset-layers").classList.remove('hidden');
+    document.getElementById("map-controls").classList.remove('hidden');
     this.loadMap(object.i);
 }
 

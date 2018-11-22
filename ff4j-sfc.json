@@ -175,7 +175,8 @@
             "assembly": {
                 "type": "text",
                 "name": "Dialog",
-                "encoding": "nullTerminated"
+                "encoding": "nullTerminated",
+                "multiLine": true
             },
             "pointerTable": {
                 "range": "0x0EF200-0x0EF374",
@@ -716,7 +717,8 @@
             },
             "assembly": {
                 "type": "text",
-                "encoding": "nullTerminated"
+                "encoding": "nullTerminated",
+                "multiLine": true
             },
             "pointerTable": {
                 "range": "0x108000-0x108400",
@@ -736,7 +738,8 @@
             },
             "assembly": {
                 "type": "text",
-                "encoding": "nullTerminated"
+                "encoding": "nullTerminated",
+                "multiLine": true
             },
             "pointerTable": {
                 "range": "0x13A500-0x13A700",
@@ -1007,7 +1010,8 @@
                 "terminator": "\\0",
                 "assembly": {
                     "type": "text",
-                    "encoding": "nullTerminated"
+                    "encoding": "nullTerminated",
+                    "multiLine": true
                 }
             },
             "pointerTable": {

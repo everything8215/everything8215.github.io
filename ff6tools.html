@@ -11,6 +11,8 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/1.3.8/FileSaver.min.js"></script>
         <script type="text/javascript" src="gfx.js"></script>
         <script type="text/javascript" src="romtools.js"></script>
+        <script type="text/javascript" src="ff1map.js"></script>
+        <script type="text/javascript" src="ff1battle.js"></script>
         <script type="text/javascript" src="ff4map.js"></script>
         <script type="text/javascript" src="ff4battle.js"></script>
         <script type="text/javascript" src="ff4script.js"></script>
@@ -20,9 +22,22 @@
         <script type="text/javascript" src="ff6script.js"></script>
         <script type="text/javascript">
             
-            var rom, definition, data, scriptList, modal;
+            var rom, definition, data, scriptList, modal, definitions;
 
-            window.onload = function() {                
+            window.onload = function() {
+
+                // read the list of definition files
+                var xhr = new XMLHttpRequest();
+                xhr.onreadystatechange = function() {
+                    if (xhr.readyState != 4 || xhr.status !== 200) return;
+                    definitions = JSON.parse(xhr.responseText);
+                };
+                xhr.onerror = function() {
+                    console.log("Unable to load ROM definitions");
+                };
+                xhr.open("get", "def.json");
+                xhr.send();
+
                 /////////////////////////////////////////
 //                var localROM = new XMLHttpRequest();
 //                localROM.onload = function() {
@@ -32,7 +47,7 @@
 //
 //                    loadBuiltInDefinition();
 //                };
-//                localROM.open("get", "roms\\ff6j.gba");
+//                localROM.open("get", "roms\\ff1u.nes");
 //                localROM.responseType = "arraybuffer";
 //                localROM.send();
                 /////////////////////////////////////////
@@ -136,8 +151,20 @@
                     // prompt the user to load their own definition
                     var content = openModal("Select Definition");
                     var p = document.createElement('p');
-                    p.innerHTML = "There is no built-in definition file for this ROM. Please select a valid definition file.";
+                    p.innerHTML = "The CRC32 of this ROM does not match any built-in definitions. Please select a built-in definition manually from the list or choose a custom definition file.";
                     content.appendChild(p);
+                    
+                    var ul = document.createElement('ul');
+                    ul.classList.add('def-list');
+                    var keys = Object.keys(definitions);
+                    for (var i = 0; i < keys.length; i++) {
+                        var key = keys[i];
+                        var def = definitions[key];
+                        var li = liForDefinition(def, key);
+                        ul.appendChild(li);
+                    }
+                    content.appendChild(ul);
+                    
                     var file = document.createElement('input');
                     file.type = 'file';
                     file.id = 'definition-file';
@@ -146,47 +173,78 @@
                 };
             }
             
-            function loadBuiltInDefinition() {
-                
-                var crc32 = ROM.crc32(data);
-                var url;
-                
-                switch (crc32) {
-                    case 0x65D0A825: // v1.0
-                    case 0x23084FCD: // v1.1
-                        url = "ff2u-sfc.json";
-                        break;
-                    case 0x21027C5D: // v1.0
-                    case 0xCAA15E97: // v1.1
-                    case 0x6CDA700C: // Easy (J)
-                        url = "ff4j-sfc.json";
-                        break;
-                    case 0xC1BC267D:
-                    case 0x84CC8DBE: // [h1]
-                        url = "ff5j-sfc.json";
-                        break;
-                    case 0x892E44BE: // [T-EngX.X_RPGe]
-                    case 0x17444605: // [T+Eng1.1_RPGe]
-                    case 0xD19F6CB5: // [T+Eng1.1_RPGe][h1]
-                        url = "ff5u-sfc.json";
-                        break;
-                    case 0xA27F1C7A: // v1.0
-                    case 0xC0FA0464: // v1.1
-                        url = "ff3u-sfc.json";
-                        break;
-                    case 0x45EF5AC8:
-                        url = "ff6j-sfc.json";
-                        break;
-                    case 0xD708F5AB:
-                        url = "ff6u-gba.json";
-                        break;
-                    case 0xD67478FE:
-                    case 0x479179F5: // steam version
-                        url = "ff6j-gba.json";
-                        break;
-                    default:
-                        return false;
+            function liForDefinition(def, url) {
+                var li = document.createElement('li');
+                li.onclick = function(e) {
+                    closeModal();
+                    loadBuiltInDefinition(url); 
                 }
+                li.innerHTML = def.name;
+                return li;
+            }
+            
+            function loadBuiltInDefinition(url) {
+                
+                if (!url) {
+                    var crc32 = ROM.crc32(data);
+
+                    if (!definitions) return false;
+                    var keys = Object.keys(definitions);
+                    for (var i = 0; i < keys.length; i++) {
+                        var key = keys[i];
+                        var def = definitions[key];
+                        if (!def.crc32 || !def.crc32.length) continue;
+                        for (var c = 0; c < def.crc32.length; c++) {
+                            if (Number(def.crc32[c]) === crc32) url = key;
+                        }
+                        if (url) break;
+                    }
+                }
+                
+                if (!url) return false;
+                
+//                switch (crc32) {
+//                    case 0xAB12ECE6:
+//                        url = "ff1u-nes.json";
+//                        break;
+//                    case 0x65D0A825: // v1.0
+//                    case 0x23084FCD: // v1.1
+//                        url = "ff2u-sfc.json";
+//                        break;
+//                    case 0x21027C5D: // v1.0
+//                    case 0xCAA15E97: // v1.1
+//                    case 0x6CDA700C: // Easy (J)
+//                        url = "ff4j-sfc.json";
+//                        break;
+//                    case 0xC1BC267D:
+//                    case 0x84CC8DBE: // [h1]
+//                        url = "ff5j-sfc.json";
+//                        break;
+//                    case 0x892E44BE: // [T-EngX.X_RPGe]
+//                    case 0x17444605: // [T+Eng1.1_RPGe]
+//                    case 0xD19F6CB5: // [T+Eng1.1_RPGe][h1]
+//                        url = "ff5u-sfc.json";
+//                        break;
+//                    case 0xA27F1C7A: // v1.0
+//                    case 0xC0FA0464: // v1.1
+//                        url = "ff3u-sfc.json";
+//                        break;
+//                    case 0x45EF5AC8:
+//                        url = "ff6j-sfc.json";
+//                        break;
+//                    case 0xD708F5AB:
+//                        url = "ff6u-gba.json";
+//                        break;
+//                    case 0xD67478FE:
+//                    case 0x479179F5: // steam version
+//                        url = "ff6j-gba.json";
+//                        break;
+//                    case 0xD15DEBA5:
+//                        url = "ff6e-gba.json";
+//                        break;
+//                    default:
+//                        return false;
+//                }
                 
                 var xhr = new XMLHttpRequest();
                 xhr.onreadystatechange = function() {
@@ -245,11 +303,11 @@
                 // create the script list
                 scriptList = new ROMScriptList(rom);
                 
-//                // output dialog to the console
+//                // output strings to the console
 //                var bigString = "";
-//                for (var d = 0; d < rom.text.array.length; d++) {
-//                    var dialogString = rom.text.item(d).text;
-//                    bigString += hexString(d >> 1, 4) + ": " + dialogString.replace(/\\n/g, "\n        ").replace(/\\page/g, "\n        ") + "\n";
+//                for (var d = 0; d < rom.attackMessage.array.length; d++) {
+//                    var dialogString = rom.attackMessage.item(d).text;
+//                    bigString += hexString(d, 4) + ": " + dialogString.replace(/\\n/g, "\n        ").replace(/\\page/g, "\n        ") + "\n";
 //                }
 //                console.log(bigString);
             }
@@ -387,7 +445,7 @@
                 span.innerHTML = m.toString();
                 span.classList.add("navListIndex");
                 li.appendChild(span);
-                li.innerHTML += mapNames.fString(m);
+                li.innerHTML += mapNames.string[m].fString();
                 return li;
             }
 
@@ -403,8 +461,8 @@
                 span.classList.add("navListIndex");
                 li.appendChild(span);
                 var name = battleName(b);
-                rom.stringTable.battleProperties.string[b] = name;
-                li.innerHTML += name;
+                rom.stringTable.battleProperties.string[b].value = name;
+                li.innerHTML += rom.stringTable.battleProperties.string[b].fString();
                 return li;
             }
             
@@ -483,8 +541,8 @@
                             <label class="two-state checked"><input id="showLayer2" type="checkbox" checked="true" onchange="twoState(this)">Layer 2</label>
                             <label class="two-state checked"><input id="showLayer3" type="checkbox" checked="true" onchange="twoState(this)">Layer 3</label>
                             <label class="two-state checked"><input id="showTriggers" type="checkbox" checked="true" onchange="twoState(this)">Triggers</label>
+                            <div id="zoom-value">100%</div>
                             <input type="range" id="zoom" min="-2" max="2" step="1" value="0">
-                            <p id="zoom-value">100%</p>
                         </div>
 
                         <div id="edit-div" class="no-select"></div>
