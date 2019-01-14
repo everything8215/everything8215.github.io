@@ -2027,6 +2027,7 @@
                     },
                     "scriptPointer": {
                         "type": "assembly",
+                        "name": "Event",
                         "external": "mapStartupEvents[%i]"
                     },
                     "flags": {

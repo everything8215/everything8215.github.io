@@ -1915,7 +1915,14 @@
                     },
                     "scriptPointer": {
                         "type": "assembly",
+                        "name": "Event",
                         "external": "mapStartupEvents[%i]"
+                    },
+                    "scriptPointerGBA": {
+                        "type": "assembly",
+                        "name": "Event (GBA)",
+                        "external": "mapStartupEventGBA[0].scriptPointer",
+                        "invalid": true
                     },
                     "flags": {
                         "type": "property",
@@ -2814,6 +2821,33 @@
                 "length": 3,
                 "mask": "0xFFFFFF",
                 "script": "eventScript"
+            }
+        },
+        "mapStartupEventGBA": {
+            "type": "array",
+            "name": "Map Startup Event (GBA)",
+            "range": "0x080312A6-0x0803145C",
+            "array": {
+                "length": 512
+            },
+            "assembly": {
+                "type": "data",
+                "length": 6,
+                "assembly": {
+                    "map": {
+                        "type": "property",
+                        "name": "Map",
+                        "begin": 0,
+                        "mask": "0xFFFF"
+                    },
+                    "scriptPointer": {
+                        "type": "property",
+                        "name": "Event (GBA)",
+                        "begin": 2,
+                        "mask": "0xFFFFFF",
+                        "script": "eventScript"
+                    }
+                }
             }
         },
         "mapTileProperties": {

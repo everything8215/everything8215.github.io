@@ -1827,10 +1827,12 @@
                     },
                     "scriptPointer": {
                         "type": "assembly",
+                        "name": "Event",
                         "external": "mapStartupEvents[%i]"
                     },
                     "scriptPointerGBA": {
                         "type": "assembly",
+                        "name": "Event (GBA)",
                         "external": "mapStartupEventGBA[0].scriptPointer",
                         "invalid": true
                     },
