@@ -17,6 +17,7 @@
         <script type="text/javascript" src="ff4battle.js"></script>
         <script type="text/javascript" src="ff4script.js"></script>
         <script type="text/javascript" src="ff5map.js"></script>
+        <script type="text/javascript" src="ff5script.js"></script>
         <script type="text/javascript" src="ff6map.js"></script>
         <script type="text/javascript" src="ff6battle.js"></script>
         <script type="text/javascript" src="ff6script.js"></script>
@@ -47,7 +48,7 @@
 //
 //                    loadBuiltInDefinition();
 //                };
-//                localROM.open("get", "roms\\ff1u.nes");
+//                localROM.open("get", "roms\\ff5u.sfc");
 //                localROM.responseType = "arraybuffer";
 //                localROM.send();
                 /////////////////////////////////////////
@@ -303,10 +304,10 @@
                 // create the script list
                 scriptList = new ROMScriptList(rom);
                 
-//                // output strings to the console
+                // output strings to the console
 //                var bigString = "";
-//                for (var d = 0; d < rom.attackMessage.array.length; d++) {
-//                    var dialogString = rom.attackMessage.item(d).text;
+//                for (var d = 0; d < rom.dialog.array.length; d++) {
+//                    var dialogString = rom.dialog.item(d).text;
 //                    bigString += hexString(d, 4) + ": " + dialogString.replace(/\\n/g, "\n        ").replace(/\\page/g, "\n        ") + "\n";
 //                }
 //                console.log(bigString);

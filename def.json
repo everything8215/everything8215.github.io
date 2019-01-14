@@ -1,10 +1,10 @@
 {
     "ff1u-nes.json": {
-        "name": "Final Fantasy (US)",
+        "name": "Final Fantasy (U)",
         "crc32": ["0xAB12ECE6"]
     },
     "ff2u-sfc.json": {
-        "name": "Final Fantasy II (US)",
+        "name": "Final Fantasy II (U)",
         "crc32": ["0x65D0A825", "0x23084FCD"]
     },
     "ff4j-sfc.json": {
@@ -20,7 +20,7 @@
         "crc32": ["0x892E44BE", "0x17444605", "0xD19F6CB5"]
     },
     "ff3u-sfc.json": {
-        "name": "Final Fantasy III (US)",
+        "name": "Final Fantasy III (U)",
         "crc32": ["0xA27F1C7A", "0xC0FA0464"]
     },
     "ff6j-sfc.json": {

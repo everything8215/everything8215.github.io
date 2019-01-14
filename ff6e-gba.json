@@ -1175,7 +1175,7 @@
                 "name": "Menu Order",
                 "length": 1,
                 "offset": -1,
-                "max": 30,
+                "max": 31,
                 "stringTable": "esperAttackDescription",
                 "link": "stringTable.esperAttackDescription[%i]"
             }
@@ -9740,7 +9740,7 @@
         },
         "esperAttackDescription": {
             "name": "Esper Attack Description",
-            "length": 35,
+            "length": 31,
             "default": {
                 "value": "<text1[%i*5+9545]>",
                 "language": {
@@ -9767,7 +9767,7 @@
                 }
             },
             "string": {
-                "27-35": {
+                "27-31": {
                     "value": "<text1[(%i-27)*5+13375]>",
                     "language": {
                         "en": {

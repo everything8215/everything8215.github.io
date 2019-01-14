@@ -1157,7 +1157,6 @@ FF4Map.prototype.drawNPC = function(npc) {
 
     // decode palette
     var pal = new Uint32Array(0x80);
-    var palette = new Array(8);
     var p1 = this.mapProperties.npcPalette1.value * 2;
     var p2 = this.mapProperties.npcPalette2.value * 2;
     pal.set(this.rom.mapSpritePalettes.item(0).data, 0x00);
@@ -1253,7 +1252,6 @@ FF4Map.prototype.drawNPC = function(npc) {
     ctx.webkitImageSmoothingEnabled = false;
     npcRect = npcRect.offset(-this.mapRect.l, -this.mapRect.t);
     ctx.drawImage(this.npcCanvas, 0, 0, w, h, npcRect.l, npcRect.t, npcRect.w, npcRect.h);
-
 }
 
 // FF4MapTileset

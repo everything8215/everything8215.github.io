@@ -413,7 +413,7 @@
         },
         "dialog": {
             "type": "array",
-            "name": "Dialog 1",
+            "name": "Dialog",
             "range": "0x0A8200-0x0AB486",
             "array": {
                 "length": 256
@@ -1669,6 +1669,7 @@
                         "mask": "0xFFFF",
                         "stringTable": {
                             "default": "Event %i",
+                            "hideIndex": true,
                             "string": {
                                 "0x9296": "No Event",
                                 "0x9297": "King Coneria",

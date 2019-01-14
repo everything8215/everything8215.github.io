@@ -565,8 +565,8 @@ FF5Map.prototype.loadMap = function(m) {
     this.ppu.layers[1].format = GFX.TileFormat.snes4bppTile;
     this.ppu.layers[1].cols = this.layer[1].w * 2;
     this.ppu.layers[1].rows = this.layer[1].h * 2;
-//    this.ppu.layers[1].x = map.hOffset2.value * 16;
-//    this.ppu.layers[1].y = map.vOffset2.value * 16;
+    this.ppu.layers[1].x = -map.hOffsetLayer2.value * 16;
+    this.ppu.layers[1].y = -map.vOffsetLayer2.value * 16;
     this.ppu.layers[1].z[0] = GFX.Z.snes2L;
     this.ppu.layers[1].z[1] = GFX.Z.snes2H;
     this.ppu.layers[1].gfx = gfx;
@@ -579,8 +579,8 @@ FF5Map.prototype.loadMap = function(m) {
     this.ppu.layers[2].format = GFX.TileFormat.snes2bppTile;
     this.ppu.layers[2].cols = this.layer[2].w * 2;
     this.ppu.layers[2].rows = this.layer[2].h * 2;
-//    this.ppu.layers[2].x = map.hOffset3.value * 16;
-//    this.ppu.layers[2].y = map.vOffset3.value * 16;
+    this.ppu.layers[2].x = -map.hOffsetLayer3.value * 16;
+    this.ppu.layers[2].y = -map.vOffsetLayer3.value * 16;
     this.ppu.layers[2].z[0] = GFX.Z.snes3L;
     this.ppu.layers[2].z[1] = GFX.Z.snes3P; // always high priority layer 3
     this.ppu.layers[2].gfx = gfx.subarray(0xC000);
@@ -811,14 +811,6 @@ FF5Map.prototype.drawTriggers = function() {
             case "entranceTriggers":
                 c = "rgba(255, 0, 0, 0.5)";
                 break;
-//            case "entranceTriggersMulti":
-//                c = "rgba(0, 128, 0, 0.5)";
-//                var length = trigger.length.value;
-//                var v = trigger.vertical.value;
-//                for (var t = 0; t < length; t++) {
-//                    drawTriggerRect(trigger.x.value + (v ? 0 : t), trigger.y.value + (v ? t : 0), c)
-//                }
-//                continue;
             case "treasureProperties":
                 c = "rgba(255, 255, 0, 0.5)";
                 break;
@@ -830,19 +822,18 @@ FF5Map.prototype.drawTriggers = function() {
     }
     
     // draw npcs (sort by y-coordinate and sprite priority)
-//    var npcs = this.triggers.filter(function(trigger) {
-//        return (trigger.key === "npcProperties");
-//    });
-//    npcs = npcs.sort(function(trigger1, trigger2) {
-//        var y1 = trigger1.y.value;
-//        var y2 = trigger2.y.value;
-//        if (y1 !== y2) return y1 - y2;
-//        return trigger1.spritePriority.value - trigger2.spritePriority.value;
-//    });
-//    for (i = 0; i < npcs.length; i++) {
-//        var npc = npcs[i];
-//        this.drawNPC(npc);
-//    }
+    var npcs = this.triggers.filter(function(trigger) {
+        return (trigger.key === "npcProperties");
+    });
+    npcs = npcs.sort(function(trigger1, trigger2) {
+        var y1 = trigger1.y.value;
+        var y2 = trigger2.y.value;
+        return y1 - y2;
+    });
+    for (i = 0; i < npcs.length; i++) {
+        var npc = npcs[i];
+        this.drawNPC(npc);
+    }
 }
 
 FF5Map.prototype.triggerAt = function(x, y) {
@@ -899,394 +890,123 @@ FF5Map.prototype.rectForTrigger = function(trigger) {
     return new Rect(l, r, t, b);
 }
 
-//FF5Map.prototype.drawNPC = function(npc) {
-//    
-//    var x = npc.x.value * 16;
-//    var y = npc.y.value * 16 - 16;
-//    var w = 16;
-//    var h = 24;
-//
-//    var vehicle = npc.vehicle.value;
-//    var showRider = npc.showRider.value;
-//    var direction = npc.direction.value;
-//    var animation = npc.animation.value;
-//    var frameIndex = 0;
-//    var tileCount = 6;
-//    var is32x32 = false;
-//    var hFlip = false;
-//    var special = (vehicle === 0 && npc.special.value);
-//
-//    if (special) {
-//        // special npc
-//        is32x32 = npc.is32x32.value;
-//        hFlip = npc.hFlip.value;
-//        var offset = 0;
-//        
-//        offset = npc.offset.value * 2;
-//        if (npc.slave.value) {
-//            var m = npc.master.value;
-//            if (!npc.parent.array || m >= npc.parent.array.length) {
-//                this.rom.log("Invalid Master NPC");
-//            } else {
-//                var master = npc.parent.array[m];
-//                x = master.x.value * 16;
-//                y = master.y.value * 16 - 16;
-//                offset = npc.offset.value * 16;
-//            }
-//        }
-//        
-//        if (npc.offsetDirection.value) {
-//            y += offset;
-//        } else {
-//            x += offset;
-//        }
-//        y += 8;
-//        
-//        if (is32x32) {
-//            tileCount = 16;
-//            w = 32; h = 32;
-//        } else {
-//            tileCount = 4;
-//            w = 16; h = 16;
-//        }
-//    } else if (animation === 0) {
-//        // normal npc
-//        var facingFrames = [0x04, 0x47, 0x01, 0x07];
-//        if ((vehicle === 1) || (vehicle === 2)) {
-//            // show riding frame when facing left or right on a vehicle (except raft)
-//            facingFrames[1] = 0x6E;
-//            facingFrames[3] = 0x2E;
-//        }
-//        frameIndex = facingFrames[direction];
-//        if (frameIndex & 0x40) hFlip = true;
-//    } else if (animation === 2) {
-//        frameIndex = 0x32;
-//    } else if (animation === 3) {
-//        frameIndex = 0x28;
-//    }
-//    
-//    // get the sprite tile layout
-//    var tileLayout = this.rom.mapSpriteLayouts.item(frameIndex & 0x3F);
-//
-//    // get a pointer to the sprite graphics
-//    var gfxPointerLo = this.rom.mapSpritePointersLo.item(npc.graphics.value).pointer.value;
-//    var gfxPointerHi = this.rom.mapSpritePointersHi.item(npc.graphics.value).pointer.value;
-//    var gfxPointer = gfxPointerLo | (gfxPointerHi << 16);
-//    gfxPointer &= 0x00FFFFFF;
-//    gfxPointer -= this.rom.unmapAddress(this.rom.mapSpriteGraphics.range.begin);
-////    gfxPointer -= isGBA ? 0xF60000 : rom.mapMode.unmapAddress(mapSpriteGraphics.range!.lowerBound)
-//
-//    // decode graphics
-//    var p = npc.palette.value << 9;
-//    var gfx = new Uint8Array(0x8000);
-//    var tileData = new Uint16Array(tileCount);
-//    for (var t = 0; t < tileCount; t++) {
-//        var tileOffset = gfxPointer + (special ? t * 0x20 : tileLayout["tile" + (t + 1)].value);
-//        var rawGraphics = this.rom.mapSpriteGraphics.data.subarray(tileOffset, tileOffset + 0x20);
-//        gfx.set(GFX.decodeSNES4bpp(rawGraphics), t * 0x40);
-//        if (hFlip) {
-//            tileData[t ^ (is32x32 ? 3 : 1)] = t | p | 0x4000;
-//        } else {
-//            tileData[t] = t | p;
-//        }
-//    }
-//
-//    // load palette
-//    var pal = new Uint32Array(0x80);
-////    pal.set(GFX.decodeBGR555(this.rom.mapSpritePalettes.item(npc.palette.value).data));
-//    pal.set(GFX.decodeBGR555(this.rom.mapSpritePalettes.item(0).data), 0x00);
-//    pal.set(GFX.decodeBGR555(this.rom.mapSpritePalettes.item(1).data), 0x10);
-//    pal.set(GFX.decodeBGR555(this.rom.mapSpritePalettes.item(2).data), 0x20);
-//    pal.set(GFX.decodeBGR555(this.rom.mapSpritePalettes.item(3).data), 0x30);
-//    pal.set(GFX.decodeBGR555(this.rom.mapSpritePalettes.item(4).data), 0x40);
-//    pal.set(GFX.decodeBGR555(this.rom.mapSpritePalettes.item(5).data), 0x50);
-//    pal.set(GFX.decodeBGR555(this.rom.mapSpritePalettes.item(6).data), 0x60);
-//    pal.set(GFX.decodeBGR555(this.rom.mapSpritePalettes.item(7).data), 0x70);
-//
-//    function drawVehicle() {
-//        if (vehicle === 0) return;
-//        if (special) return;
-//        if (animation) return;
-//
-//        var vx = x;
-//        var vy = y;
-//        var vw = 32;
-//        var vh = 32;
-//        var vp = 7; // vehicle palette
-//        
-//        // get the vehicle tile layout
-//        var vehicleTiles = new Uint16Array(16);
-//        if (vehicle === 1) {
-//            // chocobo
-//            switch (direction) {
-//
-//                case 0: // up
-//                    vehicleTiles.set([
-//                        0x2F4C, 0x2F4D,
-//                        0x2F5C, 0x2F5D,
-//                        0x2F4E, 0x2F4F,
-//                        0x2F5E, 0x2F5F]);
-//                    vw = 16;
-//                    h = 16;
-//                    y -= 3;
-//                    break;
-//
-//                case 1: // right
-//                    vehicleTiles.set([
-//                        0x6F69, 0x6F68, 0x6F65, 0x6F64,
-//                        0x6F79, 0x6F78, 0x6F75, 0x6F74,
-//                        0x6F6B, 0x6F6A, 0x6F67, 0x6F66,
-//                        0x6F7B, 0x6F7A, 0x6F77, 0x6F76]);
-//                    vx -= 8;
-//                    x -= 3;
-//                    y -= 4;
-//                    break;
-//
-//                case 2: // down
-//                    vehicleTiles.set([
-//                        0x2F42, 0x2F43,
-//                        0x2F52, 0x2F53,
-//                        0x2F44, 0x2F45,
-//                        0x2F54, 0x2F55]);
-//                    vw = 16;
-//                    h = 16;
-//                    y -= 5;
-//                    break;
-//
-//                case 3: // left
-//                    vehicleTiles.set([
-//                        0x2F64, 0x2F65, 0x2F68, 0x2F69,
-//                        0x2F74, 0x2F75, 0x2F78, 0x2F79,
-//                        0x2F66, 0x2F67, 0x2F6A, 0x2F6B,
-//                        0x2F76, 0x2F77, 0x2F7A, 0x2F7B]);
-//                    vx -= 8;
-//                    x += 3;
-//                    y -= 4;
-//                    break;
-//            }
-//
-//        } else if (vehicle === 2) {
-//            // magitek
-//            vx -= 8;
-//            h = 16;
-//            y -= 6;
-//
-//            switch (direction) {
-//                case 0:
-//                    vehicleTiles.set([
-//                    0x2FAC, 0x2FAD, 0x6FAD, 0x6FAC,
-//                    0x2FBC, 0x2FBD, 0x6FBD, 0x6FBC,
-//                    0x2FAE, 0x2FAF, 0x6FAF, 0x6FAE,
-//                    0x2FBE, 0x2FBF, 0x6FBF, 0x6FBE]);
-//                    break;
-//
-//                case 1:
-//                    vehicleTiles.set([
-//                    0x6FCB, 0x6FCA, 0x6FC9, 0x6FC8,
-//                    0x6FDB, 0x6FDA, 0x6FD9, 0x6FD8,
-//                    0x6FCF, 0x6FCE, 0x6FCD, 0x6FCC,
-//                    0x6FDF, 0x6FDE, 0x6FDD, 0x6FDC]);
-//                    break;
-//
-//                case 2:
-//                    vehicleTiles.set([
-//                    0x2FA0, 0x2FA1, 0x6FA1, 0x6FA0,
-//                    0x2FB0, 0x2FB1, 0x6FB1, 0x6FB0,
-//                    0x2FA2, 0x2FA3, 0x6FA3, 0x6FA2,
-//                    0x2FB2, 0x2FB3, 0x6FB3, 0x6FB2]);
-//                    break;
-//
-//                case 3:
-//                    vehicleTiles.set([
-//                    0x2FC8, 0x2FC9, 0x2FCA, 0x2FCB,
-//                    0x2FD8, 0x2FD9, 0x2FDA, 0x2FDB,
-//                    0x2FCC, 0x2FCD, 0x2FCE, 0x2FCF,
-//                    0x2FDC, 0x2FDD, 0x2FDE, 0x2FDF]);
-//                    break;
-//            }
-//
-//        } else if (vehicle === 3) {
-//            // raft
-//            vx -= 8;
-//            y -= 8;
-//            vp = 11;
-//            
-//            switch (direction) {
-//                case 0:
-//                case 2:
-//                    vehicleTiles.set([
-//                    0x2F20, 0x2F21, 0x2F24, 0x2F25,
-//                    0x2F30, 0x2F31, 0x2F34, 0x2F35,
-//                    0x2F22, 0x2F23, 0x2F26, 0x2F27,
-//                    0x2F32, 0x2F33, 0x2F36, 0x2F37]);
-//                    break;
-//
-//                case 1:
-//                case 3:
-//                    vehicleTiles.set([
-//                    0x2F28, 0x2F29, 0x2F2C, 0x2F2D,
-//                    0x2F38, 0x2F39, 0x2F3C, 0x2F3D,
-//                    0x2F2A, 0x2F2B, 0x2F2E, 0x2F2F,
-//                    0x2F3A, 0x2F3B, 0x2F3E, 0x2F3F]);
-//                    break;
-//            }
-//        }
-//        
-//        var vehicleRect = new Rect(vx, vx + vw, vy, vy + vh);
-//        vehicleRect = vehicleRect.scale(this.zoom);
-//        if (this.mapRect.intersect(vehicleRect).isEmpty()) return;
-//
-//        // load vehicle graphics
-//        var vehicleGraphics = GFX.decodeSNES4bpp(this.rom.vehicleGraphics.data.subarray(0, 0x1C00));
-//        gfx.set(vehicleGraphics, 0x4800);
-//
-//        // load vehicle palette
-//        pal.set(GFX.decodeBGR555(this.rom.mapSpritePalettes.item(vp).data), 0x70);
-//
-//        // set up the ppu
-//        var ppu = new GFX.PPU();
-//        ppu.pal = pal;
-//        ppu.width = vw;
-//        ppu.height = vh;
-//
-//        // layer 1
-//        ppu.layers[0].format = GFX.TileFormat.snesSpriteTile;
-//        ppu.layers[0].cols = vw >> 3;
-//        ppu.layers[0].rows = vh >> 3;
-//        ppu.layers[0].z[0] = GFX.Z.snesS0;
-//        ppu.layers[0].z[1] = GFX.Z.snesS1;
-//        ppu.layers[0].z[2] = GFX.Z.snesS2;
-//        ppu.layers[0].z[3] = GFX.Z.snesS3;
-//        ppu.layers[0].gfx = gfx;
-//        ppu.layers[0].tiles = vehicleTiles;
-//        ppu.layers[0].main = true;
-//
-//        // draw the vehicle
-//        this.npcCanvas.width = vw;
-//        this.npcCanvas.height = vh;
-//        var npcContext = this.npcCanvas.getContext('2d');
-//        var imageData = npcContext.createImageData(vw, vh);
-//        ppu.renderPPU(imageData.data);
-//        npcContext.putImageData(imageData, 0, 0);
-//
-//        var ctx = this.canvas.getContext('2d');
-//        ctx.imageSmoothingEnabled = false;
-//        ctx.webkitImageSmoothingEnabled = false;
-//        vehicleRect = vehicleRect.offset(-this.mapRect.l, -this.mapRect.t);
-//        ctx.drawImage(this.npcCanvas, 0, 0, vw, vh, vehicleRect.l, vehicleRect.t, vehicleRect.w, vehicleRect.h);
-//    }
-//    
-//    function drawSprite() {
-//        
-//        if (vehicle && !showRider && !special && !animation) return;
-//        
-//        var npcRect = new Rect(x, x + w, y, y + h);
-//        npcRect = npcRect.scale(this.zoom);
-//        if (this.mapRect.intersect(npcRect).isEmpty()) return;
-//
-//        // set up the ppu
-//        var ppu = new GFX.PPU();
-//        ppu.pal = pal;
-//        ppu.width = w;
-//        ppu.height = h;
-//
-//        // layer 1
-//        ppu.layers[0].format = GFX.TileFormat.snesSpriteTile;
-//        ppu.layers[0].cols = w >> 3;
-//        ppu.layers[0].rows = h >> 3;
-//        ppu.layers[0].z[0] = GFX.Z.snesS0;
-//        ppu.layers[0].z[1] = GFX.Z.snesS1;
-//        ppu.layers[0].z[2] = GFX.Z.snesS2;
-//        ppu.layers[0].z[3] = GFX.Z.snesS3;
-//        ppu.layers[0].gfx = gfx;
-//        ppu.layers[0].tiles = tileData;
-//        ppu.layers[0].main = true;
-//
-//        // draw the npc
-//        this.npcCanvas.width = w;
-//        this.npcCanvas.height = h;
-//        var npcContext = this.npcCanvas.getContext('2d');
-//        var imageData = npcContext.createImageData(w, h);
-//        ppu.renderPPU(imageData.data);
-//        npcContext.putImageData(imageData, 0, 0);
-//
-//        var ctx = this.canvas.getContext('2d');
-//        ctx.imageSmoothingEnabled = false;
-//        ctx.webkitImageSmoothingEnabled = false;
-//        npcRect = npcRect.offset(-this.mapRect.l, -this.mapRect.t);
-//        ctx.drawImage(this.npcCanvas, 0, 0, w, h, npcRect.l, npcRect.t, npcRect.w, npcRect.h);
-//    }
-//    
-//    function drawTail() {
-//        if (vehicle !== 1) return;
-//        if (animation) return;
-//
-//        var tx = x;
-//        var ty = y + 12;
-//        var tw = 16;
-//        var th = 16;
-//        
-//        // get the tail/head tile layout
-//        var tailTiles = new Uint16Array(4);
-//        switch (direction) {
-//
-//            case 0: // up
-//                tailTiles.set([
-//                    0x2F4A, 0x2F4B,
-//                    0x2F5A, 0x2F5B]);
-//                ty += 1;
-//                break;
-//
-//            case 2: // down
-//                tailTiles.set([
-//                    0x2F40, 0x2F41,
-//                    0x2F50, 0x2F51]);
-//                break;
-//
-//            default: return;
-//        }
-//
-//        var tailRect = new Rect(tx, tx + tw, ty, ty + th);
-//        tailRect = tailRect.scale(this.zoom);
-//        if (this.mapRect.intersect(tailRect).isEmpty()) return;
-//
-//        // set up the ppu
-//        var ppu = new GFX.PPU();
-//        ppu.pal = pal;
-//        ppu.width = tw;
-//        ppu.height = th;
-//
-//        // layer 1
-//        ppu.layers[0].format = GFX.TileFormat.snesSpriteTile;
-//        ppu.layers[0].cols = 2;
-//        ppu.layers[0].rows = 2;
-//        ppu.layers[0].z[0] = GFX.Z.snesS0;
-//        ppu.layers[0].z[1] = GFX.Z.snesS1;
-//        ppu.layers[0].z[2] = GFX.Z.snesS2;
-//        ppu.layers[0].z[3] = GFX.Z.snesS3;
-//        ppu.layers[0].gfx = gfx;
-//        ppu.layers[0].tiles = tailTiles;
-//        ppu.layers[0].main = true;
-//
-//        // draw the vehicle
-//        this.npcCanvas.width = tw;
-//        this.npcCanvas.height = th;
-//        var npcContext = this.npcCanvas.getContext('2d');
-//        var imageData = npcContext.createImageData(tw, th);
-//        ppu.renderPPU(imageData.data);
-//        npcContext.putImageData(imageData, 0, 0);
-//
-//        var ctx = this.canvas.getContext('2d');
-//        ctx.imageSmoothingEnabled = false;
-//        ctx.webkitImageSmoothingEnabled = false;
-//        tailRect = tailRect.offset(-this.mapRect.l, -this.mapRect.t);
-//        ctx.drawImage(this.npcCanvas, 0, 0, tw, th, tailRect.l, tailRect.t, tailRect.w, tailRect.h);
-//    }
-//
-//    drawVehicle.call(this);
-//    drawSprite.call(this);
-//    drawTail.call(this);
-//}
+FF5Map.prototype.drawNPC = function(npc) {
+    
+    var x = npc.x.value * 16;
+    var y = npc.y.value * 16;
+    var w = 16;
+    var h = 16;
+
+    var g = npc.graphics.value;
+    if (g === 0xFF) return;
+    var a = npc.animation.value;
+    var direction = npc.direction.value;
+    var p = npc.palette.value << 9;
+
+    // set tile data
+    var f = direction << 1;
+    if (a !== 0 && a !== 5) {
+        var specialFrame = [8, 9, 10, 11, 12, 34, 33, 15]; // from C0/4000
+        f = specialFrame[direction];
+    }
+    var tile1 = this.rom.mapSpriteFrame.item(f).tile1.value;
+    var tile2 = this.rom.mapSpriteFrame.item(f).tile2.value;
+    var tile3 = this.rom.mapSpriteFrame.item(f).tile3.value;
+    var tile4 = this.rom.mapSpriteFrame.item(f).tile4.value;
+    var tiles = [tile1 | p, tile2 | p, tile3 | p, tile4 | p];
+
+    // decode palette
+    var pal = new Uint32Array(0x80);
+    pal.set(this.rom.mapSpritePalettes.item(0).data, 0x00);
+    pal.set(this.rom.mapSpritePalettes.item(1).data, 0x10);
+    pal.set(this.rom.mapSpritePalettes.item(2).data, 0x20);
+    pal.set(this.rom.mapSpritePalettes.item(3).data, 0x30);
+    pal.set(this.rom.mapSpritePalettes.item(0).data, 0x40);
+    pal.set(this.rom.mapSpritePalettes.item(1).data, 0x50);
+    pal.set(this.rom.mapSpritePalettes.item(2).data, 0x60);
+    pal.set(this.rom.mapSpritePalettes.item(3).data, 0x70);
+
+    // get a pointer to the sprite graphics
+    var gfxOffset = 0;
+    var tileCount = 0;
+    if (g < 0x32) {
+        tileCount = 16;
+        gfxOffset = g * 0x0200;
+    } else if (g < 0x4B) {
+        tileCount = 32;
+        gfxOffset = (g - 0x32) * 0x0400 + 0x6400;
+    } else if (g < 0x52) {
+        tileCount = 64;
+        gfxOffset = (g - 0x4B) * 0x0800 + 0xC800;
+    } else if (g < 0x67) {
+        tileCount = 16;
+        gfxOffset = (g - 0x52) * 0x0200 + 0x10000;
+    } else if (g === 0x67) {
+        // hiryuu body
+        p = 2 << 9; // force palette 2
+        tileCount = 64;
+        w = 32;
+        h = 32;
+        tiles = [0x0400, 0x0401, 0x4401, 0x4400, 
+                 0x0410, 0x0411, 0x4411, 0x4410,
+                 0x0402, 0x0403, 0x4403, 0x4402,
+                 0x0412, 0x0413, 0x4413, 0x4412];
+        gfxOffset = 0x12A00;
+        x -= 8;
+        y -= 19;
+        
+    } else if (g === 0x68) {
+        // hiryuu head
+        p = 2 << 9; // force palette 2
+        p |= (direction << 1);
+        tileCount = 32;
+        tiles = [p, p + 1, p + 16, p + 17];
+        gfxOffset = 0x136C0;
+        y -= 15;
+    }
+    gfxOffset = gfxOffset << 1;
+    
+    // decode graphics
+    var gfx = new Uint8Array(tileCount * 0x40);
+    var rawGraphics = this.rom.mapSpriteGraphics.data.subarray(gfxOffset, gfxOffset + tileCount * 0x40);
+    gfx.set(rawGraphics);
+
+    var npcRect = new Rect(x, x + w, y, y + h);
+    npcRect = npcRect.scale(this.zoom);
+    if (this.mapRect.intersect(npcRect).isEmpty()) return;
+
+    // set up the ppu
+    var ppu = new GFX.PPU();
+    ppu.pal = pal;
+    ppu.width = w;
+    ppu.height = h;
+
+    // layer 1
+    ppu.layers[0].format = GFX.TileFormat.snesSpriteTile;
+    ppu.layers[0].cols = w >> 3;
+    ppu.layers[0].rows = h >> 3;
+    ppu.layers[0].z[0] = GFX.Z.snesS0;
+    ppu.layers[0].z[1] = GFX.Z.snesS1;
+    ppu.layers[0].z[2] = GFX.Z.snesS2;
+    ppu.layers[0].z[3] = GFX.Z.snesS3;
+    ppu.layers[0].gfx = gfx;
+    ppu.layers[0].tiles = tiles;
+    ppu.layers[0].main = true;
+
+    // draw the npc
+    this.npcCanvas.width = w;
+    this.npcCanvas.height = h;
+    var npcContext = this.npcCanvas.getContext('2d');
+    var imageData = npcContext.createImageData(w, h);
+    ppu.renderPPU(imageData.data);
+    npcContext.putImageData(imageData, 0, 0);
+
+    var ctx = this.canvas.getContext('2d');
+    ctx.imageSmoothingEnabled = false;
+    ctx.webkitImageSmoothingEnabled = false;
+    npcRect = npcRect.offset(-this.mapRect.l, -this.mapRect.t);
+    ctx.drawImage(this.npcCanvas, 0, 0, w, h, npcRect.l, npcRect.t, npcRect.w, npcRect.h);
+}
 
 // FF5MapTileset
 function FF5MapTileset(rom, map) {
@@ -1534,6 +1254,7 @@ FF5MapLayer.prototype.loadLayout = function(definition) {
     this.tileset = definition.tileset;
     this.w = definition.w;
     this.h = definition.h;
+    this.isTiled = definition.isTiled;
     this.paletteAssignment = definition.paletteAssignment; // world map only
 
     // update tiles for the entire map
@@ -1634,7 +1355,7 @@ FF5MapLayer.prototype.decodeMapLayout = function(x, y, w, h) {
 
     for (row = 0; row < h; row++) {
         for (col = 0; col < w; col++) {
-            tile = layout[l + col] * 2;   
+            tile = layout[l + col] * 2;
             i = t + col * 2;
             if (i > this.tiles.length) return;
             this.tiles[i + 0] = this.tileset[tile + 0x0000] | (this.tileset[tile + 0x0001] << 8);

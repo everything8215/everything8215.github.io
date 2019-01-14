@@ -3,8 +3,8 @@
 +------+
 
 data relocation
-update ff6u-gba and ff6j-gba text
-add battle/event editors for ff5
+update ff6j-gba text
+add battle editor for ff5
 make a better navigator
 fix ff6 character ai special values
 add english string tables for steam version
@@ -14,3 +14,5 @@ patch/asm support
 battle vram viewer
 custom property controls (entrance trigger destination, rendered text)
 grid check boxes (for element/status)
+tile mask layers for map editor
+allow multiple selection in script list

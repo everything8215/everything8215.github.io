@@ -834,6 +834,7 @@ FF6Map.prototype.loadTriggers = function() {
     var i;
     this.triggers = [];
     
+    // event triggers
     var triggers = this.rom.eventTriggers.item(this.m);
     if (triggers) {
         this.observer.startObserving(triggers, this.reloadTriggers);
@@ -852,6 +853,7 @@ FF6Map.prototype.loadTriggers = function() {
         }
     }
     
+    // single-tile entrance triggers
     triggers = this.rom.entranceTriggersSingle.item(this.m);
     if (triggers) {
         this.observer.startObserving(triggers, this.reloadTriggers);
@@ -863,6 +865,7 @@ FF6Map.prototype.loadTriggers = function() {
     // return if a world map
     if (this.m < 3) return;
     
+    // multi-tile entrance triggers
     triggers = this.rom.entranceTriggersMulti.item(this.m);
     if (triggers) {
         this.observer.startObserving(triggers, this.reloadTriggers);
@@ -879,6 +882,7 @@ FF6Map.prototype.loadTriggers = function() {
         }
     }
     
+    // npcs
     triggers = this.rom.npcProperties.item(this.m);
     if (triggers) {
         this.observer.startObserving(triggers, this.reloadTriggers);
@@ -917,6 +921,19 @@ FF6Map.prototype.loadTriggers = function() {
             if (trigger.map.value !== this.m) continue;
             this.observer.startObserving(trigger, this.reloadTriggers);
             this.triggers.push(trigger);
+        }
+    }
+    
+    // map start-up event
+    if (this.rom.isGBA) {
+        var mapProperties = this.rom.mapProperties.item(this.m);
+        var startupEvents = this.rom.mapStartupEventGBA;
+        for (i = 0; i < startupEvents.array.length; i++) {
+            var event = startupEvents.item(i);
+            if (event.map.value !== this.m) continue;
+            mapProperties.assembly.scriptPointerGBA.invalid = false;
+            mapProperties.assembly.scriptPointerGBA.external = "mapStartupEventGBA[" + i.toString() + "].scriptPointer";
+            break;
         }
     }
 }

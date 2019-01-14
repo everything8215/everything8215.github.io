@@ -8,34 +8,6 @@
     "mode": "gba",
     "pointerLength": 4,
     "assembly": {
-        "attackName": {
-            "type": "array",
-            "name": "Attack Names",
-            "range": "0x081C0CD2-0x081C13F0",
-            "array": {
-                "length": 175
-            },
-            "assembly": {
-                "type": "text",
-                "name": "Name",
-                "encoding": "battle"
-            },
-            "pointerTable": {
-                "range": "0x0817955C-0x08179818",
-                "offset": "0x08174454"
-            },
-            "stringTable": {
-                "name": "Attack Name",
-                "length": 256,
-                "default": "<attackName[%i-0x51]>",
-                "string": {
-                    "0x00-0x36": "<spellNames[%i]>",
-                    "0x36-0x51": "<esperNames[%i-0x36]> (<esperAttackName[%i-0x36]>)",
-                    "0x55-0x5D": "<swdTechNames[%i-0x55]>",
-                    "0xFF": "Nothing"
-                }
-            }
-        },
         "attackProperties": {
             "type": "array",
             "name": "Attack Properties",
@@ -59,7 +31,7 @@
                 "default": "Attack %i",
                 "length": 291,
                 "string": {
-                    "0-54": "<spellNames[%i]"
+                    "0-54": "<spellName[%i]"
                 }
             }
         },
@@ -158,49 +130,6 @@
                     }
                 },
                 "length": 6
-            }
-        },
-        "battleCommandName": {
-            "type": "array",
-            "name": "Battle Command Name",
-            "range": "0x0816911C-0x081691DC",
-            "array": {
-                "length": 30,
-                "max": 30
-            },
-            "assembly": {
-                "type": "text",
-                "encoding": "menu"
-            },
-            "pointerTable": {
-                "range": "0x08165A70-0x08165AF0",
-                "offset": "0x081654F8"
-            },
-            "stringTable": {
-                "name": "Battle Command Name",
-                "default": "Battle Command %i",
-                "string": {
-                    "0x00-0x1F": "<battleCommandName[%i]>",
-                    "0x1E": "A.I. Command",
-                    "0x1F": "Random Attack",
-                    "0x20": "Change Battle",
-                    "0x21": "Battle Dialog",
-                    "0x22": "Enemy Roulette",
-                    "0x23": "Battle Event",
-                    "0x24": "Monster Entry/Exit",
-                    "0x25": "Battle Message",
-                    "0x26": "Attack w/o Attacker",
-                    "0x27": "Scan Info",
-                    "0x29": "Status Counter Expired",
-                    "0x2A": "Run",
-                    "0x2B": "Monster Animation",
-                    "0x2C": "Reset Character Action",
-                    "0x2D": "Seize Damage",
-                    "0x2E": "Change Variable",
-                    "0x2F": "Change Switch",
-                    "0x30": "Misc. Effects",
-                    "0xFF": "Nothing"
-                }
             }
         },
         "battleGroupsEvent": {
@@ -960,28 +889,6 @@
                 }
             }
         },
-        "characterNames": {
-            "type": "array",
-            "name": "Character Names",
-            "range": "0x08168FBF-0x0816911C",
-            "array": {
-                "length": 64,
-                "max": 64
-            },
-            "assembly": {
-                "type": "text",
-                "encoding": "menu"
-            },
-            "pointerTable": {
-                "range": "0x08165970-0x08165A70",
-                "offset": "0x081654F8"
-            },
-            "stringTable": {
-                "name": "Character Names",
-                "length": 64,
-                "default": "<characterNames[%i]>"
-            }
-        },
         "characterPalettes": {
             "type": "array",
             "name": "Character Palettes",
@@ -1008,28 +915,6 @@
                     "6": "Rainbow",
                     "7": "Chocobo/Magitek"
                 }
-            }
-        },
-        "dialog": {
-            "type": "array",
-            "name": "Dialog",
-            "range": "0x0817A435-0x081B8797",
-            "array": {
-                "length": 3262
-            },
-            "assembly": {
-                "type": "text",
-                "encoding": "dialog",
-                "multiLine": true
-            },
-            "pointerTable": {
-                "range": "0x08174464-0x0817775C",
-                "offset": "0x08174454"
-            },
-            "stringTable": {
-                "name": "Dialog",
-                "length": 3262,
-                "default": "<dialog[%i]>"
             }
         },
         "entranceTriggersMulti": {
@@ -1218,96 +1103,6 @@
                 "offset": "0x08735A82"
             }
         },
-        "esperAttackDescriptions": {
-            "type": "array",
-            "name": "Esper Attack Descriptions",
-            "range": "0x08170F1E-0x0817143B",
-            "array": {
-                "length": 32
-            },
-            "assembly": {
-                "type": "text",
-                "name": "Attack Desc.",
-                "encoding": "menu"
-            },
-            "pointerTable": {
-                "range": "0x08167298-0x08167318",
-                "offset": "0x081654F8"
-            }
-        },
-        "esperAttackName": {
-            "type": "array",
-            "name": "Esper Attack Name",
-            "range": "0x0816AAB2-0x0816AC0A",
-            "array": {
-                "length": 27
-            },
-            "assembly": {
-                "type": "text",
-                "name": "Attack Name",
-                "encoding": "menu"
-            },
-            "pointerTable": {
-                "range": "0x08166374-0x081663E0",
-                "offset": "0x081654F8"
-            },
-            "stringTable": {
-                "name": "Esper Attack Name",
-                "length": 27,
-                "default": "<esperAttackName[%i]>"
-            }
-        },
-        "esperBonusDescriptions": {
-            "type": "array",
-            "name": "Esper Bonus Descriptions",
-            "range": "0x0816C0AE-0x0816C278",
-            "array": {
-                "length": 17
-            },
-            "assembly": {
-                "type": "text",
-                "name": "Description",
-                "encoding": "menu"
-            },
-            "pointerTable": {
-                "range": "0x08166C2C-0x08166C70",
-                "offset": "0x081654F8"
-            }
-        },
-        "esperBonusNames": {
-            "type": "array",
-            "name": "Esper Bonus Names",
-            "range": "0x081714E3-0x08171584",
-            "array": {
-                "length": 17
-            },
-            "assembly": {
-                "type": "data",
-                "assembly": {
-                    "bonusName": {
-                        "type": "text",
-                        "name": "Name",
-                        "encoding": "menu"
-                    },
-                    "description": {
-                        "type": "assembly",
-                        "external": "esperBonusDescriptions[%i]"
-                    }
-                }
-            },
-            "pointerTable": {
-                "range": "0x08167398-0x081673DC",
-                "offset": "0x081654F8"
-            },
-            "stringTable": {
-                "name": "Esper Bonus Names",
-                "length": 17,
-                "default": "<esperBonusNames[%i].bonusName>",
-                "string": {
-                    "255": "None"
-                }
-            }
-        },
         "esperMenuOrder": {
             "type": "array",
             "name": "Esper Menu Order",
@@ -1318,29 +1113,11 @@
             "assembly": {
                 "type": "property",
                 "name": "Menu Order",
-                "length": 1
-            }
-        },
-        "esperNames": {
-            "type": "array",
-            "name": "Esper Names",
-            "range": "0x0816A2B3-0x0816A394",
-            "array": {
-                "length": 27
-            },
-            "assembly": {
-                "type": "text",
-                "name": "Name",
-                "encoding": "menu"
-            },
-            "pointerTable": {
-                "range": "0x0816604C-0x081660B8",
-                "offset": "0x081654F8"
-            },
-            "stringTable": {
-                "name": "Esper Names",
-                "length": 27,
-                "default": "<esperNames[%i]>"
+                "length": 1,
+                "offset": -1,
+                "max": 31,
+                "stringTable": "esperAttackDescription",
+                "link": "stringTable.esperAttackDescription[%i]"
             }
         },
         "esperProperties": {
@@ -1355,15 +1132,20 @@
                 "assembly": {
                     "esperName": {
                         "type": "assembly",
-                        "external": "esperNames[%i]"
+                        "name": "Name",
+                        "external": "text1[%i+0x02D1]",
+                        "invalid": "this.parent.i >= 27"
+                    },
+                    "esperNameGBA": {
+                        "type": "assembly",
+                        "name": "Name",
+                        "external": "text1[(%i-27)+0x0A5B]",
+                        "invalid": "this.parent.i < 27"
                     },
                     "attackName": {
                         "type": "assembly",
-                        "external": "esperAttackName[%i]"
-                    },
-                    "attackDescription": {
-                        "type": "assembly",
-                        "external": "esperAttackDescriptions[%i]"
+                        "name": "Attack Name",
+                        "external": "stringTable.esperAttackName[%i]"
                     },
                     "menuOrder": {
                         "type": "assembly",
@@ -1373,8 +1155,11 @@
                         "type": "property",
                         "name": "Spell 1",
                         "begin": 1,
-                        "stringTable": "spellNames",
-                        "link": "attackProperties[%i]"
+                        "stringTable": "spellName",
+                        "link": "attackProperties[%i]",
+                        "special": {
+                            "0xFF": "Nothing"
+                        }
                     },
                     "rate1": {
                         "type": "property",
@@ -1386,8 +1171,11 @@
                         "type": "property",
                         "name": "Spell 2",
                         "begin": 3,
-                        "stringTable": "spellNames",
-                        "link": "attackProperties[%i]"
+                        "stringTable": "spellName",
+                        "link": "attackProperties[%i]",
+                        "special": {
+                            "0xFF": "Nothing"
+                        }
                     },
                     "rate2": {
                         "type": "property",
@@ -1399,8 +1187,11 @@
                         "type": "property",
                         "name": "Spell 3",
                         "begin": 5,
-                        "stringTable": "spellNames",
-                        "link": "attackProperties[%i]"
+                        "stringTable": "spellName",
+                        "link": "attackProperties[%i]",
+                        "special": {
+                            "0xFF": "Nothing"
+                        }
                     },
                     "rate3": {
                         "type": "property",
@@ -1412,8 +1203,11 @@
                         "type": "property",
                         "name": "Spell 4",
                         "begin": 7,
-                        "stringTable": "spellNames",
-                        "link": "attackProperties[%i]"
+                        "stringTable": "spellName",
+                        "link": "attackProperties[%i]",
+                        "special": {
+                            "0xFF": "Nothing"
+                        }
                     },
                     "rate4": {
                         "type": "property",
@@ -1425,8 +1219,11 @@
                         "type": "property",
                         "name": "Spell 5",
                         "begin": 9,
-                        "stringTable": "spellNames",
-                        "link": "attackProperties[%i]"
+                        "stringTable": "spellName",
+                        "link": "attackProperties[%i]",
+                        "special": {
+                            "0xFF": "Nothing"
+                        }
                     },
                     "rate5": {
                         "type": "property",
@@ -1438,18 +1235,21 @@
                         "type": "property",
                         "name": "Bonus",
                         "begin": 10,
-                        "stringTable": "esperBonusNames",
-                        "link": "esperBonusNames[%i]"
+                        "stringTable": "esperBonus",
+                        "link": "stringTable.esperBonus[%i]",
+                        "special": {
+                            "0xFF": "Nothing"
+                        }
                     }
                 },
                 "length": 11
             },
-            "stringTable": "esperNames"
+            "stringTable": "esperName"
         },
         "eventScript": {
             "type": "script",
             "name": "Event Script",
-            "range": "0x087A0000-0x087DDA63",
+            "range": "0x087A0000-0x087E8B97",
             "encoding": "event",
             "label": {
                 "No Event": "0x087A0000",
@@ -1558,46 +1358,6 @@
                 "length": 1,
                 "mask": "0x01",
                 "bool": true
-            }
-        },
-        "itemDescriptions": {
-            "type": "array",
-            "name": "Item Descriptions",
-            "range": "0x0816C881-0x0816FFE0",
-            "array": {
-                "length": 271
-            },
-            "assembly": {
-                "type": "text",
-                "encoding": "menu"
-            },
-            "pointerTable": {
-                "range": "0x08166CEC-0x08167128",
-                "offset": "0x081654F8"
-            }
-        },
-        "itemNames": {
-            "type": "array",
-            "name": "Item Names",
-            "range": "0x081691DC-0x0816A03B",
-            "array": {
-                "length": 271
-            },
-            "assembly": {
-                "type": "text",
-                "encoding": "menu"
-            },
-            "pointerTable": {
-                "range": "0x08165AF0-0x08165F2C",
-                "offset": "0x081654F8"
-            },
-            "stringTable": {
-                "name": "Item Names",
-                "length": 271,
-                "default": "<rom.itemNames[%i].formattedText>",
-                "string": {
-                    "0xFF": "Empty"
-                }
             }
         },
         "mapAnimationGraphics": {
@@ -2057,7 +1817,7 @@
                         "name": "Title",
                         "begin": 0,
                         "stringTable": "mapTitle",
-                        "link": "mapTitle[%i]"
+                        "link": "stringTable.mapTitle[%i]"
                     },
                     "song": {
                         "type": "property",
@@ -2068,6 +1828,11 @@
                     "scriptPointer": {
                         "type": "assembly",
                         "external": "mapStartupEvents[%i]"
+                    },
+                    "scriptPointerGBA": {
+                        "type": "assembly",
+                        "external": "mapStartupEventGBA[0].scriptPointer",
+                        "invalid": true
                     },
                     "flags": {
                         "type": "property",
@@ -2963,10 +2728,37 @@
             },
             "assembly": {
                 "type": "property",
-                "name": "Start-Up Event",
+                "name": "Event",
                 "length": 3,
                 "mask": "0xFFFFFF",
                 "script": "eventScript"
+            }
+        },
+        "mapStartupEventGBA": {
+            "type": "array",
+            "name": "Map Startup Event (GBA)",
+            "range": "0x0803123A-0x080313F0",
+            "array": {
+                "length": 512
+            },
+            "assembly": {
+                "type": "data",
+                "length": 6,
+                "assembly": {
+                    "map": {
+                        "type": "property",
+                        "name": "Map",
+                        "begin": 0,
+                        "mask": "0xFFFF"
+                    },
+                    "scriptPointer": {
+                        "type": "property",
+                        "name": "Event (GBA)",
+                        "begin": 2,
+                        "mask": "0xFFFFFF",
+                        "script": "eventScript"
+                    }
+                }
             }
         },
         "mapTileProperties": {
@@ -3089,31 +2881,6 @@
                 "offset": "0x08520000"
             }
         },
-        "mapTitle": {
-            "type": "array",
-            "name": "Map Title",
-            "range": "0x081C183B-0x081C1C29",
-            "array": {
-                "length": 74,
-                "max": 256
-            },
-            "assembly": {
-                "type": "text",
-                "encoding": "battle"
-            },
-            "pointerTable": {
-                "range": "0x081799F0-0x08179B18",
-                "offset": "0x08174454"
-            },
-            "stringTable": {
-                "name": "Map Title",
-                "length": 74,
-                "default": "<mapTitle[%i-1]>",
-                "string": {
-                    "0": "No Title"
-                }
-            }
-        },
         "monsterAttack": {
             "type": "array",
             "name": "Monster Attack",
@@ -3125,28 +2892,6 @@
                 "type": "property",
                 "name": "Attack Animation",
                 "length": 1
-            }
-        },
-        "monsterAttackName": {
-            "type": "array",
-            "name": "Monster Attack Name",
-            "range": "0x081B8797-0x081B9587",
-            "array": {
-                "length": 423
-            },
-            "assembly": {
-                "type": "text",
-                "name": "Attack Name",
-                "encoding": "battle"
-            },
-            "pointerTable": {
-                "range": "0x0817775C-0x08177DF8",
-                "offset": "0x08174454"
-            },
-            "stringTable": {
-                "name": "Monster Attack Name",
-                "length": 423,
-                "default": "<monsterAttackName[%i]>"
             }
         },
         "monsterAttackControl": {
@@ -3262,28 +3007,6 @@
                 }
             }
         },
-        "monsterDialog": {
-            "type": "array",
-            "name": "Monster Dialog",
-            "range": "0x081B9587-0x081BB3B3",
-            "array": {
-                "length": 160
-            },
-            "assembly": {
-                "type": "text",
-                "encoding": "battle",
-                "multiLine": true
-            },
-            "pointerTable": {
-                "range": "0x08177DF8-0x081781F8",
-                "offset": "0x08174454"
-            },
-            "stringTable": {
-                "name": "Monster Dialog",
-                "length": 160,
-                "default": "<monsterDialog[%i]>"
-            }
-        },
         "monsterGraphics": {
             "type": "array",
             "name": "Monster Graphics",
@@ -3388,28 +3111,6 @@
                 }
             }
         },
-        "monsterName": {
-            "type": "array",
-            "name": "Monster Name",
-            "range": "0x0816B02B-0x0816BFD6",
-            "array": {
-                "length": 423
-            },
-            "assembly": {
-                "type": "text",
-                "name": "Name",
-                "encoding": "menu"
-            },
-            "pointerTable": {
-                "range": "0x08166544-0x08166BE0",
-                "offset": "0x081654F8"
-            },
-            "stringTable": {
-                "name": "Monster Name",
-                "length": 423,
-                "default": "<monsterName[%i]>"
-            }
-        },
         "monsterPalette": {
             "type": "array",
             "name": "Monster Palette",
@@ -3436,7 +3137,7 @@
                 "assembly": {
                     "monsterName": {
                         "type": "assembly",
-                        "external": "monsterName[%i]"
+                        "external": "stringTable.monsterName[%i]"
                     },
                     "level": {
                         "type": "property",
@@ -3560,7 +3261,8 @@
                     "category-special": "Special Attack",
                     "attackName": {
                         "type": "assembly",
-                        "external": "monsterAttackName[%i]"
+                        "name": "Attack Name",
+                        "external": "text2[%i+0x0CBE]"
                     },
                     "attackAnimation": {
                         "type": "assembly",
@@ -4356,43 +4058,6 @@
                 }
             }
         },
-        "rareItemDescriptions": {
-            "type": "array",
-            "name": "Rare Item Descriptions",
-            "range": "0x08170BF4-0x08170F1E",
-            "array": {
-                "length": 22
-            },
-            "assembly": {
-                "type": "text",
-                "encoding": "nullTerminated"
-            },
-            "pointerTable": {
-                "range": "0x08167240-0x08167298",
-                "offset": "0x081654F8"
-            }
-        },
-        "rareItemNames": {
-            "type": "array",
-            "name": "Rare Item Names",
-            "range": "0x0816BFD6-0x0816C0AE",
-            "array": {
-                "length": 19
-            },
-            "assembly": {
-                "type": "text",
-                "encoding": "menu"
-            },
-            "stringTable": {
-                "name": "Rare Item Names",
-                "length": 20,
-                "default": "<rareItemNames[%i]>"
-            },
-            "pointerTable": {
-                "range": "0x08166BE0-0x08166C2C",
-                "offset": "0x081654F8"
-            }
-        },
         "shopProperties": {
             "type": "array",
             "name": "Shop Properties",
@@ -4581,83 +4246,50 @@
                 }
             }
         },
-        "spellNames": {
+        "text1": {
             "type": "array",
-            "name": "Spell Names",
-            "range": "0x0816A0D8-0x0816A2B3",
+            "name": "Small Text",
+            "range": "0x08167F20-0x08174454",
+            "isSequential": true,
             "array": {
-                "length": 54
+                "length": 2694
             },
             "assembly": {
                 "type": "text",
-                "encoding": "menu"
+                "encoding": "text1",
+                "multiLine": true
             },
             "pointerTable": {
-                "range": "0x08165F74-0x0816604C",
+                "range": "0x08165508-0x08167F20",
                 "offset": "0x081654F8"
             },
             "stringTable": {
-                "name": "Spell Names",
-                "length": 54,
-                "default": "<spellNames[%i]>",
-                "string": {
-                    "255": "None"
-                }
+                "name": "Small Text",
+                "length": 2694,
+                "default": "<text1[%i]>"
             }
         },
-        "statusNames": {
+        "text2": {
             "type": "array",
-            "name": "Status Names",
-            "range": "0x0817143B-0x081714E3",
+            "name": "Large Text",
+            "range": "0x0817A3EC-0x081C31BB",
+            "isSequential": true,
             "array": {
-                "length": 32
+                "length": 6114
             },
             "assembly": {
                 "type": "text",
-                "encoding": "menu"
+                "encoding": "text2",
+                "multiLine": true
             },
             "pointerTable": {
-                "range": "0x08167318-0x08167398",
-                "offset": "0x081654F8"
-            },
-            "stringTable": {
-                "name": "Status Names",
-                "length": 32,
-                "default": "<statusNames[%i]>",
-                "string": {
-                    "4": "Magitek",
-                    "8": "Sleep",
-                    "9": "HP Leak",
-                    "23": "Dance",
-                    "25": "Interceptor",
-                    "26": "Hidden",
-                    "27": "Chant",
-                    "28": "Morph",
-                    "30": "Freeze",
-                    "31": "Rage"
-                }
-            }
-        },
-        "swdTechNames": {
-            "type": "array",
-            "name": "Bushido Names",
-            "range": "0x081C0A4A-0x081C0A80",
-            "array": {
-                "length": 8
-            },
-            "assembly": {
-                "type": "text",
-                "name": "Name",
-                "encoding": "battle"
-            },
-            "pointerTable": {
-                "range": "0x081793F8-0x08179418",
+                "range": "0x08174464-0x0817A3EC",
                 "offset": "0x08174454"
             },
             "stringTable": {
-                "name": "Bushido Names",
-                "length": 8,
-                "default": "<swdTechNames[%i]>"
+                "name": "Large Text",
+                "length": 6114,
+                "default": "<text2[%i]>"
             }
         },
         "treasureProperties": {
@@ -5433,7 +5065,7 @@
                             "begin": 1,
                             "mask": "0x3FFF",
                             "stringTable": "dialog",
-                            "link": "dialog[%i]"
+                            "link": "text2[%i]"
                         },
                         "dialogType": {
                             "type": "property",
@@ -5503,7 +5135,7 @@
                             "name": "Esper",
                             "begin": 1,
                             "offset": -54,
-                            "stringTable": "esperNames",
+                            "stringTable": "esperName",
                             "link": "esperProperties[%i]"
                         }
                     }
@@ -5559,7 +5191,7 @@
                     }
                 },
                 "inventorySwdTech": {
-                    "name": "Unlock All SwdTechs",
+                    "name": "Unlock All Bushido",
                     "category": "Inventory",
                     "opcode": "0x8F"
                 },
@@ -7506,7 +7138,7 @@
                             "type": "property",
                             "name": "Dialog",
                             "begin": 1,
-                            "link": "monsterDialog[%i]",
+                            "link": "text2[%i+0x0E65]",
                             "stringTable": "monsterDialog"
                         }
                     }
@@ -9127,122 +8759,6 @@
         }
     },
     "charTable": {
-        "battle": {
-            "name": "Battle",
-            "char": {
-                "0x00": " ",
-                "0x01": "e",
-                "0x02": "t",
-                "0x03": "o",
-                "0x04": "a",
-                "0x05": "n",
-                "0x06": "r",
-                "0x07": "i",
-                "0x08": "s",
-                "0x09": "h",
-                "0x0A": ".",
-                "0x0B": "l",
-                "0x0C": "u",
-                "0x0D": "d",
-                "0x0E": "\\0",
-                "0x0F": "m",
-                "0x10": "g",
-                "0x11": "y",
-                "0x12": "w",
-                "0x13": "c",
-                "0x14": "f",
-                "0x15": "p",
-                "0x16": "!",
-                "0x17": "b",
-                "0x18": "'",
-                "0x19": ":",
-                "0x1A": "k",
-                "0x1B": "I",
-                "0x1C": "\\A",
-                "0x1D": "v",
-                "0x1E": ",",
-                "0x1F": "T",
-                "0x20": "?",
-                "0x21": "W",
-                "0x22": "S",
-                "0x23": "A",
-                "0x24": "H",
-                "0x25": "M",
-                "0x26": "G",
-                "0x27": "O",
-                "0x28": "D",
-                "0x29": "E",
-                "0x2A": "B",
-                "0x2B": "Y",
-                "0x2C": "R",
-                "0x2D": "N",
-                "0x2E": "C",
-                "0x2F": "L",
-                "0x30": "K",
-                "0x31": "\\triangle",
-                "0x32": "F",
-                "0x33": "0",
-                "0x34": "-",
-                "0x35": "P",
-                "0x36": "U",
-                "0x37": "j",
-                "0x38": "z",
-                "0x39": "\"",
-                "0x3A": "x",
-                "0x3B": "*",
-                "0x3C": "(",
-                "0x3D": ")",
-                "0x3E": "V",
-                "0x3F": "q",
-                "0x40": "1",
-                "0x41": "J",
-                "0x42": "5",
-                "0x43": "Q",
-                "0x44": "Z",
-                "0x45": "2",
-                "0x46": "3",
-                "0x47": "4",
-                "0x48": "8",
-                "0x49": "6",
-                "0x4A": "7",
-                "0x4B": "X",
-                "0x4C": "9",
-                "0x4D": "=",
-                "0x4E": "/",
-                "0x4F": "%",
-                "0x50": "&",
-                "0x51": "~",
-                "0x52": "+",
-                "0x53": "\\t",
-                "0x54": "\\x54",
-                "0x66": "\\holy",
-                "0x67": "\\lightning",
-                "0x68": "\\wind",
-                "0x69": "\\earth",
-                "0x6A": "\\ice",
-                "0x6B": "\\fire",
-                "0x6C": "\\water",
-                "0x6D": "\\poison",
-                "0x6E": "♬",
-                "0x6F": "ñ",
-                "0x70": "阿",
-                "0x71": "愛",
-                "0x72": "暗",
-                "0x73": "\\x73",
-                "0x74": "円",
-                "0x75": "炎",
-                "0x76": "焔",
-                "0x77": "燕",
-                "0x78": "\\x78",
-                "0x79": "王",
-                "0x7A": "\\x7A",
-                "0x7B": "\\x7B",
-                "0x7C": "火",
-                "0x7D": "香",
-                "0x7E": "華",
-                "0x7F": "\\x7F"
-            }
-        },
         "buttons": {
             "name": "Buttons",
             "char": {
@@ -9348,7 +8864,42 @@
                 "0xC2B5": "\\effect"
             }
         },
-        "menu": {
+        "menuEscapeSequences": {
+            "name": "Menu Escape Sequences",
+            "char": {
+                "0xC387": "\\item",
+                "0xC388": "\\character"
+            }
+        },
+        "portraits": {
+            "name": "Character Portraits",
+            "char": {
+                "0xC490": "\\portrait00",
+                "0xC491": "\\portrait01",
+                "0xC492": "\\portrait02",
+                "0xC493": "\\portrait03",
+                "0xC494": "\\portrait04",
+                "0xC495": "\\portrait05",
+                "0xC496": "\\portrait06",
+                "0xC497": "\\portrait07",
+                "0xC498": "\\portrait08",
+                "0xC499": "\\portrait09",
+                "0xC49A": "\\portrait10",
+                "0xC49B": "\\portrait11",
+                "0xC49C": "\\portrait12",
+                "0xC49D": "\\portrait13",
+                "0xC49E": "\\portrait14",
+                "0xC49F": "\\portrait15",
+                "0xC4A0": "\\portrait16",
+                "0xC4A1": "\\portrait17",
+                "0xC4A2": "\\portrait18",
+                "0xC4A3": "\\portrait19",
+                "0xC4A4": "\\portrait20",
+                "0xC4A5": "\\portrait21",
+                "0xC4A6": "\\portrait22"
+            }
+        },
+        "text1": {
             "name": "Menu",
             "char": {
                 "0x00": " ",
@@ -9469,73 +9020,156 @@
                 "0xC4": "\\xC4["
             }
         },
-        "menuEscapeSequences": {
-            "name": "Menu Escape Sequences",
+        "text2": {
+            "name": "Battle",
             "char": {
-                "0xC387": "\\item",
-                "0xC388": "\\character"
-            }
-        },
-        "portraits": {
-            "name": "Character Portraits",
-            "char": {
-                "0xC490": "\\portrait00",
-                "0xC491": "\\portrait01",
-                "0xC492": "\\portrait02",
-                "0xC493": "\\portrait03",
-                "0xC494": "\\portrait04",
-                "0xC495": "\\portrait05",
-                "0xC496": "\\portrait06",
-                "0xC497": "\\portrait07",
-                "0xC498": "\\portrait08",
-                "0xC499": "\\portrait09",
-                "0xC49A": "\\portrait10",
-                "0xC49B": "\\portrait11",
-                "0xC49C": "\\portrait12",
-                "0xC49D": "\\portrait13",
-                "0xC49E": "\\portrait14",
-                "0xC49F": "\\portrait15",
-                "0xC4A0": "\\portrait16",
-                "0xC4A1": "\\portrait17",
-                "0xC4A2": "\\portrait18",
-                "0xC4A3": "\\portrait19",
-                "0xC4A4": "\\portrait20",
-                "0xC4A5": "\\portrait21",
-                "0xC4A6": "\\portrait22"
+                "0x00": " ",
+                "0x01": "e",
+                "0x02": "t",
+                "0x03": "o",
+                "0x04": "a",
+                "0x05": "n",
+                "0x06": "r",
+                "0x07": "i",
+                "0x08": "s",
+                "0x09": "h",
+                "0x0A": ".",
+                "0x0B": "l",
+                "0x0C": "u",
+                "0x0D": "d",
+                "0x0E": "\\0",
+                "0x0F": "m",
+                "0x10": "g",
+                "0x11": "y",
+                "0x12": "w",
+                "0x13": "c",
+                "0x14": "f",
+                "0x15": "p",
+                "0x16": "!",
+                "0x17": "b",
+                "0x18": "'",
+                "0x19": ":",
+                "0x1A": "k",
+                "0x1B": "I",
+                "0x1C": "\\A",
+                "0x1D": "v",
+                "0x1E": ",",
+                "0x1F": "T",
+                "0x20": "?",
+                "0x21": "W",
+                "0x22": "S",
+                "0x23": "A",
+                "0x24": "H",
+                "0x25": "M",
+                "0x26": "G",
+                "0x27": "O",
+                "0x28": "D",
+                "0x29": "E",
+                "0x2A": "B",
+                "0x2B": "Y",
+                "0x2C": "R",
+                "0x2D": "N",
+                "0x2E": "C",
+                "0x2F": "L",
+                "0x30": "K",
+                "0x31": "\\triangle",
+                "0x32": "F",
+                "0x33": "0",
+                "0x34": "-",
+                "0x35": "P",
+                "0x36": "U",
+                "0x37": "j",
+                "0x38": "z",
+                "0x39": "\"",
+                "0x3A": "x",
+                "0x3B": "*",
+                "0x3C": "(",
+                "0x3D": ")",
+                "0x3E": "V",
+                "0x3F": "q",
+                "0x40": "1",
+                "0x41": "J",
+                "0x42": "5",
+                "0x43": "Q",
+                "0x44": "Z",
+                "0x45": "2",
+                "0x46": "3",
+                "0x47": "4",
+                "0x48": "8",
+                "0x49": "6",
+                "0x4A": "7",
+                "0x4B": "X",
+                "0x4C": "9",
+                "0x4D": "=",
+                "0x4E": "/",
+                "0x4F": "%",
+                "0x50": "&",
+                "0x51": "~",
+                "0x52": "+",
+                "0x53": "\\t",
+                "0x54": "\\x54",
+                "0x66": "\\holy",
+                "0x67": "\\lightning",
+                "0x68": "\\wind",
+                "0x69": "\\earth",
+                "0x6A": "\\ice",
+                "0x6B": "\\fire",
+                "0x6C": "\\water",
+                "0x6D": "\\poison",
+                "0x6E": "♬",
+                "0x6F": "ñ",
+                "0x70": "阿",
+                "0x71": "愛",
+                "0x72": "暗",
+                "0x73": "\\x73",
+                "0x74": "円",
+                "0x75": "炎",
+                "0x76": "焔",
+                "0x77": "燕",
+                "0x78": "\\x78",
+                "0x79": "王",
+                "0x7A": "\\x7A",
+                "0x7B": "\\x7B",
+                "0x7C": "火",
+                "0x7D": "香",
+                "0x7E": "華",
+                "0x7F": "\\x7F"
             }
         }
     },
     "textEncoding": {
-        "battle": {
-            "name": "Battle",
+        "text1": {
+            "name": "Text 1",
             "charTable": [
-                "battle",
-                "characters",
-                "dialogEscapeSequences",
+                "text1",
+                "item",
+                "menuEscapeSequences",
                 "buttons"
             ]
         },
-        "dialog": {
-            "name": "Dialog",
+        "text2": {
+            "name": "Text 2",
             "charTable": [
-                "battle",
+                "text2",
                 "portraits",
                 "characters",
                 "dialogEscapeSequences",
                 "buttons"
             ]
-        },
-        "menu": {
-            "name": "Menu",
-            "charTable": [
-                "menu",
-                "item",
-                "menuEscapeSequences",
-                "buttons"
-            ]
         }
     },
     "stringTable": {
+        "attackName": {
+            "name": "Attack Name",
+            "string": {
+                "0x00-0x39": "<stringTable.spellName[%i]>",
+                "0x51-0x55": "<text2[%i+0x13ED]>",
+                "0x55-0x5D": "<stringTable.bushidoName[%i-0x55]>",
+                "0x5D-0xFF": "<text2[%i+0x13ED]>",
+                "0xFF": "Nothing",
+                "0x100-0x123": "<stringTable.esperAttackName[%i-0x100]>"
+            }
+        },
         "battleBackground": {
             "name": "Battle Backgrounds",
             "default": "Backrgound %i",
@@ -9598,6 +9232,32 @@
                 "55": "Tentacles",
                 "63": "Map Default",
                 "255": "No Background Override"
+            }
+        },
+        "battleCommandName": {
+            "name": "Battle Command Name",
+            "default": "Battle Command %i",
+            "string": {
+                "0x00-0x1F": "<text2[%i+0x15CD]>",
+                "0x1E": "A.I. Command",
+                "0x1F": "Random Attack",
+                "0x20": "Change Battle",
+                "0x21": "Battle Dialog",
+                "0x22": "Enemy Roulette",
+                "0x23": "Battle Event",
+                "0x24": "Monster Entry/Exit",
+                "0x25": "Battle Message",
+                "0x26": "Attack w/o Attacker",
+                "0x27": "Scan Info",
+                "0x29": "Status Counter Expired",
+                "0x2A": "Run",
+                "0x2B": "Monster Animation",
+                "0x2C": "Reset Character Action",
+                "0x2D": "Seize Damage",
+                "0x2E": "Change Variable",
+                "0x2F": "Change Switch",
+                "0x30": "Misc. Effects",
+                "0xFF": "Nothing"
             }
         },
         "battleSwitch": {
@@ -9709,6 +9369,16 @@
                 "12": "Cursed Shield Counter"
             }
         },
+        "characterNames": {
+            "name": "Character Names",
+            "length": 64,
+            "default": "<text1[%i+0x011A]>"
+        },
+        "dialog": {
+            "name": "Dialog",
+            "length": 3262,
+            "default": "<text2[%i]>"
+        },
         "directions": {
             "name": "Facing Directions",
             "string": {
@@ -9731,12 +9401,93 @@
                 "7": "Water"
             }
         },
+        "esperAttackName": {
+            "name": "Esper Attack Name",
+            "length": 35,
+            "default": {
+                "value": "<text1[%i+0x039B]>",
+                "language": {
+                    "text1": {
+                        "name": "Small Text",
+                        "link": "text1[%i+0x039B]"
+                    },
+                    "text2": {
+                        "name": "Large Text",
+                        "link": "text2[%i+0x14ED]"
+                    }
+                }
+            },
+            "string": {
+                "27-35": {
+                    "value": "<text1[(%i-27)+0x03BE]>",
+                    "language": {
+                        "text1": {
+                            "name": "Small Text",
+                            "link": "text1[(%i-27)+0x03BE]"
+                        },
+                        "text2": {
+                            "name": "Large Text",
+                            "link": "text2[(%i-27)+0x1510]"
+                        }
+                    }
+                }
+            }
+        },
+        "esperAttackDescription": {
+            "name": "Esper Attack Description",
+            "length": 31,
+            "default": {
+                "value": "<text1[%i+0x0764]>",
+                "language": {
+                    "text1": {
+                        "name": "Text",
+                        "link": "text1[%i+0x0764]"
+                    }
+                }
+            },
+            "string": {
+                "27-31": {
+                    "value": "<text1[(%i-27)+0x0A62]>",
+                    "language": {
+                        "text1": {
+                            "name": "Text",
+                            "link": "text1[(%i-27)+0x0A62]"
+                        }
+                    }
+                }
+            }
+        },
+        "esperBonus": {
+            "name": "Esper Bonus",
+            "length": 17,
+            "default": {
+                "value": "<text1[%i+0x07A4]>",
+                "language": {
+                    "text1": {
+                        "name": "Name",
+                        "link": "text1[%i+0x07A4]"
+                    },
+                    "text2": {
+                        "name": "Description",
+                        "link": "text1[%i+0x05C9]"
+                    }
+                }
+            }
+        },
+        "esperName": {
+            "name": "Esper Name",
+            "length": 31,
+            "default": "<text1[%i+0x02D1]>",
+            "string": {
+                "27-31": "<text1[(%i-27)+0x0A5B]>"
+            }
+        },
         "eventCharacters": {
             "name": "Event Characters",
             "length": 16,
             "default": "Character %i",
             "string": {
-                "0-14": "<characterNames[%i]>"
+                "0-14": "<stringTable.characterNames[%i]>"
             }
         },
         "eventObjects": {
@@ -9755,11 +9506,32 @@
         },
         "eventSwitches": {
             "name": "Event Switches",
-            "length": "0x0700",
-            "default": "Switch %i",
             "string": {
                 "0x0000-0x0300": "<stringTable.mapSwitches[%i]>",
-                "0x0300-0x0700": "<stringTable.npcSwitches[%i-0x0300]>"
+                "0x0300-0x0700": "<stringTable.npcSwitches[%i-0x0300]>",
+                "0x4000-0x4300": "<stringTable.eventSwitchGBA[%i-0x4000]>"
+            }
+        },
+        "eventSwitchGBA": {
+            "name": "Event Switch (GBA)",
+            "length": "0x0300",
+            "default": "Switch %i (GBA)",
+            "string": {
+                "0": "Ice Dragon Defeated",
+                "1": "Earth Dragon Defeated",
+                "2": "Red Dragon Defeated",
+                "3": "Storm Dragon Defeated",
+                "4": "Blue Dragon Defeated",
+                "5": "Holy Dragon Defeated",
+                "6": "Skull Dragon Defeated",
+                "7": "Gold Dragon Defeated",
+                "8": "Kaiser Dragon Defeated",
+                "93": "Obtained Diabolos Magicite",
+                "97": "Gigantaur Defeated",
+                "100": "Leviathan Defeated",
+                "107": "Soul Shrine is Accessible",
+                "115": "Gilgamesh Defeated",
+                "116": "Obtained Gilgemesh Magicite"
             }
         },
         "eventVariables": {
@@ -9771,6 +9543,23 @@
                 "1": "Narshe security checkpoint variable",
                 "6": "Number of dragons left",
                 "7": "Cid's health/Pieces of coral"
+            }
+        },
+        "itemNames": {
+            "name": "Item Names",
+            "length": 271,
+            "default": {
+                "value": "<text1[%i+0x017A]>",
+                "language": {
+                    "text1": {
+                        "name": "Small Text",
+                        "link": "text1[%i+0x017A]"
+                    },
+                    "text2": {
+                        "name": "Large Text",
+                        "link": "text2[%i+0x11CE]"
+                    }
+                }
             }
         },
         "mapSpriteActions": {
@@ -10218,20 +10007,20 @@
                 "365": "Jidoor / Bought Golem",
                 "366": "Cave in the Veldt / Switch",
                 "367": "Learned Airship Controls",
-                "416": "<characterNames[0]>",
-                "417": "<characterNames[1]>",
-                "418": "<characterNames[2]>",
-                "419": "<characterNames[3]>",
-                "420": "<characterNames[4]>",
-                "421": "<characterNames[5]>",
-                "422": "<characterNames[6]>",
-                "423": "<characterNames[7]>",
-                "424": "<characterNames[8]>",
-                "425": "<characterNames[9]>",
-                "426": "<characterNames[10]>",
-                "427": "<characterNames[11]>",
-                "428": "<characterNames[12]>",
-                "429": "<characterNames[13]>",
+                "416": "<stringTable.characterNames[0]>",
+                "417": "<stringTable.characterNames[1]>",
+                "418": "<stringTable.characterNames[2]>",
+                "419": "<stringTable.characterNames[3]>",
+                "420": "<stringTable.characterNames[4]>",
+                "421": "<stringTable.characterNames[5]>",
+                "422": "<stringTable.characterNames[6]>",
+                "423": "<stringTable.characterNames[7]>",
+                "424": "<stringTable.characterNames[8]>",
+                "425": "<stringTable.characterNames[9]>",
+                "426": "<stringTable.characterNames[10]>",
+                "427": "<stringTable.characterNames[11]>",
+                "428": "<stringTable.characterNames[12]>",
+                "429": "<stringTable.characterNames[13]>",
                 "430": "Character 14",
                 "431": "Character 15",
                 "432": "Party is facing up",
@@ -10254,26 +10043,28 @@
                 "461": "Disable Random Battles",
                 "462": "Enable Party Switching",
                 "463": "Map Event is Running",
-                "464": "<rareItemNames[0]>",
-                "465": "<rareItemNames[1]>",
-                "466": "<rareItemDescriptions[2]>",
-                "467": "<rareItemDescriptions[3]>",
-                "468": "<rareItemDescriptions[4]>",
-                "469": "<rareItemDescriptions[5]>",
-                "470": "<rareItemNames[6]>",
-                "471": "<rareItemNames[7]>",
-                "472": "<rareItemNames[8]>",
-                "473": "<rareItemNames[9]>",
-                "474": "<rareItemNames[10]>",
-                "475": "<rareItemNames[11]>",
-                "476": "<rareItemNames[12]>",
-                "477": "<rareItemNames[13]>",
-                "478": "<rareItemNames[14]>",
-                "479": "<rareItemNames[15]>",
-                "480": "<rareItemNames[16]>",
-                "481": "<rareItemNames[17]>",
-                "482": "<rareItemNames[18]>",
-                "483": "<rareItemNames[19]>",
+                "464": "<stringTable.rareItem[0]>",
+                "465": "<stringTable.rareItem[1]>",
+                "466": "<stringTable.rareItem[2]>",
+                "467": "<stringTable.rareItem[3]>",
+                "468": "<stringTable.rareItem[4]>",
+                "469": "<stringTable.rareItem[5]>",
+                "470": "<stringTable.rareItem[6]>",
+                "471": "<stringTable.rareItem[7]>",
+                "472": "<stringTable.rareItem[8]>",
+                "473": "<stringTable.rareItem[9]>",
+                "474": "<stringTable.rareItem[10]>",
+                "475": "<stringTable.rareItem[11]>",
+                "476": "<stringTable.rareItem[12]>",
+                "477": "<stringTable.rareItem[13]>",
+                "478": "<stringTable.rareItem[14]>",
+                "479": "<stringTable.rareItem[15]>",
+                "480": "<stringTable.rareItem[16]>",
+                "481": "<stringTable.rareItem[17]>",
+                "482": "<stringTable.rareItem[18]>",
+                "483": "<stringTable.rareItem[19]>",
+                "484": "<stringTable.rareItem[20]>",
+                "485": "<stringTable.rareItem[21]>",
                 "496": "Local Control 1",
                 "497": "Local Control 2",
                 "498": "Local Control 3",
@@ -10407,6 +10198,14 @@
                 "767": "At least one saved game"
             }
         },
+        "mapTitle": {
+            "name": "Map Title",
+            "length": 74,
+            "default": "<text2[%i+0x1562]>",
+            "string": {
+                "0": "No Title"
+            }
+        },
         "monsterAnimation": {
             "name": "Monster Animation",
             "string": {
@@ -10423,6 +10222,33 @@
                 "11": "Atma Glow (long)",
                 "12": "Atma Glow (short)",
                 "13": "Kefka Death"
+            }
+        },
+        "monsterAttackName": {
+            "name": "Monster Attack Name",
+            "length": 423,
+            "default": "<text2[%i+0x0CBE]>"
+        },
+        "monsterDialog": {
+            "name": "Monster Dialog",
+            "length": 256,
+            "default": "<text2[%i+0x0E65]>"
+        },
+        "monsterName": {
+            "name": "Monster Name",
+            "length": 423,
+            "default": {
+                "value": "<text1[%i+0x040F]>",
+                "language": {
+                    "text1": {
+                        "name": "Small Text",
+                        "link": "text1[%i+0x040F]"
+                    },
+                    "text2": {
+                        "name": "Large Text",
+                        "link": "text2[%i+0x1626]"
+                    }
+                }
             }
         },
         "npcSwitches": {
@@ -10822,6 +10648,51 @@
                 "965": "Narshe: Locked Weapon Shop"
             }
         },
+        "rareItem": {
+            "name": "Rare Item",
+            "length": 22,
+            "string": {
+                "0-2": {
+                    "value": "<text1[%i+0x05B6]>",
+                    "language": {
+                        "text1": {
+                            "name": "Name",
+                            "link": "text1[%i+0x05B6]"
+                        },
+                        "text2": {
+                            "name": "Description",
+                            "link": "text1[%i+0x074E]"
+                        }
+                    }
+                },
+                "2-6": {
+                    "value": "<text1[%i+0x074E]>",
+                    "language": {
+                        "text1": {
+                            "name": "Name",
+                            "link": "text1[0x05B8]"
+                        },
+                        "text2": {
+                            "name": "Description",
+                            "link": "text1[%i+0x074E]"
+                        }
+                    }
+                },
+                "6-22": {
+                    "value": "<text1[%i+0x05B3]>",
+                    "language": {
+                        "text1": {
+                            "name": "Name",
+                            "link": "text1[%i+0x05B3]"
+                        },
+                        "text2": {
+                            "name": "Description",
+                            "link": "text1[%i+0x074E]"
+                        }
+                    }
+                }
+            }
+        },
         "song": {
             "name": "Songs",
             "default": "Song %i",
@@ -10914,6 +10785,55 @@
                 "0xFF": "Continue Previous Song"
             }
         },
+        "spellName": {
+            "name": "Spell Name",
+            "length": 57,
+            "default": {
+                "value": "<text1[%i+0x029B]>",
+                "language": {
+                    "text1": {
+                        "name": "Small Text",
+                        "link": "text1[%i+0x029B]"
+                    },
+                    "text2": {
+                        "name": "Large Text",
+                        "link": "text2[%i+0x13ED]"
+                    }
+                }
+            },
+            "string": {
+                "54-57": {
+                    "value": "<text1[(%i-54)+0x0A58]>",
+                    "language": {
+                        "text1": {
+                            "name": "Small Text",
+                            "link": "text1[(%i-27)+0x0A58]"
+                        },
+                        "text2": {
+                            "name": "Large Text",
+                            "link": "text2[%i+0x13ED]"
+                        }
+                    }
+                }
+            }
+        },
+        "statusNames": {
+            "name": "Status Names",
+            "length": 32,
+            "default": "<text1[%i+0x0784]>",
+            "string": {
+                "4": "Magitek",
+                "8": "Sleep",
+                "9": "HP Leak",
+                "23": "Dance",
+                "25": "Interceptor",
+                "26": "Hidden",
+                "27": "Chant",
+                "28": "Morph",
+                "30": "Freeze",
+                "31": "Rage"
+            }
+        },
         "statusNamesReversed": {
             "name": "Status Names (Reverse Order)",
             "string": {
@@ -10921,6 +10841,27 @@
                 "8-16": "<stringTable.statusNames[23-%i]>",
                 "16-24": "<stringTable.statusNames[39-%i]>",
                 "24-32": "<stringTable.statusNames[55-%i]>"
+            }
+        },
+        "bushidoName": {
+            "name": "Bushido Name",
+            "length": 8,
+            "default": {
+                "value": "<text1[%i+0x0A76]>",
+                "language": {
+                    "text1": {
+                        "name": "Small Text",
+                        "link": "text1[%i+0x0A76]"
+                    },
+                    "text2": {
+                        "name": "Large Text",
+                        "link": "text2[%i+0x13E5]"
+                    },
+                    "description": {
+                        "name": "Description",
+                        "link": "text1[%i+0x073E]"
+                    }
+                }
             }
         },
         "treasureSwitches": {

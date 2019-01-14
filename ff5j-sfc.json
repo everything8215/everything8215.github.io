@@ -487,18 +487,38 @@
             "assembly": {
                 "type": "data",
                 "editor": "FF5Map",
+                "length": 26,
                 "assembly": {
+                    "id": {
+                        "type": "property",
+                        "name": "Map ID",
+                        "begin": 0,
+                        "mask": "0xFFFF"
+                    },
+                    "title": {
+                        "type": "property",
+                        "name": "Title",
+                        "begin": 2
+                    },
+                    "song": {
+                        "type": "property",
+                        "name": "Song",
+                        "begin": 25
+                    },
+                    "unknown4_6": {
+                        "type": "property",
+                        "name": "Unknown 4.6",
+                        "begin": 4,
+                        "mask": "0x40",
+                        "bool": true
+                    },
                     "colorMath": {
                         "type": "property",
                         "name": "Color Math",
                         "begin": 4,
                         "mask": "0x3F"
                     },
-                    "tileProperties": {
-                        "type": "property",
-                        "name": "Tile Properties",
-                        "begin": 5
-                    },
+                    "category-graphics": "Graphics",
                     "tileset": {
                         "type": "property",
                         "name": "Tileset",
@@ -522,37 +542,159 @@
                         "begin": 10,
                         "mask": "0x03F0"
                     },
-                    "gfxLayer3": {
+                    "animation": {
                         "type": "property",
-                        "name": "Layer 3 Graphics",
-                        "begin": 11,
-                        "mask": "0xFC"
+                        "name": "Map Animation",
+                        "begin": 4,
+                        "mask": "0x80",
+                        "bool": true
                     },
+                    "category-layer1": "Layer 1",
                     "layout1": {
                         "type": "property",
-                        "name": "Layer 1 Layout",
+                        "name": "Layout",
                         "begin": 12,
                         "mask": "0x03FF"
                     },
+                    "tileProperties": {
+                        "type": "property",
+                        "name": "Tile Properties",
+                        "begin": 5
+                    },
+                    "category-layer2": "Layer 2",
                     "layout2": {
                         "type": "property",
-                        "name": "Layer 2 Layout",
+                        "name": "Layout",
                         "begin": 13,
                         "mask": "0x0FFC"
                     },
+                    "vOffsetLayer2": {
+                        "type": "property",
+                        "name": "V-Offset",
+                        "begin": 18
+                    },
+                    "hOffsetLayer2": {
+                        "type": "property",
+                        "name": "H-Offset",
+                        "begin": 19
+                    },
+                    "vParallaxLayer2": {
+                        "type": "property",
+                        "name": "V-Parallax",
+                        "begin": 20,
+                        "mask": "0x0C",
+                        "stringTable": "mapProperties.vParallaxLayer3"
+                    },
+                    "hParallaxLayer2": {
+                        "type": "property",
+                        "name": "H-Parallax",
+                        "begin": 20,
+                        "mask": "0x03",
+                        "stringTable": "mapProperties.vParallaxLayer3"
+                    },
+                    "category-layer3": "Layer 3",
                     "layout3": {
                         "type": "property",
-                        "name": "Layer 3 Layout",
+                        "name": "Layout",
                         "begin": 14,
                         "mask": "0x3FF0"
                     },
+                    "gfxLayer3": {
+                        "type": "property",
+                        "name": "Graphics",
+                        "begin": 11,
+                        "mask": "0xFC"
+                    },
+                    "vOffsetLayer3": {
+                        "type": "property",
+                        "name": "V-Offset",
+                        "begin": 16
+                    },
+                    "hOffsetLayer3": {
+                        "type": "property",
+                        "name": "H-Offset",
+                        "begin": 17
+                    },
+                    "vParallaxLayer3": {
+                        "type": "property",
+                        "name": "V-Parallax",
+                        "begin": 20,
+                        "mask": "0xC0",
+                        "stringTable": {
+                            "hideIndex": true,
+                            "string": {
+                                "0": "Normal (1×)",
+                                "1": "Half (½×)",
+                                "2": "Double (2×)",
+                                "3": "Normal (1×)"
+                            }
+                        }
+                    },
+                    "hParallaxLayer3": {
+                        "type": "property",
+                        "name": "H-Parallax",
+                        "begin": 20,
+                        "mask": "0x30",
+                        "stringTable": "mapProperties.vParallaxLayer3"
+                    },
+                    "category-tiled": "Tiled Background",
+                    "tiledLayer3": {
+                        "type": "property",
+                        "name": "Tiled Layer 3",
+                        "begin": 21,
+                        "mask": "0x80",
+                        "bool": true
+                    },
+                    "tiledLayer2": {
+                        "type": "property",
+                        "name": "Tiled Layer 2",
+                        "begin": 21,
+                        "mask": "0x40",
+                        "bool": true
+                    },
+                    "hAutoScroll": {
+                        "type": "property",
+                        "name": "H-Scroll Speed",
+                        "begin": 21,
+                        "mask": "0x38",
+                        "stringTable": {
+                            "hideIndex": true,
+                            "string": {
+                                "0": "None",
+                                "1": "-4",
+                                "2": "-2",
+                                "3": "-1",
+                                "5": "+1",
+                                "6": "+2",
+                                "7": "+4"
+                            }
+                        }
+                    },
+                    "vAutoScroll": {
+                        "type": "property",
+                        "name": "V-Scroll Speed",
+                        "begin": 21,
+                        "mask": "0x07",
+                        "stringTable": "mapProperties.hAutoScroll"
+                    },
+                    "category-palette": "Palette",
                     "palette": {
                         "type": "property",
                         "name": "Palette",
                         "begin": 22
+                    },
+                    "paletteAnimation": {
+                        "type": "property",
+                        "name": "Animation",
+                        "begin": 23
+                    },
+                    "category-battle": "Battle",
+                    "battleBG": {
+                        "type": "property",
+                        "name": "Battle BG",
+                        "begin": 24
                     }
-                },
-                "length": 26
+                }
             },
             "stringTable": {
                 "default": "Map %i",
@@ -1073,6 +1215,62 @@
                 }
             }
         },
+        "mapSpriteFrame": {
+            "type": "array",
+            "name": "Map Sprite Frame",
+            "range": "0xC02A97-0xC02F95",
+            "array": {
+                "length": 79
+            },
+            "assembly": {
+                "type": "data",
+                "length": 16,
+                "assembly": {
+                    "tile1": {
+                        "type": "property",
+                        "name": "Tile 1",
+                        "begin": 0,
+                        "mask": "0xFFFF"
+                    },
+                    "tile2": {
+                        "type": "property",
+                        "name": "Tile 2",
+                        "begin": 4,
+                        "mask": "0xFFFF"
+                    },
+                    "tile3": {
+                        "type": "property",
+                        "name": "Tile 3",
+                        "begin": 8,
+                        "mask": "0xFFFF"
+                    },
+                    "tile4": {
+                        "type": "property",
+                        "name": "Tile 4",
+                        "begin": 12,
+                        "mask": "0xFFFF"
+                    }
+                }
+            }
+        },
+        "mapSpriteGraphics": {
+            "type": "assembly",
+            "name": "Map Sprite Graphics",
+            "range": "0xDA0000-0xDB3A00",
+            "format": "snes4bpp"
+        },
+        "mapSpritePalettes": {
+            "type": "array",
+            "name": "Map Sprite Palettes",
+            "range": "0xDFFC00-0xDFFC80",
+            "array": {
+                "length": 4
+            },
+            "assembly": {
+                "length": 32,
+                "format": "bgr555"
+            }
+        },
         "mapTilesets": {
             "type": "array",
             "name": "Map Tilesets",
@@ -1119,7 +1317,20 @@
                 "type": "array",
                 "assembly": {
                     "type": "data",
+                    "length": 7,
                     "assembly": {
+                        "event": {
+                            "type": "property",
+                            "name": "Event",
+                            "begin": 0,
+                            "mask": "0x3FFF"
+                        },
+                        "unknownEvent": {
+                            "type": "property",
+                            "name": "Unknown 1",
+                            "begin": 1,
+                            "mask": "0xC0"
+                        },
                         "graphics": {
                             "type": "property",
                             "name": "Graphics",
@@ -1132,6 +1343,12 @@
                             "mask": "0x3F",
                             "hidden": true
                         },
+                        "unknownX": {
+                            "type": "property",
+                            "name": "Unknown 3.6",
+                            "begin": 3,
+                            "mask": "0xC0"
+                        },
                         "y": {
                             "type": "property",
                             "name": "Y Position",
@@ -1139,28 +1356,108 @@
                             "mask": "0x3F",
                             "hidden": true
                         },
+                        "unknownY": {
+                            "type": "property",
+                            "name": "Unknown 4.6",
+                            "begin": 4,
+                            "mask": "0xC0"
+                        },
+                        "animationSpeed": {
+                            "type": "property",
+                            "name": "Animation Speed",
+                            "begin": 5,
+                            "mask": "0x03",
+                            "stringTable": {
+                                "string": {
+                                    "0": "Normal",
+                                    "1": "Slow",
+                                    "2": "Slowest",
+                                    "3": "Fast"
+                                }
+                            }
+                        },
+                        "unknown2": {
+                            "type": "property",
+                            "name": "Unknown 5.2",
+                            "begin": 5,
+                            "mask": "0x04",
+                            "bool": true
+                        },
+                        "unknown3": {
+                            "type": "property",
+                            "name": "Unknown 5.3",
+                            "begin": 5,
+                            "mask": "0x08",
+                            "bool": true
+                        },
+                        "animation": {
+                            "type": "property",
+                            "name": "Animation",
+                            "begin": 5,
+                            "mask": "0x70",
+                            "stringTable": {
+                                "string": {
+                                    "0": "Walking",
+                                    "1": "1 Frame",
+                                    "2": "2 Frames",
+                                    "3": "4 Frames",
+                                    "4": "8 Frames",
+                                    "5": "Chocobo/Animal"
+                                }
+                            }
+                        },
+                        "reaction": {
+                            "type": "property",
+                            "name": "Reaction",
+                            "begin": 5,
+                            "mask": "0x80",
+                            "stringTable": {
+                                "hideIndex": true,
+                                "string": {
+                                    "0": "None",
+                                    "1": "Face Party"
+                                }
+                            }
+                        },
                         "palette": {
                             "type": "property",
                             "name": "Palette",
                             "begin": 6,
                             "mask": "0x07"
                         },
+                        "layerPriorityTop": {
+                            "type": "property",
+                            "name": "Layer Priority (Top)",
+                            "begin": 6,
+                            "mask": "0x08",
+                            "bool": true
+                        },
+                        "layerPriorityBottom": {
+                            "type": "property",
+                            "name": "Layer Priority (Bottom)",
+                            "begin": 6,
+                            "mask": "0x10",
+                            "bool": true
+                        },
                         "direction": {
                             "type": "property",
                             "name": "Direction",
                             "begin": 6,
-                            "mask": "0x60",
+                            "mask": "0xE0",
                             "stringTable": {
                                 "string": {
                                     "0": "Up",
                                     "1": "Right",
                                     "2": "Down",
-                                    "3": "Left"
+                                    "3": "Left",
+                                    "4": "Special 1",
+                                    "5": "Special 2",
+                                    "6": "Special 3",
+                                    "7": "Special 4"
                                 }
                             }
                         }
-                    },
-                    "length": 7
+                    }
                 }
             },
             "pointerTable": {
