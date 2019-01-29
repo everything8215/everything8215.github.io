@@ -28,7 +28,38 @@
                     "0x55-0x5D": "<swdTechNames[%i-0x55]>",
                     "0xFF": "Nothing"
                 }
-            }
+            },
+            "reference": [
+                {
+                    "begin": "0xC15FDE",
+                    "mask": "0xFFFFFF"
+                }, {
+                    "begin": "0xC1650B",
+                    "mask": "0xFFFFFF",
+                    "offset": -500
+                }, {
+                    "begin": "0xC15FDE",
+                    "mask": "0xFFFFFF"
+                }, {
+                    "begin": "0xC165C0",
+                    "mask": "0xFFFFFF"
+                }, {
+                    "begin": "0xC16671",
+                    "mask": "0xFFFFFF",
+                    "offset": -580
+                }, {
+                    "begin": "0xC16AEE",
+                    "mask": "0xFFFFFF"
+                }, {
+                    "begin": "0xC3526C",
+                    "mask": "0xFFFF",
+                    "offset": -580
+                }, {
+                    "begin": "0xC35271",
+                    "mask": "0xFF",
+                    "bankByte": true
+                }
+            ]
         },
         "attackProperties": {
             "type": "array",
@@ -62,8 +93,7 @@
             },
             "pointerTable": {
                 "range": "0xE71650-0xE71731",
-                "pointerLength": 3,
-                "offset": 0
+                "pointerLength": 3
             }
         },
         "battleBackgroundLayout": {
@@ -999,18 +1029,51 @@
             },
             "pointerTable": {
                 "range": "0xCCE602-0xCD0000",
-                "offset": "0xCD0000"
+                "offset": "0xCD0000",
+                "reference": [
+                    {
+                        "begin": "0xC07FCA",
+                        "mask": "0xFFFFFF"
+                    }
+                ]
             },
             "stringTable": {
                 "length": 3084,
                 "default": "<dialog[%i]>"
-            }
+            },
+            "reference": [
+                {
+                    "begin": "0xC07F72",
+                    "mask": "0xFF",
+                    "bankByte": true
+                }, {
+                    "begin": "0xC07FC0",
+                    "mask": "0xFF",
+                    "bankByte": true
+                }, {
+                    "target": "dialogBankIncrement",
+                    "mask": "0xFFFF",
+                    "eval": "this.parent.array.find(function(d) { return d.range.begin >= 0x10000; }).i"
+                }
+            ]
+        },
+        "dialogBankIncrement": {
+            "type": "assembly",
+            "name": "Dialog Bank Increment",
+            "range": "0xCCE600-0xCCE602",
+            "reference": [
+                {
+                    "begin": "0xC07FD2",
+                    "mask": "0xFFFFFF"
+                }
+            ]
         },
         "entranceTriggersMulti": {
             "type": "array",
             "name": "Multi-Tile Entrance Triggers",
             "range": "0xEDF882-0xEDFCAA",
             "isSequential": true,
+            "endPointer": true,
             "array": {
                 "length": 415
             },
@@ -1102,8 +1165,103 @@
             },
             "pointerTable": {
                 "range": "0xEDF480-0xEDF882",
-                "offset": "0xEDF480"
-            }
+                "offset": "0xEDF480",
+                "reference": [
+                    {
+                        "begin": "0xC018EB",
+                        "mask": "0xFFFFFF",
+                        "offset": -2
+                    }, {
+                        "begin": "0xC018F1",
+                        "mask": "0xFFFFFF"
+                    }
+                ]
+            },
+            "reference": [
+                {
+                    "begin": "0xC01904",
+                    "mask": "0xFFFFFF",
+                    "pointerOffset": true,
+                    "offset": -2
+                }, {
+                    "begin": "0xC0190C",
+                    "mask": "0xFFFFFF",
+                    "offset": -1,
+                    "pointerOffset": true
+                }, {
+                    "begin": "0xC01917",
+                    "mask": "0xFFFFFF",
+                    "pointerOffset": true
+                }, {
+                    "begin": "0xC0191F",
+                    "mask": "0xFFFFFF",
+                    "pointerOffset": true
+                }, {
+                    "begin": "0xC01930",
+                    "mask": "0xFFFFFF",
+                    "pointerOffset": true
+                }, {
+                    "begin": "0xC0193B",
+                    "mask": "0xFFFFFF",
+                    "offset": -1,
+                    "pointerOffset": true
+                }, {
+                    "begin": "0xC01943",
+                    "mask": "0xFFFFFF",
+                    "offset": -1,
+                    "pointerOffset": true
+                }, {
+                    "begin": "0xC01964",
+                    "mask": "0xFFFFFF",
+                    "offset": -3,
+                    "pointerOffset": true
+                }, {
+                    "begin": "0xC01970",
+                    "mask": "0xFFFFFF",
+                    "offset": -3,
+                    "pointerOffset": true
+                }, {
+                    "begin": "0xC0197C",
+                    "mask": "0xFFFFFF",
+                    "offset": -3,
+                    "pointerOffset": true
+                }, {
+                    "begin": "0xC0198B",
+                    "mask": "0xFFFFFF",
+                    "offset": -5,
+                    "pointerOffset": true
+                }, {
+                    "begin": "0xC019A0",
+                    "mask": "0xFFFFFF",
+                    "offset": -5,
+                    "pointerOffset": true
+                }, {
+                    "begin": "0xC019AA",
+                    "mask": "0xFFFFFF",
+                    "offset": -4,
+                    "pointerOffset": true
+                }, {
+                    "begin": "0xC019B7",
+                    "mask": "0xFFFFFF",
+                    "offset": -4,
+                    "pointerOffset": true
+                }, {
+                    "begin": "0xC019C5",
+                    "mask": "0xFFFFFF",
+                    "offset": -4,
+                    "pointerOffset": true
+                }, {
+                    "begin": "0xC019E6",
+                    "mask": "0xFFFFFF",
+                    "offset": -3,
+                    "pointerOffset": true
+                }, {
+                    "begin": "0xC01A15",
+                    "mask": "0xFFFFFF",
+                    "offset": -4,
+                    "pointerOffset": true
+                }
+            ]
         },
         "entranceTriggersSingle": {
             "type": "array",
@@ -1187,8 +1345,101 @@
             },
             "pointerTable": {
                 "range": "0xDFBB00-0xDFBF02",
-                "offset": "0xDFBB00"
-            }
+                "offset": "0xDFBB00",
+                "reference": [
+                    {
+                        "begin": "0xC01A7E",
+                        "mask": "0xFFFFFF",
+                        "offset": -2
+                    }, {
+                        "begin": "0xC01A84",
+                        "mask": "0xFFFFFF"
+                    }, {
+                        "begin": "0xEE20EA",
+                        "mask": "0xFFFFFF"
+                    }, {
+                        "begin": "0xEE20F0",
+                        "mask": "0xFFFFFF",
+                        "offset": -2
+                    }
+                ]
+            },
+            "reference": [
+                {
+                    "begin": "0xC01A90",
+                    "mask": "0xFFFFFF",
+                    "pointerOffset": true
+                }, {
+                    "begin": "0xC01AAB",
+                    "mask": "0xFFFFFF",
+                    "offset": -2,
+                    "pointerOffset": true
+                }, {
+                    "begin": "0xC01AB7",
+                    "mask": "0xFFFFFF",
+                    "offset": -2,
+                    "pointerOffset": true
+                }, {
+                    "begin": "0xC01AC3",
+                    "mask": "0xFFFFFF",
+                    "offset": -2,
+                    "pointerOffset": true
+                }, {
+                    "begin": "0xC01AD2",
+                    "mask": "0xFFFFFF",
+                    "offset": -4,
+                    "pointerOffset": true
+                }, {
+                    "begin": "0xC01AE7",
+                    "mask": "0xFFFFFF",
+                    "offset": -4,
+                    "pointerOffset": true
+                }, {
+                    "begin": "0xC01AF1",
+                    "mask": "0xFFFFFF",
+                    "offset": -3,
+                    "pointerOffset": true
+                }, {
+                    "begin": "0xC01AFE",
+                    "mask": "0xFFFFFF",
+                    "offset": -3,
+                    "pointerOffset": true
+                }, {
+                    "begin": "0xC01B0C",
+                    "mask": "0xFFFFFF",
+                    "offset": -3,
+                    "pointerOffset": true
+                }, {
+                    "begin": "0xC01B2D",
+                    "mask": "0xFFFFFF",
+                    "offset": -2,
+                    "pointerOffset": true
+                }, {
+                    "begin": "0xC01B5F",
+                    "mask": "0xFFFFFF",
+                    "offset": -3,
+                    "pointerOffset": true
+                }, {
+                    "begin": "0xEE20FF",
+                    "mask": "0xFFFFFF",
+                    "pointerOffset": true
+                }, {
+                    "begin": "0xEE2107",
+                    "mask": "0xFFFFFF",
+                    "offset": -1,
+                    "pointerOffset": true
+                }, {
+                    "begin": "0xEE2111",
+                    "mask": "0xFFFFFF",
+                    "offset": -2,
+                    "pointerOffset": true
+                }, {
+                    "begin": "0xEE213D",
+                    "mask": "0xFFFFFF",
+                    "offset": -4,
+                    "pointerOffset": true
+                }
+            ]
         },
         "esperAttackDescriptions": {
             "type": "array",
@@ -1462,6 +1713,7 @@
             "name": "Event Triggers",
             "range": "0xC40342-0xC419FE",
             "isSequential": true,
+            "endPointer": true,
             "array": {
                 "length": 415
             },
@@ -1495,8 +1747,66 @@
             },
             "pointerTable": {
                 "range": "0xC40000-0xC40342",
-                "offset": "0xC40000"
-            }
+                "offset": "0xC40000",
+                "reference": [
+                    {
+                        "begin": "0xC0BCAF",
+                        "mask": "0xFFFFFF",
+                        "offset": -2
+                    }, {
+                        "begin": "0xC0BCB5",
+                        "mask": "0xFFFFFF"
+                    }, {
+                        "begin": "0xEE2177",
+                        "mask": "0xFFFFFF"
+                    }, {
+                        "begin": "0xEE217D",
+                        "mask": "0xFFFFFF",
+                        "offset": -2
+                    }
+                ]
+            },
+            "reference": [
+                {
+                    "begin": "0xC0BCBE",
+                    "mask": "0xFFFFFF",
+                    "pointerOffset": true
+                }, {
+                    "begin": "0xC0BCD4",
+                    "mask": "0xFFFFFF",
+                    "offset": -2,
+                    "pointerOffset": true
+                }, {
+                    "begin": "0xC0BCEE",
+                    "mask": "0xFFFFFF",
+                    "offset": -4,
+                    "pointerOffset": true
+                }, {
+                    "begin": "0xEE218C",
+                    "mask": "0xFFFFFF",
+                    "pointerOffset": true
+                }, {
+                    "begin": "0xEE2194",
+                    "mask": "0xFFFFFF",
+                    "offset": -1,
+                    "pointerOffset": true
+                }, {
+                    "begin": "0xEE219C",
+                    "mask": "0xFFFFFF",
+                    "offset": -2,
+                    "pointerOffset": true
+                }, {
+                    "begin": "0xEE21A5",
+                    "mask": "0xFFFFFF",
+                    "offset": -3,
+                    "pointerOffset": true
+                }, {
+                    "begin": "0xEE21AD",
+                    "mask": "0xFFFFFF",
+                    "offset": -4,
+                    "pointerOffset": true
+                }
+            ]
         },
         "initialRage": {
             "type": "array",
@@ -1896,7 +2206,8 @@
         "mapLayouts": {
             "type": "array",
             "name": "Map Layouts",
-            "range": "0xD9D1B0-0xDE0000",
+            "range": "0xD9D1B0-0xDDFFF2",
+            "endPointer": true,
             "array": {
                 "length": 350
             },
@@ -1904,10 +2215,58 @@
                 "format": "ff6-lzss"
             },
             "pointerTable": {
-                "range": "0xD9CD90-0xD9D1B0",
+                "range": "0xD9CD90-0xD9D1AD",
                 "pointerLength": 3,
-                "offset": "0xD9D1B0"
-            }
+                "offset": "0xD9D1B0",
+                "reference": [
+                    {
+                        "begin": "0xC02893",
+                        "mask": "0xFFFFFF"
+                    }, {
+                        "begin": "0xC028A0",
+                        "mask": "0xFFFFFF",
+                        "offset": -2
+                    }, {
+                        "begin": "0xC028E7",
+                        "mask": "0xFFFFFF"
+                    }, {
+                        "begin": "0xC028F4",
+                        "mask": "0xFFFFFF",
+                        "offset": -2
+                    }, {
+                        "begin": "0xC0293D",
+                        "mask": "0xFFFFFF"
+                    }, {
+                        "begin": "0xC0294A",
+                        "mask": "0xFFFFFF",
+                        "offset": -2
+                    }
+                ]
+            },
+            "reference": [
+                {
+                    "begin": "0xC02898",
+                    "mask": "0xFFFF"
+                }, {
+                    "begin": "0xC028A4",
+                    "mask": "0xFF",
+                    "bankByte": true
+                }, {
+                    "begin": "0xC028EC",
+                    "mask": "0xFFFF"
+                }, {
+                    "begin": "0xC028F8",
+                    "mask": "0xFF",
+                    "bankByte": true
+                }, {
+                    "begin": "0xC02942",
+                    "mask": "0xFFFF"
+                }, {
+                    "begin": "0xC0294E",
+                    "mask": "0xFF",
+                    "bankByte": true
+                }
+            ]
         },
         "mapPalettes": {
             "type": "array",
@@ -2768,7 +3127,7 @@
                 "type": "assembly",
                 "format": "snes4bpp"
             },
-            "pointerTable": "mapSpritePointers"
+            "pointerTable": "mapSpritePointers[%i].pointer"
         },
         "mapSpriteLayouts": {
             "type": "array",
@@ -2956,8 +3315,24 @@
             },
             "pointerTable": {
                 "range": "0xD9CD10-0xD9CD66",
-                "offset": "0xD9A800"
+                "offset": "0xD9A800",
+                "reference": [
+                    {
+                        "begin": "0xC01CD6",
+                        "mask": "0xFFFFFF"
+                    }
+                ]
             },
+            "reference": [
+                {
+                    "begin": "0xC01CDA",
+                    "mask": "0xFFFF"
+                }, {
+                    "begin": "0xC01CE2",
+                    "mask": "0xFF",
+                    "bankByte": true
+                }
+            ],
             "stringTable": {
                 "length": 42,
                 "default": "Tile Properties %i",
@@ -3038,7 +3413,13 @@
             },
             "pointerTable": {
                 "range": "0xE68400-0xE68492",
-                "offset": "0xCEF100"
+                "offset": "0xCEF100",
+                "reference": [
+                    {
+                        "begin": "0xC08009",
+                        "mask": "0xFFFFFF"
+                    }
+                ]
             },
             "stringTable": {
                 "length": 73,
@@ -3046,7 +3427,17 @@
                 "string": {
                     "0": "No Title"
                 }
-            }
+            },
+                "reference": [
+                    {
+                        "begin": "0xC07FFE",
+                        "mask": "0xFF",
+                        "bankByte": true
+                    }, {
+                        "begin": "0xC0800D",
+                        "mask": "0xFFFF"
+                    }
+                ]
         },
         "monsterAttack": {
             "type": "array",
@@ -3219,8 +3610,7 @@
             "array": {
                 "length": 416
             },
-            "pointerTable": "monsterGraphicsProperties",
-            "pointerKey": "graphicsPointer"
+            "pointerTable": "monsterGraphicsProperties[%i].graphicsPointer"
         },
         "monsterGraphicsMap": {
             "type": "data",
@@ -3726,11 +4116,27 @@
             "type": "script",
             "name": "Monster Script",
             "range": "0xCF8700-0xCFC049",
-            "encoding": "monster"
+            "encoding": "monster",
+            "reference": [
+                {
+                    "begin": "0xC21A45",
+                    "mask": "0xFFFFFF"
+                }, {
+                    "begin": "0xC21A65",
+                    "mask": "0xFFFFFF",
+                    "offset": -2
+                }, {
+                    "begin": "0xC21A6C",
+                    "mask": "0xFFFFFF"
+                }, {
+                    "begin": "0xC22D89",
+                    "mask": "0xFFFFFF"
+                }
+            ]
         },
         "monsterScriptPointers": {
             "type": "array",
-            "name": "Monster Script Pointers",
+            "name": "Script Pointer",
             "range": "0xCF8400-0xCF8700",
             "array": {
                 "length": 384
@@ -3741,7 +4147,13 @@
                 "mask": "0xFFFF",
                 "length": 2,
                 "script": "monsterScript"
-            }
+            },
+            "reference": [
+                {
+                    "begin": "0xC22D79",
+                    "mask": "0xFFFFFF"
+                }
+            ]
         },
         "monsterVerticalOffset": {
             "type": "array",
@@ -3761,6 +4173,7 @@
             "name": "NPC Properties",
             "range": "0xC41D52-0xC46A6B",
             "isSequential": true,
+            "endPointer": true,
             "array": {
                 "length": 415
             },
@@ -3768,6 +4181,7 @@
                 "type": "array",
                 "assembly": {
                     "type": "data",
+                    "length": 9,
                     "assembly": {
                         "scriptPointer": {
                             "type": "property",
@@ -4032,14 +4446,120 @@
                             },
                             "disabled": "this.parent.animation.value === 0"
                         }
-                    },
-                    "length": 9
+                    }
                 }
             },
             "pointerTable": {
                 "range": "0xC41A10-0xC41D52",
-                "offset": "0xC41A10"
-            }
+                "offset": "0xC41A10",
+                "reference": [
+                    {
+                        "begin": "0xC052BD",
+                        "mask": "0xFFFFFF",
+                        "offset": -2
+                    }, {
+                        "begin": "0xC052C3",
+                        "mask": "0xFFFFFF"
+                    }
+                ]
+            },
+            "reference": [
+                {
+                    "begin": "0xC052D5",
+                    "mask": "0xFFFFFF",
+                    "pointerOffset": true
+                }, {
+                    "begin": "0xC052DC",
+                    "mask": "0xFFFFFF",
+                    "offset": -1,
+                    "pointerOffset": true
+                }, {
+                    "begin": "0xC052E3",
+                    "mask": "0xFFFFFF",
+                    "offset": -2,
+                    "pointerOffset": true
+                }, {
+                    "begin": "0xC052EC",
+                    "mask": "0xFFFFFF",
+                    "offset": -2,
+                    "pointerOffset": true
+                }, {
+                    "begin": "0xC052F9",
+                    "mask": "0xFFFFFF",
+                    "offset": -2,
+                    "pointerOffset": true
+                }, {
+                    "begin": "0xC05306",
+                    "mask": "0xFFFFFF",
+                    "offset": -2,
+                    "pointerOffset": true
+                }, {
+                    "begin": "0xC05322",
+                    "mask": "0xFFFFFF",
+                    "offset": -4,
+                    "pointerOffset": true
+                }, {
+                    "begin": "0xC0532D",
+                    "mask": "0xFFFFFF",
+                    "offset": -4,
+                    "pointerOffset": true
+                }, {
+                    "begin": "0xC0533B",
+                    "mask": "0xFFFFFF",
+                    "offset": -5,
+                    "pointerOffset": true
+                }, {
+                    "begin": "0xC0535B",
+                    "mask": "0xFFFFFF",
+                    "offset": -5,
+                    "pointerOffset": true
+                }, {
+                    "begin": "0xC0536A",
+                    "mask": "0xFFFFFF",
+                    "offset": -6,
+                    "pointerOffset": true
+                }, {
+                    "begin": "0xC05374",
+                    "mask": "0xFFFFFF",
+                    "offset": -7,
+                    "pointerOffset": true
+                }, {
+                    "begin": "0xC05380",
+                    "mask": "0xFFFFFF",
+                    "offset": -7,
+                    "pointerOffset": true
+                }, {
+                    "begin": "0xC0538B",
+                    "mask": "0xFFFFFF",
+                    "offset": -7,
+                    "pointerOffset": true
+                }, {
+                    "begin": "0xC05398",
+                    "mask": "0xFFFFFF",
+                    "offset": -8,
+                    "pointerOffset": true
+                }, {
+                    "begin": "0xC053AE",
+                    "mask": "0xFFFFFF",
+                    "offset": -8,
+                    "pointerOffset": true
+                }, {
+                    "begin": "0xC053BD",
+                    "mask": "0xFFFFFF",
+                    "offset": -8,
+                    "pointerOffset": true
+                }, {
+                    "begin": "0xC053D1",
+                    "mask": "0xFFFFFF",
+                    "offset": -8,
+                    "pointerOffset": true
+                }, {
+                    "begin": "0xC053E4",
+                    "mask": "0xFFFFFF",
+                    "offset": -8,
+                    "pointerOffset": true
+                }
+            ]
         },
         "rareItemDescriptions": {
             "type": "array",
@@ -4289,6 +4809,20 @@
                     "name": "Expansion RAM Size",
                     "begin": 13
                 },
+                "romSize": {
+                    "type": "property",
+                    "name": "ROM Size",
+                    "begin": 39,
+                    "stringTable": {
+                        "string": {
+                            "9": "3-4 MBit",
+                            "10": "5-8 MBit",
+                            "11": "9-16 MBit",
+                            "12": "17-32 MBit",
+                            "13": "33-64 MBit"
+                        }
+                    }
+                },
                 "checksumInverse": {
                     "type": "property",
                     "name": "Checksum Inverse",
@@ -4374,6 +4908,7 @@
             "name": "Treasure Properties",
             "range": "0xED8634-0xED8BCA",
             "isSequential": true,
+            "endPointer": true,
             "array": {
                 "length": 415
             },
@@ -4381,6 +4916,7 @@
                 "type": "array",
                 "assembly": {
                     "type": "data",
+                    "length": 5,
                     "assembly": {
                         "x": {
                             "type": "property",
@@ -4437,14 +4973,63 @@
                             "multiplier": 100,
                             "invalid": "this.parent.treasureType.value !== 8"
                         }
-                    },
-                    "length": 5
+                    }
                 }
             },
             "pointerTable": {
                 "range": "0xED82F4-0xED8634",
-                "offset": "0xED8634"
-            }
+                "offset": "0xED8634",
+                "reference": [
+                    {
+                        "begin": "0xC015DE",
+                        "mask": "0xFFFFFF",
+                        "offset": -2
+                    }, {
+                        "begin": "0xC015E4",
+                        "mask": "0xFFFFFF"
+                    }, {
+                        "begin": "0xC04BDB",
+                        "mask": "0xFFFFFF",
+                        "offset": -2
+                    }, {
+                        "begin": "0xC04BE1",
+                        "mask": "0xFFFFFF"
+                    }
+                ]
+            },
+            "reference": [
+                {
+                    "begin": "0xC015F2",
+                    "mask": "0xFFFFFF"
+                }, {
+                    "begin": "0xC015F8",
+                    "mask": "0xFFFFFF",
+                    "offset": -1
+                }, {
+                    "begin": "0xC015FF",
+                    "mask": "0xFFFFFF",
+                    "offset": -2
+                }, {
+                    "begin": "0xC0160A",
+                    "mask": "0xFFFFFF",
+                    "offset": -2
+                }, {
+                    "begin": "0xC04BED",
+                    "mask": "0xFFFFFF"
+                }, {
+                    "begin": "0xC04BF5",
+                    "mask": "0xFFFFFF",
+                    "offset": -1
+                }, {
+                    "begin": "0xC04C09",
+                    "mask": "0xFFFFFF",
+                    "offset": -4
+                }, {
+                    "begin": "0xC04C0F",
+                    "mask": "0xFFFFFF",
+                    "offset": -2
+                }
+            ]
         },
         "vehicleGraphics": {
             "type": "assembly",
@@ -4554,19 +5139,37 @@
             "type": "assembly",
             "name": "World of Balance Layout",
             "range": "0xEED434-0xEF114F",
-            "format": "ff6-lzss"
+            "format": "ff6-lzss",
+            "reference": [
+                {
+                    "begin": "0xEEB20F",
+                    "mask": "0xFFFFFF"
+                }
+            ]
         },
         "worldLayout2": {
             "type": "assembly",
             "name": "World of Ruin Layout",
             "range": "0xEF6A56-0xEF9D17",
-            "format": "ff6-lzss"
+            "format": "ff6-lzss",
+            "reference": [
+                {
+                    "begin": "0xEEB224",
+                    "mask": "0xFFFFFF"
+                }
+            ]
         },
         "worldLayout3": {
             "type": "assembly",
             "name": "Serpent Trench Layout",
             "range": "0xEF9D17-0xEFB631",
-            "format": "ff6-lzss"
+            "format": "ff6-lzss",
+            "reference": [
+                {
+                    "begin": "0xEEB227",
+                    "mask": "0xFFFFFF"
+                }
+            ]
         },
         "worldGraphics1": {
             "type": "data",
@@ -4600,18 +5203,18 @@
             "assembly": {
                 "tileset": {
                     "type": "assembly",
-                    "name": "World of Balance Tileset",
+                    "name": "World of Ruin Tileset",
                     "range": "0x0000-0x0400"
                 },
                 "graphics": {
                     "type": "assembly",
-                    "name": "World of Balance Graphics",
+                    "name": "World of Ruin Graphics",
                     "range": "0x0400-0x2400",
                     "format": "linear4bpp"
                 },
                 "paletteAssignment": {
                     "type": "assembly",
-                    "name": "World of Balance Palette Assignment",
+                    "name": "World of Ruin Palette Assignment",
                     "range": "0x2400-0x2480"
                 }
             }
@@ -4624,18 +5227,18 @@
             "assembly": {
                 "tileset": {
                     "type": "assembly",
-                    "name": "World of Balance Tileset",
+                    "name": "Serpent Trench Tileset",
                     "range": "0x0000-0x0400"
                 },
                 "graphics": {
                     "type": "assembly",
-                    "name": "World of Balance Graphics",
+                    "name": "Serpent Trench Graphics",
                     "range": "0x0400-0x2400",
                     "format": "linear4bpp"
                 },
                 "paletteAssignment": {
                     "type": "assembly",
-                    "name": "World of Balance Palette Assignment",
+                    "name": "Serpent Trench Palette Assignment",
                     "range": "0x2400-0x2480"
                 }
             }
@@ -10604,7 +11207,7 @@
         },
         "treasureSwitches": {
             "name": "Treasure Switches",
-            "length": 384,
+            "length": 512,
             "default": "Treasure %i",
             "string": {
                 "1": "Narshe: Outside Arvis' Back Door",
@@ -10883,5 +11486,53 @@
                 "2": "Chocobo"
             }
         }
-    }
+    },
+    "freeSpace": [
+        "0xC0D613-0xC0DFA0",
+        "0xC0FF18-0xC0FFB0",
+        "0xC1FFE5-0xC20000",
+        "0xC26469-0xC26800",
+        "0xC28A60-0xC28A70",
+        "0xC2A65A-0xC2A800",
+        "0xC2FAA4-0xC2FC6D",
+        "0xC3F091-0xC40000",
+        "0xC419FE-0xC41A10",
+        "0xC46A6B-0xC46AC0",
+        "0xC4A4C0-0xC4BA00",
+        "0xC53C4E-0xC53C5E",
+        "0xC9FCEC-0xC9FE00",
+        "0xCCE5EE-0xCCE600",
+        "0xCEEFBB-0xCEF100",
+        "0xCEF463-0xCEF600",
+        "0xCEFEDF-0xCF0000",
+        "0xCFC049-0xCFC050",
+        "0xCFF442-0xCFF450",
+        "0xCFFB29-0xCFFC00",
+        "0xCFFCE0-0xCFFD00",
+        "0xCFFFBE-0xD00000",
+        "0xD0CF4A-0xD0D000",
+        "0xD0FC7A-0xD0FD00",
+        "0xD1E989-0xD1EAD7",
+        "0xD1F751-0xD1F7A0",
+        "0xD1F9A0-0xD1F9AB",
+        "0xD1F9D0-0xD1FA00",
+        "0xD2B224-0xD2B300",
+        "0xD4C998-0xD4CA00",
+        "0xD4F646-0xD50000",
+        "0xD8EE47-0xD8F000",
+        "0xD9CC4C-0xD9CD10",
+        "0xD9CD66-0xD9CD90",
+        "0xD9D1AD-0xD9D1B0",
+        "0xDDFFF2-0xDE0000",
+        "0xDFD978-0xDFDA00",
+        "0xE5FEC6-0xE60000",
+        "0xE68492-0xE68780",
+        "0xED7787-0xED77A0",
+        "0xED7A61-0xED7A70",
+        "0xED8BCA-0xED8E5B",
+        "0xEDFCAA-0xEDFE00",
+        "0xEDFFA7-0xEDFFD0",
+        "0xEEAF01-0xEEB200",
+        "0xEFFBC8-0xEFFEF0"
+    ]
 }

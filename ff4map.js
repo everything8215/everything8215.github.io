@@ -266,6 +266,10 @@ FF4Map.prototype.mouseMove = function(e) {
     var col = ((e.offsetX / this.zoom + this.ppu.layers[this.l].x) % this.ppu.width) >> 4;
     var row = ((e.offsetY / this.zoom + this.ppu.layers[this.l].y) % this.ppu.height) >> 4;
 
+    // update the displayed coordinates
+    var coordinates = document.getElementById("coordinates");
+    coordinates.innerHTML = "(" + col + ", " + row + ")";
+
     // return if the cursor position didn't change
     if (this.selection[1] === col && this.selection[2] === row) return;
 

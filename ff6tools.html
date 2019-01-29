@@ -17,6 +17,7 @@
         <script type="text/javascript" src="ff4battle.js"></script>
         <script type="text/javascript" src="ff4script.js"></script>
         <script type="text/javascript" src="ff5map.js"></script>
+        <script type="text/javascript" src="ff5battle.js"></script>
         <script type="text/javascript" src="ff5script.js"></script>
         <script type="text/javascript" src="ff6map.js"></script>
         <script type="text/javascript" src="ff6battle.js"></script>
@@ -48,7 +49,7 @@
 //
 //                    loadBuiltInDefinition();
 //                };
-//                localROM.open("get", "roms\\ff5u.sfc");
+//                localROM.open("get", "roms\\ff3u.sfc");
 //                localROM.responseType = "arraybuffer";
 //                localROM.send();
                 /////////////////////////////////////////
@@ -204,49 +205,6 @@
                 
                 if (!url) return false;
                 
-//                switch (crc32) {
-//                    case 0xAB12ECE6:
-//                        url = "ff1u-nes.json";
-//                        break;
-//                    case 0x65D0A825: // v1.0
-//                    case 0x23084FCD: // v1.1
-//                        url = "ff2u-sfc.json";
-//                        break;
-//                    case 0x21027C5D: // v1.0
-//                    case 0xCAA15E97: // v1.1
-//                    case 0x6CDA700C: // Easy (J)
-//                        url = "ff4j-sfc.json";
-//                        break;
-//                    case 0xC1BC267D:
-//                    case 0x84CC8DBE: // [h1]
-//                        url = "ff5j-sfc.json";
-//                        break;
-//                    case 0x892E44BE: // [T-EngX.X_RPGe]
-//                    case 0x17444605: // [T+Eng1.1_RPGe]
-//                    case 0xD19F6CB5: // [T+Eng1.1_RPGe][h1]
-//                        url = "ff5u-sfc.json";
-//                        break;
-//                    case 0xA27F1C7A: // v1.0
-//                    case 0xC0FA0464: // v1.1
-//                        url = "ff3u-sfc.json";
-//                        break;
-//                    case 0x45EF5AC8:
-//                        url = "ff6j-sfc.json";
-//                        break;
-//                    case 0xD708F5AB:
-//                        url = "ff6u-gba.json";
-//                        break;
-//                    case 0xD67478FE:
-//                    case 0x479179F5: // steam version
-//                        url = "ff6j-gba.json";
-//                        break;
-//                    case 0xD15DEBA5:
-//                        url = "ff6e-gba.json";
-//                        break;
-//                    default:
-//                        return false;
-//                }
-                
                 var xhr = new XMLHttpRequest();
                 xhr.onreadystatechange = function() {
                     if (xhr.readyState != 4 || xhr.status !== 200) return;
@@ -317,9 +275,30 @@
                 
                 if (!rom) return;
                 
+//                rom.npcProperties.markAsDirty();
+//                rom.npcPropertiesPointerTable.markAsDirty();
+                
                 // assemble the rom and attach the data to a blob
-                var data = new Uint8Array(rom.data.length);
-                rom.assemble(data);
+                if (!rom.assemble()) {
+                    
+                    var content = openModal("Expand ROM");
+                    
+                    var p = document.createElement('p');
+                    p.innerHTML = "The ROM must be expanded to a larger size in order to save it. Continue?";
+                    content.appendChild(p);
+                    
+                    var yesButton = document.createElement('button');
+                    yesButton.innerHTML = "Okay";
+                    yesButton.onclick = function() { expandROM(); closeModal(); };
+                    content.appendChild(yesButton);
+                    
+                    var noButton = document.createElement('button');
+                    noButton.innerHTML = "Cancel";
+                    noButton.onclick = function() { closeModal(); };
+                    content.appendChild(noButton);
+                    
+                    return;
+                }
                 var definition = JSON.stringify(rom.definition, null, 4);
 
                 // update the script list since the script references will change
@@ -327,13 +306,18 @@
 
                 // create a zip file with the rom and the definition file
                 var zip = new JSZip();
-                zip.file(rom.name + '.' + rom.system, data);
+                zip.file(rom.name + '.' + rom.system, rom.data);
                 zip.file(rom.name + '.json', definition);
                 
                 zip.generateAsync({type:"blob"}).then(function(content) {
                     // see FileSaver.js
                     saveAs(content, rom.name + ".zip");
                 });
+            }
+            
+            function expandROM() {
+                rom.expand(rom.data.length + 0x100000);
+                saveROM();
             }
             
             function selectMap(m) {
@@ -544,6 +528,7 @@
                             <label class="two-state checked"><input id="showTriggers" type="checkbox" checked="true" onchange="twoState(this)">Triggers</label>
                             <div id="zoom-value">100%</div>
                             <input type="range" id="zoom" min="-2" max="2" step="1" value="0">
+                            <div id="coordinates">(0,0)</div>
                         </div>
 
                         <div id="edit-div" class="no-select"></div>

@@ -1122,8 +1122,9 @@
         "mapLayouts": {
             "type": "array",
             "name": "Map Layouts",
-            "range": "0x178300-0x19FE60",
+            "range": "0x178300-0x19FCF9",
             "autoBank": true,
+            "endPointer": true,
             "array": {
                 "length": 383
             },
@@ -1132,8 +1133,33 @@
             },
             "pointerTable": {
                 "range": "0x178000-0x178300",
-                "offset": "0x178000"
-            }
+                "offset": "0x178000",
+                "reference": [
+                    {
+                        "begin": "0x00FC4F",
+                        "mask": "0xFFFFFF"
+                    }, {
+                        "begin": "0x00FC55",
+                        "mask": "0xFFFFFF",
+                        "offset": -1
+                    }, {
+                        "begin": "0x00FC63",
+                        "mask": "0xFFFFFF",
+                        "offset": -2
+                    }, {
+                        "begin": "0x00FC69",
+                        "mask": "0xFFFFFF",
+                        "offset": -3
+                    }
+                ]
+            },
+            "reference": [
+                {
+                    "begin": "0x00FC37",
+                    "mask": "0xFF",
+                    "bankByte": true
+                }
+            ]
         },
         "mapPalettes": {
             "type": "array",
@@ -1917,8 +1943,93 @@
             },
             "pointerTable": {
                 "range": "0x158000-0x158300",
-                "offset": "0x158300"
-            }
+                "offset": "0x158300",
+                "reference": [
+                    {
+                        "begin": "0x009954",
+                        "mask": "0xFFFFFF"
+                    }, {
+                        "begin": "0x00995A",
+                        "mask": "0xFFFFFF",
+                        "offset": -1
+                    }, {
+                        "begin": "0x009A35",
+                        "mask": "0xFFFFFF"
+                    }, {
+                        "begin": "0x009A3B",
+                        "mask": "0xFFFFFF",
+                        "offset": -1
+                    }
+                ]
+            },
+            "reference": [
+                {
+                    "begin": "0x0096C4",
+                    "mask": "0xFFFFFF"
+                }, {
+                    "begin": "0x0096CC",
+                    "mask": "0xFFFFFF",
+                    "offset": -1
+                }, {
+                    "begin": "0x009737",
+                    "mask": "0xFFFFFF",
+                    "offset": -3
+                }, {
+                    "begin": "0x00973D",
+                    "mask": "0xFFFFFF",
+                    "offset": -4
+                }, {
+                    "begin": "0x009982",
+                    "mask": "0xFFFFFF"
+                }, {
+                    "begin": "0x009988",
+                    "mask": "0xFFFFFF",
+                    "offset": -1
+                }, {
+                    "begin": "0x009A43",
+                    "mask": "0xFFFFFF"
+                }, {
+                    "begin": "0x009A4C",
+                    "mask": "0xFFFFFF",
+                    "offset": -1
+                }, {
+                    "begin": "0x009A5D",
+                    "mask": "0xFFFFFF",
+                    "offset": -2
+                }, {
+                    "begin": "0x009A65",
+                    "mask": "0xFFFFFF",
+                    "offset": -3
+                }, {
+                    "begin": "0x009A70",
+                    "mask": "0xFFFFFF",
+                    "offset": -2
+                }, {
+                    "begin": "0x009A7B",
+                    "mask": "0xFFFFFF",
+                    "offset": -3
+                }, {
+                    "begin": "0x009A84",
+                    "mask": "0xFFFFFF",
+                    "offset": -3
+                }, {
+                    "begin": "0x009A93",
+                    "mask": "0xFFFFFF",
+                    "offset": -4
+                }, {
+                    "begin": "0x009AAD",
+                    "mask": "0xFFFFFF",
+                    "offset": -2
+                }, {
+                    "begin": "0x009AB7",
+                    "mask": "0xFFFFFF",
+                    "offset": -3
+                }, {
+                    "begin": "0x009ABE",
+                    "mask": "0xFFFFFF",
+                    "offset": -4
+                }
+            ]
         },
         "monsterAction": {
             "type": "array",
@@ -2180,17 +2291,70 @@
                 "length": 224,
                 "default": "Monster Agility %i",
                 "string": {
-                    "0": "1 - 2",
+                    "0": "[1...2]",
                     "1": "30",
-                    "2": "1 - 2",
-                    "3": "1 - 3",
-                    "4": "2 - 4",
-                    "5": "2 - 5",
-                    "6": "3 - 6",
-                    "7": "4 - 7",
-                    "8": "5 - 8",
-                    "9": "6 - 9",
-                    "10": "7 - 10"
+                    "2": "[1...2]",
+                    "3": "[1...3]",
+                    "4": "[2...4]",
+                    "5": "[2...5]",
+                    "6": "[3...6]",
+                    "7": "[4...7]",
+                    "8": "[5...8]",
+                    "9": "[6...9]",
+                    "10": "[7...10]",
+                    "11": "[8...11]",
+                    "12": "[9...12]",
+                    "13": "[10...13]",
+                    "14": "[11...14]",
+                    "15": "[12...15]",
+                    "16": "[13...16]",
+                    "17": "[14...17]",
+                    "18": "[15...18]",
+                    "19": "[16...19]",
+                    "20": "[17...20]",
+                    "21": "[18...21]",
+                    "22": "[19...22]",
+                    "23": "[20...23]",
+                    "24": "[21...24]",
+                    "25": "[22...25]",
+                    "26": "[23...26]",
+                    "27": "[24...27]",
+                    "28": "[25...28]",
+                    "29": "[26...29]",
+                    "30": "[27...30]",
+                    "31": "[28...31]",
+                    "32": "[29...32]",
+                    "33": "[30...33]",
+                    "34": "[31...34]",
+                    "35": "[32...35]",
+                    "36": "[33...36]",
+                    "37": "[34...37]",
+                    "38": "[35...38]",
+                    "39": "[36...39]",
+                    "40": "[37...40]",
+                    "41": "[38...41]",
+                    "42": "[39...42]",
+                    "43": "[40...43]",
+                    "44": "[41...44]",
+                    "45": "[42...45]",
+                    "46": "[43...46]",
+                    "47": "65",
+                    "48": "5",
+                    "49": "31",
+                    "50": "9",
+                    "51": "8",
+                    "52": "66",
+                    "53": "4",
+                    "54": "15",
+                    "55": "18",
+                    "56": "11",
+                    "57": "7",
+                    "58": "27",
+                    "59": "38",
+                    "60": "89",
+                    "61": "53",
+                    "62": "111",
+                    "63": "69"
                 }
             }
         },
@@ -3875,8 +4039,53 @@
             },
             "pointerTable": {
                 "range": "0x138000-0x138300",
-                "offset": "0x138300"
-            }
+                "offset": "0x138300",
+                "reference": [
+                    {
+                        "begin": "0x00BEAA",
+                        "mask": "0xFFFFFF"
+                    }, {
+                        "begin": "0x00BEB0",
+                        "mask": "0xFFFFFF",
+                        "offset": -1
+                    }
+                ]
+            },
+            "reference": [
+                {
+                    "begin": "0x00BE70",
+                    "mask": "0xFFFFFF"
+                }, {
+                    "begin": "0x00BEC4",
+                    "mask": "0xFFFFFF"
+                }, {
+                    "begin": "0x00BEE4",
+                    "mask": "0xFFFFFF"
+                }, {
+                    "begin": "0x00BF11",
+                    "mask": "0xFFFFFF",
+                    "offset": -3
+                }, {
+                    "begin": "0x00BF39",
+                    "mask": "0xFFFFFF",
+                    "offset": -3
+                }, {
+                    "begin": "0x00BF4A",
+                    "mask": "0xFFFFFF"
+                }, {
+                    "begin": "0x00BF51",
+                    "mask": "0xFFFFFF",
+                    "offset": -1
+                }, {
+                    "begin": "0x00BF5C",
+                    "mask": "0xFFFFFF",
+                    "offset": -1
+                }, {
+                    "begin": "0x00BF67",
+                    "mask": "0xFFFFFF",
+                    "offset": -2
+                }
+            ]
         },
         "npcScript": {
             "type": "array",
@@ -4119,6 +4328,20 @@
                     "begin": 0,
                     "length": 21
                 },
+                "romSize": {
+                    "type": "property",
+                    "name": "ROM Size",
+                    "begin": 23,
+                    "stringTable": {
+                        "string": {
+                            "9": "3-4 MBit",
+                            "10": "5-8 MBit",
+                            "11": "9-16 MBit",
+                            "12": "17-32 MBit",
+                            "13": "33-64 MBit"
+                        }
+                    }
+                },
                 "checksumInverse": {
                     "type": "property",
                     "name": "Checksum Inverse",
@@ -4338,7 +4561,7 @@
         "worldLayout0": {
             "type": "array",
             "name": "World Layout",
-            "range": "0x168480-0x16C354",
+            "range": "0x168480-0x16C355",
             "array": {
                 "length": "0x0100"
             },
@@ -4347,13 +4570,33 @@
             },
             "pointerTable": {
                 "range": "0x168000-0x168200",
-                "offset": "0x168480"
-            }
+                "offset": "0x168480",
+                "reference": [
+                    {
+                        "begin": "0x00FAED",
+                        "mask": "0xFFFFFF"
+                    }, {
+                        "begin": "0x00FAF3",
+                        "mask": "0xFFFFFF",
+                        "offset": -1
+                    }
+                ]
+            },
+            "reference": [
+                {
+                    "begin": "0x00FAFB",
+                    "mask": "0xFFFFFF"
+                }, {
+                    "begin": "0x00FB04",
+                    "mask": "0xFFFFFF",
+                    "offset": -1
+                }
+            ]
         },
         "worldLayout1": {
             "type": "array",
             "name": "Underground Layout",
-            "range": "0x16C480-0x16E041",
+            "range": "0x16C480-0x16E042",
             "array": {
                 "length": "0x0100"
             },
@@ -4362,13 +4605,33 @@
             },
             "pointerTable": {
                 "range": "0x168200-0x168400",
-                "offset": "0x16C480"
-            }
+                "offset": "0x16C480",
+                "reference": [
+                    {
+                        "begin": "0x00FB7B",
+                        "mask": "0xFFFFFF"
+                    }, {
+                        "begin": "0x00FB81",
+                        "mask": "0xFFFFFF",
+                        "offset": -1
+                    }
+                ]
+            },
+            "reference": [
+                {
+                    "begin": "0x00FB89",
+                    "mask": "0xFFFFFF"
+                }, {
+                    "begin": "0x00FB92",
+                    "mask": "0xFFFFFF",
+                    "offset": -1
+                }
+            ]
         },
         "worldLayout2": {
             "type": "array",
             "name": "Moon Layout",
-            "range": "0x16E180-0x16EB53",
+            "range": "0x16E180-0x16EB54",
             "array": {
                 "length": "0x40"
             },
@@ -4377,8 +4640,28 @@
             },
             "pointerTable": {
                 "range": "0x168400-0x168480",
-                "offset": "0x16E180"
-            }
+                "offset": "0x16E180",
+                "reference": [
+                    {
+                        "begin": "0x00FBC8",
+                        "mask": "0xFFFFFF"
+                    }, {
+                        "begin": "0x00FBCE",
+                        "mask": "0xFFFFFF",
+                        "offset": -1
+                    }
+                ]
+            },
+            "reference": [
+                {
+                    "begin": "0x00FBD6",
+                    "mask": "0xFFFFFF"
+                }, {
+                    "begin": "0x00FBDF",
+                    "mask": "0xFFFFFF",
+                    "offset": -1
+                }
+            ]
         },
         "worldPalettes": {
             "type": "array",
@@ -4557,8 +4840,52 @@
             },
             "pointerTable": {
                 "range": "0x19FE60-0x19FE66",
-                "offset": "0x19FE66"
-            }
+                "offset": "0x19FE66",
+                "reference": [
+                    {
+                        "begin": "0x009B7F",
+                        "mask": "0xFFFFFF"
+                    }, {
+                        "begin": "0x009B85",
+                        "mask": "0xFFFFFF",
+                        "offset": -1
+                    }
+                ]
+            },
+            "reference": [
+                {
+                    "begin": "0x009B8D",
+                    "mask": "0xFFFFFF"
+                }, {
+                    "begin": "0x009B96",
+                    "mask": "0xFFFFFF",
+                    "offset": -1
+                }, {
+                    "begin": "0x009BA7",
+                    "mask": "0xFFFFFF",
+                    "offset": -2
+                }, {
+                    "begin": "0x009BAF",
+                    "mask": "0xFFFFFF",
+                    "offset": -3
+                }, {
+                    "begin": "0x009BEA",
+                    "mask": "0xFFFFFF",
+                    "offset": -2
+                }, {
+                    "begin": "0x009BF1",
+                    "mask": "0xFFFFFF",
+                    "offset": -3
+                }, {
+                    "begin": "0x009BFA",
+                    "mask": "0xFFFFFF",
+                    "offset": -4
+                }, {
+                    "begin": "0x009C01",
+                    "mask": "0xFFFFFF",
+                    "offset": -3
+                }
+            ]
         }
     },
     "scriptEncoding": {
@@ -6492,5 +6819,11 @@
                 "31": "Cinematic ?"
             }
         }
-    }
+    },
+    "freeSpace": [
+        "0x16C355-0x16C480",
+        "0x16E042-0x16E180",
+        "0x16EB54-0x16EB80",
+        "0x19FCF9-0x19FE60"
+    ]
 }

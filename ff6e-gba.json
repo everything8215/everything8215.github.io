@@ -1361,7 +1361,6 @@
             "type": "array",
             "name": "Event Triggers (GBA)",
             "range": "0x08030418-0x08030E58",
-            "isSequential": true,
             "array": {
                 "length": 328
             },
@@ -2686,7 +2685,7 @@
                 "type": "assembly",
                 "format": "linear4bpp"
             },
-            "pointerTable": "mapSpritePointers"
+            "pointerTable": "mapSpritePointers[%i].pointer"
         },
         "mapSpriteLayouts": {
             "type": "array",
@@ -3107,8 +3106,7 @@
             "array": {
                 "length": 459
             },
-            "pointerTable": "monsterGraphicsProperties",
-            "pointerKey": "graphicsPointer"
+            "pointerTable": "monsterGraphicsProperties[%i].graphicsPointer"
         },
         "monsterGraphicsMap": {
             "type": "array",
@@ -3117,8 +3115,7 @@
             "array": {
                 "length": 459
             },
-            "pointerTable": "monsterGraphicsProperties",
-            "pointerKey": "mapPointer"
+            "pointerTable": "monsterGraphicsProperties[%i].mapPointer"
         },
         "monsterGraphicsProperties": {
             "type": "array",
@@ -3555,7 +3552,7 @@
         },
         "monsterScriptPointers": {
             "type": "array",
-            "name": "Monster Script Pointers",
+            "name": "Script Pointer",
             "range": "0x0872808C-0x087283DA",
             "array": {
                 "length": 423
@@ -3872,7 +3869,6 @@
             "type": "array",
             "name": "NPC Properties (GBA)",
             "range": "0x08030E58-0x080312A4",
-            "isSequential": true,
             "array": {
                 "length": 100
             },
@@ -4681,12 +4677,12 @@
             "assembly": {
                 "tileset": {
                     "type": "assembly",
-                    "name": "World of Balance Tileset",
+                    "name": "World of Ruin Tileset",
                     "range": "0x0000-0x0400"
                 },
                 "graphics": {
                     "type": "assembly",
-                    "name": "World of Balance Graphics",
+                    "name": "World of Ruin Graphics",
                     "range": "0x0400-0x4400"
                 }
             }
@@ -4699,12 +4695,12 @@
             "assembly": {
                 "tileset": {
                     "type": "assembly",
-                    "name": "World of Balance Tileset",
+                    "name": "Serpent Trench Tileset",
                     "range": "0x0000-0x0400"
                 },
                 "graphics": {
                     "type": "assembly",
-                    "name": "World of Balance Graphics",
+                    "name": "Serpent Trench Graphics",
                     "range": "0x0400-0x4400"
                 }
             }
@@ -11399,7 +11395,7 @@
         },
         "treasureSwitches": {
             "name": "Treasure Switches",
-            "length": 384,
+            "length": 512,
             "default": "Treasure %i",
             "string": {
                 "1": "Narshe: Outside Arvis' Back Door",

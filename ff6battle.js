@@ -280,9 +280,9 @@ FF6Battle.prototype.monstersSortedByPriority = function() {
         this.monsterInSlot(4),
         this.monsterInSlot(5),
         this.monsterInSlot(6)].sort(function(a, b) {
-        if (a === null) return false;
-        if (b === null) return true;
-        return (a.rect.b + a.vOffset) < (b.rect.b + b.vOffset);
+        if (a === null) return +1;
+        if (b === null) return -1;
+        return (b.rect.b + b.vOffset) - (a.rect.b + a.vOffset);
     });
 }
 
@@ -291,9 +291,9 @@ FF6Battle.prototype.charactersSortedByPriority = function() {
         this.characterInSlot(2),
         this.characterInSlot(3),
         this.characterInSlot(4)].sort(function(a, b) {
-        if (a === null) return false;
-        if (b === null) return true;
-        return a.rect.b < b.rect.b;
+        if (a === null) return +1;
+        if (b === null) return -1;
+        return b.rect.b - a.rect.b;
     });
 }
 
@@ -634,7 +634,8 @@ FF6Battle.prototype.loadBattleBackgroundGraphics = function(i) {
     if (i === 0xFF) return new Uint8Array(0); // no graphics
 
     var bgGraphics = this.rom.battleBackgroundGraphics;
-    var pointer = bgGraphics.pointerTable.item(i & 0x7F).pointer;
+    var pointer = bgGraphics.createPointer(i & 0x7F);
+//    var pointer = bgGraphics.pointerTable.item(i & 0x7F).pointer;
 
     var begin;
     if (this.rom.isSFC) {
@@ -645,13 +646,15 @@ FF6Battle.prototype.loadBattleBackgroundGraphics = function(i) {
         begin = this.rom.mapAddress(pointer.value);
     } else {
         // normal battle bg graphics
-        if ((pointer.data[2] & 0x80) === 0) return bgGraphics.item(i & 0x7F).data;
+        if ((pointer.value & 0x800000) === 0) return bgGraphics.item(i & 0x7F).data;
+        pointer.options.offset = this.rom.mapAddress(Number(this.rom.mapGraphics.pointerOffset));
 
         // use map graphics (absolute pointer)
-        pointer.mask = 0x7FFFFF;
-        pointer.offset = this.rom.mapGraphics.pointerTable.item(0).pointer.offset;
-        pointer.disassemble(pointer.parent.data);
-        begin = pointer.value;
+//        pointer.mask = 0x7FFFFF;
+//        pointer.offset = this.rom.mapGraphics.pointerTable.item(0).pointer.offset;
+//        pointer.disassemble(pointer.parent.data);
+//        var offset = this.rom.mapGraphics.pointerOffset;
+        begin = pointer.value & 0x7FFFFF;
     }
     var end = begin + (i & 0x80 ? 0x2000 : 0x1000);
     var decode = this.rom.isSFC ? GFX.decodeSNES4bpp : GFX.decodeLinear4bpp;

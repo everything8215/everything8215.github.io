@@ -1468,13 +1468,27 @@
         "snesHeader": {
             "type": "data",
             "name": "SNES Header",
-            "range": "0xC0FFC0-0xC0FFE0",
+            "range": "0x00FFC0-0x00FFE0",
             "assembly": {
                 "gameTitle": {
                     "type": "text",
                     "name": "Game Title",
                     "begin": 0,
                     "length": 21
+                },
+                "romSize": {
+                    "type": "property",
+                    "name": "ROM Size",
+                    "begin": 23,
+                    "stringTable": {
+                        "string": {
+                            "9": "3-4 MBit",
+                            "10": "5-8 MBit",
+                            "11": "9-16 MBit",
+                            "12": "17-32 MBit",
+                            "13": "33-64 MBit"
+                        }
+                    }
                 },
                 "checksumInverse": {
                     "type": "property",

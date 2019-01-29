@@ -3908,6 +3908,20 @@
                     "begin": 0,
                     "length": 21
                 },
+                "romSize": {
+                    "type": "property",
+                    "name": "ROM Size",
+                    "begin": 23,
+                    "stringTable": {
+                        "string": {
+                            "9": "3-4 MBit",
+                            "10": "5-8 MBit",
+                            "11": "9-16 MBit",
+                            "12": "17-32 MBit",
+                            "13": "33-64 MBit"
+                        }
+                    }
+                },
                 "checksumInverse": {
                     "type": "property",
                     "name": "Checksum Inverse",
@@ -4277,7 +4291,6 @@
             "type": "array",
             "name": "World Triggers",
             "range": "0x158006-0x1581A0",
-            "isSequential": true,
             "array": {
                 "length": 3
             },

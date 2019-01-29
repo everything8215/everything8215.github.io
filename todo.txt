@@ -2,7 +2,6 @@
 | TODO |
 +------+
 
-data relocation
 update ff6j-gba text
 add battle editor for ff5
 make a better navigator
@@ -15,4 +14,10 @@ battle vram viewer
 custom property controls (entrance trigger destination, rendered text)
 grid check boxes (for element/status)
 tile mask layers for map editor
-allow multiple selection in script list
+allow multiple selection, cut/copy/paste in script list
+world of ruin gets corrupted in roms expanded by ff3usme
+warning message before leaving page
+tileset zooms when sidebar is expanded
+make modules with require.js (maybe...)
+show trigger position in properties pane
+add an option to switch between hex and decimal

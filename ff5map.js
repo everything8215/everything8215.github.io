@@ -179,7 +179,11 @@ FF5Map.prototype.mouseDown = function(e) {
         } else {
             // clear trigger selection selection and select map properties
             this.selectedTrigger = null;
-            this.rom.select(this.mapProperties);
+            if (this.m < 3) {
+                this.selectWorldBattle(this.clickedCol, this.clickedRow) 
+            } else if (this.map >= 5) {
+                this.rom.select(this.mapProperties);
+            }
             this.clickedCol = null;
             this.clickedRow = null;
         }
@@ -197,7 +201,7 @@ FF5Map.prototype.mouseDown = function(e) {
 
 FF5Map.prototype.mouseUp = function(e) {
 
-    if (this.l === 3 && isNumber(this.clickedCol) && isNumber(this.clickedRow)) {
+    if (this.l === 3 && this.selectedTrigger && isNumber(this.clickedCol) && isNumber(this.clickedRow)) {
         // save the new trigger position
         var col = this.selectedTrigger.x.value;
         var row = this.selectedTrigger.y.value;
@@ -230,6 +234,10 @@ FF5Map.prototype.mouseMove = function(e) {
     
     var col = ((e.offsetX / this.zoom + this.ppu.layers[this.l].x) % this.ppu.width) >> 4;
     var row = ((e.offsetY / this.zoom + this.ppu.layers[this.l].y) % this.ppu.height) >> 4;
+
+    // update the displayed coordinates
+    var coordinates = document.getElementById("coordinates");
+    coordinates.innerHTML = "(" + col + ", " + row + ")";
 
     // return if the cursor position didn't change
     if (this.selection[1] === col && this.selection[2] === row) return;
@@ -334,6 +342,17 @@ FF5Map.prototype.selectLayer = function(l) {
     this.drawCursor();
 }
 
+FF5Map.prototype.selectWorldBattle = function(x, y) {
+    if (this.m > 2) return;
+    
+    x >>= 5;
+    y >>= 5;
+    
+    var sector = x | (y << 3) | (this.m << 6);
+    var battleGroup = this.rom.worldBattleGroup.item(sector);
+    this.rom.select(battleGroup);
+}
+
 FF5Map.prototype.changeLayer = function(id) {
     this[id] = document.getElementById(id).checked;
     var map = this.rom.mapProperties.item(this.m);
@@ -429,6 +448,7 @@ FF5Map.prototype.drawCursor = function() {
 FF5Map.prototype.selectObject = function(object) {
     document.getElementById("tileset-div").classList.remove('hidden');
     document.getElementById("tileset-layers").classList.remove('hidden');
+    document.getElementById("map-controls").classList.remove('hidden');
     this.loadMap(object.i);
 }
 
@@ -449,7 +469,11 @@ FF5Map.prototype.loadMap = function(m) {
         }
         this.mapProperties = this.rom.mapProperties.item(this.m);
         this.observer.startObserving(this.mapProperties, this.loadMap);
-    }    
+
+        // set the default battle background
+        var battleEditor = this.rom.getEditor("FF5Battle");
+        if (battleEditor) battleEditor.bg = this.mapProperties.battleBackground.value;
+    }
 
     // get map properties
     var map = this.mapProperties;

@@ -449,7 +449,7 @@
                         "begin": 0,
                         "mask": "0x0FFF",
                         "flag": true,
-                        "invertBits": true,
+                        "invert": true,
                         "stringTable": "class"
                     }
                 }
@@ -2165,7 +2165,7 @@
                         "name": "spell",
                         "begin": 0,
                         "flag": true,
-                        "invertBits": true,
+                        "invert": true,
                         "stringTable": "spell"
                     }
                 }

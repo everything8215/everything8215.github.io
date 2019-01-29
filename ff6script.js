@@ -231,6 +231,7 @@ FF6Script.didDisassemble = function(command, data) {
             break;
             
         case "objectScript":
+            // add a placeholder at the end of the object script
             offset = command.range.end + command.scriptLength.value;
             command.parent.addPlaceholder(null, offset, "event");
             break;

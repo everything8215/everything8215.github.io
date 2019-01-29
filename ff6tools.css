@@ -412,6 +412,13 @@ body {
     font-size: small;
 }
 
+#coordinates {
+    margin: auto 8px;
+    width: 60px;
+    font-size: small;
+    text-align: center;
+}
+
 #toolbox {
     margin: 0px 0px;
     padding: 0px 0px;
