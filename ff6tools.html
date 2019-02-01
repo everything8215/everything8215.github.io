@@ -271,36 +271,44 @@
 //                console.log(bigString);
             }
 
-            function saveROM() {
+            function saveROM(canRelocate) {
                 
                 if (!rom) return;
+                
+                rom.canRelocate = canRelocate;
                 
 //                rom.npcProperties.markAsDirty();
 //                rom.npcPropertiesPointerTable.markAsDirty();
                 
                 // assemble the rom and attach the data to a blob
-                if (!rom.assemble()) {
+                if (!rom.assemble() && canRelocate) {
                     
                     var content = openModal("Expand ROM");
                     
                     var p = document.createElement('p');
-                    p.innerHTML = "The ROM must be expanded to a larger size in order to save it. Continue?";
+                    p.innerHTML = "Some data has increased in size and no longer fits in its alotted space. Saving may result in corruption of data. Would you like to save anyway?";
                     content.appendChild(p);
                     
                     var yesButton = document.createElement('button');
-                    yesButton.innerHTML = "Okay";
-                    yesButton.onclick = function() { expandROM(); closeModal(); };
+                    yesButton.innerHTML = "Yes";
+                    yesButton.onclick = function() { closeModal(); saveROM(false); };
                     content.appendChild(yesButton);
                     
                     var noButton = document.createElement('button');
-                    noButton.innerHTML = "Cancel";
+                    noButton.innerHTML = "No";
                     noButton.onclick = function() { closeModal(); };
                     content.appendChild(noButton);
                     
+                    var expandButton = document.createElement('button');
+                    expandButton.innerHTML = "Expand ROM (untested)";
+                    expandButton.onclick = function() { closeModal(); expandROM(); };
+                    content.appendChild(expandButton);
+
                     return;
                 }
+                
                 var definition = JSON.stringify(rom.definition, null, 4);
-
+                
                 // update the script list since the script references will change
                 scriptList.update();
 
@@ -317,7 +325,7 @@
             
             function expandROM() {
                 rom.expand(rom.data.length + 0x100000);
-                saveROM();
+                saveROM(false);
             }
             
             function selectMap(m) {
@@ -486,7 +494,7 @@
                         <span class="tooltiptext">Open ROM</span>
                     </button>
                     <input type="file" style="display:none;" id="rom-file" name="file"/>
-                    <button class="icon-btn float-left tooltip" onclick="saveROM()">
+                    <button class="icon-btn float-left tooltip" onclick="saveROM(rom.canRelocate)">
                         <i class="fas fa-save"></i>
                         <span class="tooltiptext">Save ROM</span>
                     </button>

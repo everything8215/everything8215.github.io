@@ -249,30 +249,36 @@ ROMAssembly.prototype.assemble = function(data) {
     // return if just updating lazyData (no data parameter)
     if (!data) return false;
     
+    var success = true;
     var end = this.range.begin + this.assembledLength;
     if (end > this.range.end) {
         // this assembly won't fit in its range
 //        this.rom.log(this.name + " will not fit in its range.");
         
-        // try to expand into adjacent free space
-        var adjacentRange = new ROMRange(this.range.end, end);
-        if (this.parent) this.parent.addFreeSpace(this.range, true);
-        this.range = ROMRange.emptyRange;
-        return false;
+        if (this.rom.canRelocate & this.definition.reference) {
+            // try to expand into adjacent free space
+            var adjacentRange = new ROMRange(this.range.end, end);
+            if (this.parent) this.parent.addFreeSpace(this.range, true);
+            this.range = ROMRange.emptyRange;
+            return false;
+        }
+        
+        success = false;
+        
     } else if (end < this.range.end) {
         // adjust range and add free space
-        this.relocate();
         var freeSpace = new ROMRange(this.range.begin + this.assembledLength, this.range.end);
         this.parent.addFreeSpace(freeSpace, true);
+        this.relocate();
     }
 
     // pad free space
     this.padFreeSpace();
     
-    // copy the assembly into its parent and validate
+    // copy the assembly into its parent and update references
     data.set(this.lazyData, this.range.begin);
     this.updateReferences();
-    return true;
+    return success;
 }
 
 ROMAssembly.prototype.disassemble = function(data) {
@@ -465,7 +471,9 @@ ROMAssembly.prototype.cleanUpFreeSpace = function() {
         if (range1.isEmpty) continue;
         cleanSpace.push(range1);
     }
+    
     this.freeSpace = cleanSpace;
+    if (!this.freeSpace.length) this.freeSpace = null;
 }
 
 ROMAssembly.prototype.padFreeSpace = function() {
@@ -480,8 +488,10 @@ ROMAssembly.prototype.padFreeSpace = function() {
 }
 
 ROMAssembly.prototype.findFreeSpace = function(length, align) {
+
     align = align || 1;
     var bestRange = ROMRange.emptyRange;
+    if (!this.freeSpace || !this.freeSpace.length) return bestRange;
     
     // find the smallest range of free space that is at least as large as required
     for (var i = 0; i < this.freeSpace.length; i++) {
@@ -716,6 +726,7 @@ ROMData.prototype.updateReferences = function() {
 ROMData.prototype.assemble = function(data) {
 
     // assemble children
+    var success = true;
     var orphans = [];
     var keys = Object.keys(this.assembly);
     for (var i = 0; i < keys.length; i++) {
@@ -724,13 +735,15 @@ ROMData.prototype.assemble = function(data) {
         if (assembly.assemble(this.data)) {
             // assemble was successful
             assembly.isDirty = false;
-        } else {
+        } else if (!assembly.range && this.rom.canRelocate) {
             // need to relocate assembly
             orphans.push(assembly);
+        } else {
+            // failed to assemble
+            success = false;
         }
     }
     
-    var success = true;
     if (orphans.length) {
         orphans.sort(function(a, b) { return a.assembledLength - b.assembledLength; })
         for (var i = 0; i < orphans.length; i++) {
@@ -795,6 +808,7 @@ function ROM(rom, definition) {
     this.crc32 = Number(definition.crc32);
     this.system = definition.system;
     this.mode = definition.mode;
+    this.canRelocate = true;
     this.editors = {};
     this.pointerLength = Number(definition.pointerLength);
     if (!isNumber(this.pointerLength)) { this.pointerLength = 2; }

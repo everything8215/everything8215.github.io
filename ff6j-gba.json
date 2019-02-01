@@ -1955,7 +1955,22 @@
                 "range": "0x087FF3FC-0x087FF88E",
                 "pointerLength": 3,
                 "offset": "0x08548446"
-            }
+            },
+            "reference": [
+                {
+                    "begin": "0x081BAC8",
+                    "mask": "0x7FFFFFFF"
+                }, {
+                    "begin": "0x081BC18",
+                    "mask": "0x7FFFFFFF"
+                }, {
+                    "begin": "0x081BD38",
+                    "mask": "0x7FFFFFFF"
+                }, {
+                    "begin": "0x081BE8C",
+                    "mask": "0x7FFFFFFF"
+                }
+            ]
         },
         "mapPalettes": {
             "type": "array",
