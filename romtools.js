@@ -513,11 +513,12 @@ ROMAssembly.prototype.findFreeSpace = function(length, align) {
         // align the range
         if (this.unmapAddress) {
             begin = this.unmapAddress(begin);
-            begin = Math.ceil(begin / align) * align;
+            if (begin % align) begin = Math.ceil(begin / align + 1) * align;
             begin = this.mapAddress(begin);
         } else {
-            begin = Math.ceil(begin / align) * align;
+            if (begin % align) begin = Math.ceil(begin / align + 1) * align;
         }
+        if (begin > range.end) continue;
         
         // todo: if the data is smaller than one bank, make sure it doesn't straddle two banks
         
@@ -530,6 +531,7 @@ ROMAssembly.prototype.findFreeSpace = function(length, align) {
 }
 
 ROMAssembly.prototype.rangeIsFree = function(range) {
+    if (!this.freeSpace || !this.freeSpace.length) return false;
     for (var i = 0; i < this.freeSpace.length; i++) {
         var checkRange = this.freeSpace[i];
         if (checkRange.end < range.end) continue;

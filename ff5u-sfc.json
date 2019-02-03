@@ -1110,7 +1110,7 @@
         "mapLayouts": {
             "type": "array",
             "name": "Map Layouts",
-            "range": "0xCB0290-0xCDFA40",
+            "range": "0xCB0290-0xCDF9FF",
             "autoBank": true,
             "array": {
                 "length": 324
@@ -5207,5 +5207,8 @@
                 "6": "Airship"
             }
         }
-    }
+    },
+    "freeSpace": [
+        "0xCDF9FF-0xCDFA40"
+    ]
 }
