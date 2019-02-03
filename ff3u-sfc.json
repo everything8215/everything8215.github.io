@@ -1018,6 +1018,7 @@
             "type": "array",
             "name": "Dialog",
             "range": "0xCD0000-0xCEEFBB",
+            "align": "0x10000",
             "autoBank": true,
             "array": {
                 "length": 3084
@@ -1444,7 +1445,7 @@
         "esperAttackDescriptions": {
             "type": "array",
             "name": "Esper Attack Descriptions",
-            "range": "0xCF3940-0xCF3C40",
+            "range": "0xCF3940-0xCF3BAD",
             "array": {
                 "length": 27
             },
@@ -1456,8 +1457,28 @@
             },
             "pointerTable": {
                 "range": "0xCFFE40-0xCFFE80",
-                "offset": "0xCF3940"
-            }
+                "offset": "0xCF3940",
+                "reference": [
+                    {
+                        "begin": "0xC35C0A",
+                        "mask": "0xFFFF"
+                    }, {
+                        "begin": "0xC35C14",
+                        "mask": "0xFF",
+                        "bankByte": true
+                    }
+                ]
+            },
+            "reference": [
+                {
+                    "begin": "0xC35C0F",
+                    "mask": "0xFFFF"
+                }, {
+                    "begin": "0xC35C18",
+                    "mask": "0xFF",
+                    "bankByte": true
+                }
+            ]
         },
         "esperAttackName": {
             "type": "array",
@@ -1491,8 +1512,28 @@
             },
             "pointerTable": {
                 "range": "0xEDFFD0-0xEE0000",
-                "offset": "0xEDFE00"
-            }
+                "offset": "0xEDFE00",
+                "reference": [
+                    {
+                        "begin": "0xC35BF7",
+                        "mask": "0xFFFF"
+                    }, {
+                        "begin": "0xC35C01",
+                        "mask": "0xFF",
+                        "bankByte": true
+                    }
+                ]
+            },
+            "reference": [
+                {
+                    "begin": "0xC35BFC",
+                    "mask": "0xFFFF"
+                }, {
+                    "begin": "0xC35C05",
+                    "mask": "0xFF",
+                    "bankByte": true
+                }
+            ]
         },
         "esperBonusNames": {
             "type": "array",
@@ -1663,6 +1704,7 @@
             "type": "script",
             "name": "Event Script",
             "range": "0xCA0000-0xCCE5EE",
+            "align": "0x10000",
             "encoding": ["event", "object", "world", "vehicle"],
             "label": {
                 "No Event": "0xCA0000",
@@ -3586,6 +3628,7 @@
             "type": "array",
             "name": "Monster Dialog",
             "range": "0xCFE1E0-0xCFF442",
+            "pointerAlign": "0x10000",
             "array": {
                 "length": 256
             },
@@ -3596,12 +3639,25 @@
             },
             "pointerTable": {
                 "range": "0xCFDFE0-0xCFE1E0",
-                "offset": "0xCF0000"
+                "offset": "0xCF0000",
+                "reference": [
+                    {
+                        "begin": "0xC19847",
+                        "mask": "0xFFFFFF"
+                    }
+                ]
             },
             "stringTable": {
                 "length": 256,
                 "default": "<monsterDialog[%i]>"
-            }
+            },
+            "reference": [
+                {
+                    "begin": "0xC19839",
+                    "mask": "0xFF",
+                    "bankByte": true
+                }
+            ]
         },
         "monsterGraphics": {
             "type": "array",
@@ -11505,6 +11561,7 @@
         "0xCEEFBB-0xCEF100",
         "0xCEF463-0xCEF600",
         "0xCEFEDF-0xCF0000",
+        "0xCF3BAD-0xCF3C40",
         "0xCFC049-0xCFC050",
         "0xCFF442-0xCFF450",
         "0xCFFB29-0xCFFC00",

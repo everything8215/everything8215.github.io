@@ -42,16 +42,16 @@
 
                 /////////////////////////////////////////
 //                var localROM = new XMLHttpRequest();
-//                localROM.onload = function() {
-//                    if (localROM.status != 200) return;
-//                    var arrayBuffer = localROM.response;
-//                    data = new Uint8Array(arrayBuffer);
-//
-//                    loadBuiltInDefinition();
-//                };
-//                localROM.open("get", "roms\\ff3u.sfc");
-//                localROM.responseType = "arraybuffer";
-//                localROM.send();
+//                 localROM.onload = function() {
+//                     if (localROM.status != 200) return;
+//                     var arrayBuffer = localROM.response;
+//                     data = new Uint8Array(arrayBuffer);
+// 
+//                     loadBuiltInDefinition();
+//                 };
+//                 localROM.open("get", "roms\\ff1u.nes");
+//                 localROM.responseType = "arraybuffer";
+//                 localROM.send();
                 /////////////////////////////////////////
                 
                 modal = document.getElementById('modal');
@@ -103,6 +103,11 @@
                         }
                     }
                 });
+                
+            }
+
+            window.onbeforeunload = function() {
+                return "Are you sure you want to leave?";
             };
             
             // When the user clicks anywhere outside of the modal, close it
@@ -277,8 +282,8 @@
                 
                 rom.canRelocate = canRelocate;
                 
-//                rom.npcProperties.markAsDirty();
-//                rom.npcPropertiesPointerTable.markAsDirty();
+//                rom.esperAttackDescriptions.markAsDirty();
+//                rom.esperAttackDescriptionsPointerTable.markAsDirty();
                 
                 // assemble the rom and attach the data to a blob
                 if (!rom.assemble() && canRelocate) {
@@ -286,7 +291,7 @@
                     var content = openModal("Expand ROM");
                     
                     var p = document.createElement('p');
-                    p.innerHTML = "Some data has increased in size and no longer fits in its alotted space. Saving may result in corruption of data. Would you like to save anyway?";
+                    p.innerHTML = "Some data has increased in size and no longer fits in its alotted space. Saving may result in a loss of data. Would you like to save anyway?";
                     content.appendChild(p);
                     
                     var yesButton = document.createElement('button');
@@ -325,7 +330,7 @@
             
             function expandROM() {
                 rom.expand(rom.data.length + 0x100000);
-                saveROM(false);
+                saveROM(true);
             }
             
             function selectMap(m) {

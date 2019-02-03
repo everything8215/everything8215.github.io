@@ -1123,6 +1123,7 @@
             "type": "array",
             "name": "Map Layouts",
             "range": "0x178300-0x19FCF9",
+            "align": "0x8000",
             "autoBank": true,
             "endPointer": true,
             "array": {

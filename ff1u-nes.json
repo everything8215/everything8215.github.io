@@ -6,6 +6,7 @@
     "crc32": "0xAB12ECE6",
     "system": "nes",
     "mode": "mmc1",
+    "pad": "0x00",
     "assembly": {
         "armorProperties": {
             "type": "array",
@@ -680,7 +681,7 @@
         "mapLayout": {
             "type": "array",
             "name": "Map Layout",
-            "range": "0x048080-0x06ACA0",
+            "range": "0x048080-0x06AC9A",
             "isSequential": true,
             "array": {
                 "length": 64
@@ -690,8 +691,25 @@
             },
             "pointerTable": {
                 "range": "0x048000-0x048080",
-                "offset": "0x048000"
-            }
+                "offset": "0x048000",
+                "reference": [
+                    {
+                        "begin": "0x0FD130",
+                        "mask": "0xFFFF"
+                    }, {
+                        "begin": "0x0FD135",
+                        "mask": "0xFFFF",
+                        "offset": -1
+                    }
+                ]
+            },
+            "reference": [
+                {
+                    "begin": "0x0FD127",
+                    "mask": "0xFF",
+                    "bankByte": true
+                }
+            ]
         },
         "mapPalette": {
             "type": "array",
@@ -2996,5 +3014,8 @@
             "length": 40,
             "default": "<text[%i+0x1C]>"
         }
-    }
+    },
+    "freeSpace": [
+        "0x06AC9A-0x078000"
+    ]
 }

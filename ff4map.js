@@ -938,7 +938,7 @@ FF4Map.prototype.insertTrigger = function(type) {
         
         // treasures have to come first
         var i = 0;
-        while (triggers.item(i).map.value === 0xFE) i++;
+        while (i < triggers.array.length && triggers.item(i).map.value === 0xFE) i++;
         triggers.insertAssembly(trigger, i);
 //        this.logTreasures();
         this.updateTreasures();

@@ -16,7 +16,6 @@ grid check boxes (for element/status)
 tile mask layers for map editor
 allow multiple selection, cut/copy/paste in script list
 world of ruin gets corrupted in roms expanded by ff3usme
-warning message before leaving page
 tileset zooms when sidebar is expanded
 make modules with require.js (maybe...)
 show trigger position in properties pane
