@@ -8,7 +8,7 @@ Currently supported ROMs:
 - Final Fantasy (U)
 - Final Fantasy II (U)
 - Final Fantasy IV (J)
-- Final Fantasy V (RTPe)
+- Final Fantasy V (RPGe translation)
 - Final Fantasy V (J)
 - Final Fantasy III (U)
 - Final Fantasy VI (J)
