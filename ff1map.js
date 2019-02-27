@@ -77,6 +77,7 @@ function FF1Map(rom) {
     buttonLayer2.onchange = function() { map.changeLayer("showLayer2"); twoState(this); };
     buttonLayer2.parentElement.childNodes[1].nodeValue = "Rooms";
     buttonLayer2.parentElement.style.display = "inline-block";
+    buttonLayer2.checked = this.showRooms;
 
     var buttonLayer3 = document.getElementById("showLayer3");
     buttonLayer3.onchange = null;
@@ -89,6 +90,18 @@ function FF1Map(rom) {
     this.showTriggers = buttonTriggers.checked;
     
     document.getElementById("zoom").onchange = function() { map.changeZoom(); };
+}
+
+FF1Map.prototype.beginAction = function(callback) {
+    this.rom.beginAction();
+    this.rom.doAction(new ROMAction(this.observer, this.observer.wake, this.observer.sleep));
+    if (callback) this.rom.doAction(new ROMAction(this, callback, null));
+}
+
+FF1Map.prototype.endAction = function(callback) {
+    if (callback) this.rom.doAction(new ROMAction(this, null, callback));
+    this.rom.doAction(new ROMAction(this.observer, this.observer.sleep, this.observer.wake));
+    this.rom.endAction();
 }
 
 FF1Map.prototype.changeZoom = function() {
@@ -178,8 +191,8 @@ FF1Map.prototype.mouseDown = function(e) {
         this.selectTiles();
         this.isDragging = true;
     } else {
-        this.rom.beginAction();
-        this.rom.pushAction(new ROMAction(this, this.drawMap, null, "Redraw Map"));
+        this.beginAction(this.drawMap);
+//        this.rom.pushAction(new ROMAction(this, this.drawMap, null, "Redraw Map"));
         this.rom.doAction(new ROMAction(this.selectedLayer, this.selectedLayer.decodeLayout, null, "Decode Layout"));
         this.setTiles();
         this.isDragging = true;
@@ -201,17 +214,17 @@ FF1Map.prototype.mouseUp = function(e) {
             this.selectedTrigger.y.value = this.clickedRow;
 
             // set the new trigger position (and trigger undo)
-            this.observer.stopObserving(this.selectedTrigger);
-            this.rom.beginAction();
+//            this.observer.stopObserving(this.selectedTrigger);
+            this.beginAction(this.reloadTriggers);
             this.selectedTrigger.x.setValue(col);
             this.selectedTrigger.y.setValue(row);
-            this.rom.endAction();
-            this.observer.startObserving(this.selectedTrigger, this.drawMap);
+            this.endAction(this.reloadTriggers);
+//            this.observer.startObserving(this.selectedTrigger, this.drawMap);
         }
     } else if (this.rom.action && this.isDragging) {
         this.rom.doAction(new ROMAction(this.selectedLayer, null, this.selectedLayer.decodeLayout, "Decode Layout"));
         this.rom.pushAction(new ROMAction(this, null, this.drawMap, "Redraw Map"));
-        this.rom.endAction();
+        this.endAction();
     }
     
     this.isDragging = false;
@@ -702,6 +715,11 @@ FF1Map.prototype.reloadTriggers = function() {
     this.drawMap();
 }
 
+FF1Map.prototype.reloadTriggers = function() {
+    this.loadTriggers();
+    this.drawMap();
+}
+
 FF1Map.prototype.loadTriggers = function() {
 
     this.triggers = [];
@@ -717,39 +735,6 @@ FF1Map.prototype.loadTriggers = function() {
         this.triggers.push(npc);
     }
 }
-
-//FF1Map.prototype.insertTrigger = function(type) {
-//    
-//    this.closeMenu();
-//    
-//    var triggers = this.rom.mapTriggers.item(this.m);
-//    if (this.isWorld) triggers = this.rom.worldTriggers.item(this.m - 0xFB);
-//
-//    var trigger = triggers.blankAssembly();
-//
-//    this.rom.beginAction();
-//    trigger.x.setValue(this.clickedCol);
-//    trigger.y.setValue(this.clickedRow);
-//    if (type === "treasureProperties") {
-//        trigger.map.setValue(0xFE);
-//        
-//        // treasures have to come first
-//        var i = 0;
-//        while (triggers.item(i).map.value === 0xFE) i++;
-//        triggers.insertAssembly(trigger, i);
-//        
-//    } else if (type === "eventTriggers") {
-//        trigger.map.setValue(0xFF);
-//        triggers.insertAssembly(trigger);
-//    } else {
-//        triggers.insertAssembly(trigger);
-//    }
-//    this.rom.endAction();
-//    
-//    this.observer.startObserving(trigger, this.reloadTriggers);
-//    this.selectedTrigger = trigger;
-//    this.rom.select(trigger);
-//}
 
 FF1Map.prototype.insertNPC = function() {
     this.closeMenu();
@@ -767,11 +752,11 @@ FF1Map.prototype.insertNPC = function() {
     }
     if (!npc) return;
     
-    this.rom.beginAction();
+    this.beginAction(this.reloadTriggers);
     npc.x.setValue(this.clickedCol);
     npc.y.setValue(this.clickedRow);
     npc.npcID.setValue(1);
-    this.rom.endAction();
+    this.endAction(this.reloadTriggers);
     
     this.selectedTrigger = npc;
     this.rom.select(npc);
@@ -786,9 +771,9 @@ FF1Map.prototype.deleteTrigger = function() {
     var index = triggers.array.indexOf(trigger);
     if (index === -1) return;
     
-    this.rom.beginAction();
+    this.beginAction(this.reloadTriggers);
     triggers.removeAssembly(index);
-    this.rom.endAction();
+    this.endAction(this.reloadTriggers);
     
     this.selectedTrigger = null;
     this.rom.select(null);

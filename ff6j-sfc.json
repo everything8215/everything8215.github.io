@@ -347,7 +347,6 @@
                         "begin": 2,
                         "max": "0x01FF",
                         "msb": "this.parent.monster1MSB",
-                        "format": "msb(14, 0x01, 2, 0x0100)",
                         "stringTable": "monsterName",
                         "link": "monsterProperties[%i]",
                         "special": {
@@ -3236,6 +3235,7 @@
             "type": "data",
             "name": "Monster Graphics Map",
             "range": "0xD2A820-0xD2B224",
+            "isSequential": true,
             "assembly": {
                 "smallPointer": {
                     "type": "property",
@@ -4574,6 +4574,7 @@
             "name": "World of Balance Graphics Data",
             "range": "0xEF114F-0xEF3250",
             "format": "ff6-lzss",
+            "isSequential": true,
             "assembly": {
                 "tileset": {
                     "type": "assembly",
@@ -4598,6 +4599,7 @@
             "name": "World of Ruin Graphics Data",
             "range": "0xEF4A46-0xEF6A56",
             "format": "ff6-lzss",
+            "isSequential": true,
             "assembly": {
                 "tileset": {
                     "type": "assembly",
@@ -4622,6 +4624,7 @@
             "name": "Serpent Trench Graphics Data",
             "range": "0xEFB631-0xEFC624",
             "format": "ff6-lzss",
+            "isSequential": true,
             "assembly": {
                 "tileset": {
                     "type": "assembly",
@@ -11845,8 +11848,8 @@
                 "60": "Phantom Train: Small Room E",
                 "61": "Mobliz: Mail House Clock",
                 "62": "Nikeah: Clock in Inn",
-                "63": "Serpent's Trench A",
-                "64": "Serpent's Trench B",
+                "63": "Serpent Trench A",
+                "64": "Serpent Trench B",
                 "65": "Kohlingen: Chest in Crazy Man's House",
                 "66": "Jidoor: Pot in Owzer's House",
                 "67": "Phantom Train: Caboose Room",

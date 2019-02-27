@@ -6,6 +6,7 @@
     "crc32": "0x892E44BE",
     "system": "sfc",
     "mode": "hiROM",
+    "pad": "0x00",
     "assembly": {
         "attackName": {
             "type": "array",
@@ -140,8 +141,7 @@
                     "hFlip": {
                         "type": "property",
                         "name": "H-Flip",
-                        "begin": 4,
-                        "hidden": true
+                        "begin": 4
                     },
                     "vFlip": {
                         "type": "property",
@@ -541,8 +541,10 @@
             "name": "Entrance Triggers",
             "range": "0xCE3AC0-0xCE58D2",
             "isSequential": true,
+            "endPointer": true,
+            "canRelocate": true,
             "array": {
-                "length": 512
+                "length": 511
             },
             "assembly": {
                 "type": "array",
@@ -585,8 +587,57 @@
             },
             "pointerTable": {
                 "range": "0xCE36C0-0xCE3AC0",
-                "offset": "0xCE36C0"
-            }
+                "offset": "0xCE36C0",
+                "canRelocate": true,
+                "reference": [
+                    {
+                        "begin": "0xC00691",
+                        "mask": "0xFFFFFF",
+                        "offset": -2
+                    }, {
+                        "begin": "0xC00697",
+                        "mask": "0xFFFFFF"
+                    }
+                ]
+            },
+            "reference": [
+                {
+                    "begin": "0xC006A6",
+                    "mask": "0xFFFFFF"
+                }, {
+                    "begin": "0xC006D3",
+                    "mask": "0xFFFFFF",
+                    "offset": -2
+                }, {
+                    "begin": "0xC006E9",
+                    "mask": "0xFFFFFF",
+                    "offset": -4
+                }, {
+                    "begin": "0xC006F0",
+                    "mask": "0xFFFFFF",
+                    "offset": -5
+                }, {
+                    "begin": "0xC006FD",
+                    "mask": "0xFFFFFF",
+                    "offset": -3
+                }, {
+                    "begin": "0xC00708",
+                    "mask": "0xFFFFFF",
+                    "offset": -3
+                }, {
+                    "begin": "0xC00713",
+                    "mask": "0xFFFFFF",
+                    "offset": -4
+                }, {
+                    "begin": "0xC00726",
+                    "mask": "0xFFFFFF",
+                    "offset": -4
+                }, {
+                    "begin": "0xC0072F",
+                    "mask": "0xFFFFFF",
+                    "offset": -5
+                }
+            ]
         },
         "eventScript": {
             "type": "array",
@@ -639,8 +690,10 @@
             "name": "Event Triggers",
             "range": "0xCE2800-0xCE36C0",
             "isSequential": true,
+            "endPointer": true,
+            "canRelocate": true,
             "array": {
-                "length": 512
+                "length": 511
             },
             "assembly": {
                 "type": "array",
@@ -673,8 +726,29 @@
             },
             "pointerTable": {
                 "range": "0xCE2400-0xCE2800",
-                "offset": "0xCE2400"
-            }
+                "offset": "0xCE2400",
+                "canRelocate": true,
+                "reference": [
+                    {
+                        "begin": "0xC0064A",
+                        "mask": "0xFFFFFF",
+                        "offset": -2
+                    }, {
+                        "begin": "0xC00650",
+                        "mask": "0xFFFFFF"
+                    }
+                ]
+            },
+            "reference": [
+                {
+                    "begin": "0xC0065C",
+                    "mask": "0xFFFFFF"
+                }, {
+                    "begin": "0xC00675",
+                    "mask": "0xFFFFFF",
+                    "offset": -2
+                }
+            ]
         },
         "itemNames": {
             "type": "array",
@@ -1112,6 +1186,8 @@
             "name": "Map Layouts",
             "range": "0xCB0290-0xCDF9FF",
             "autoBank": true,
+            "canRelocate": true,
+            "pointerAlign": "0x010000",
             "array": {
                 "length": 324
             },
@@ -1120,8 +1196,28 @@
             },
             "pointerTable": {
                 "range": "0xCB0000-0xCB0290",
-                "offset": "0xCB0000"
-            }
+                "offset": "0xCB0000",
+                "canRelocate": true,
+                "reference": [
+                    {
+                        "begin": "0xC06AE1",
+                        "mask": "0xFFFFFF"
+                    }, {
+                        "begin": "0xC06AE7",
+                        "mask": "0xFFFFFF"
+                    }, {
+                        "begin": "0xC06AF4",
+                        "mask": "0xFFFFFF"
+                    }
+                ]
+            },
+            "reference": [
+                {
+                    "begin": "0xC06ACD",
+                    "mask": "0xFF",
+                    "bankByte": true
+                }
+            ]
         },
         "mapPalettes": {
             "type": "array",
@@ -1983,6 +2079,7 @@
             "type": "array",
             "name": "Map Treasures",
             "range": "0xD13000-0xD13210",
+            "canRelocate": true,
             "array": {
                 "length": 528
             },
@@ -1996,7 +2093,24 @@
                     }
                 },
                 "length": 1
-            }
+            },
+            "reference": [
+                {
+                    "begin": "0xC00D7B",
+                    "mask": "0xFFFFFF"
+                }, {
+                    "begin": "0xC00D86",
+                    "mask": "0xFFFFFF",
+                    "offset": -1
+                }, {
+                    "begin": "0xC05CC4",
+                    "mask": "0xFFFFFF"
+                }, {
+                    "begin": "0xC05CCF",
+                    "mask": "0xFFFFFF",
+                    "offset": -1
+                }
+            ]
         },
         "monsterGraphics": {
             "type": "array",
@@ -2728,7 +2842,8 @@
         "treasureProperties": {
             "type": "array",
             "name": "Treasure Properties",
-            "range": "0xD13210-0xD13610",
+            "range": "0xD13210-0xD13600",
+            "canRelocate": true,
             "array": {
                 "length": 256
             },
@@ -2748,16 +2863,9 @@
                         "begin": 1,
                         "hidden": true
                     },
-                    "isBattle": {
+                    "contentsBattle": {
                         "type": "property",
-                        "name": "Battle",
-                        "begin": 2,
-                        "mask": "0x80",
-                        "bool": true
-                    },
-                    "treasureTypeBattle": {
-                        "type": "property",
-                        "name": "Type",
+                        "name": "Contents",
                         "begin": 2,
                         "mask": "0x40",
                         "invalid": "!this.parent.isBattle.value",
@@ -2769,9 +2877,9 @@
                             }
                         }
                     },
-                    "treasureType": {
+                    "contents": {
                         "type": "property",
-                        "name": "Type",
+                        "name": "Contents",
                         "begin": 2,
                         "mask": "0x60",
                         "invalid": "this.parent.isBattle.value",
@@ -2785,29 +2893,19 @@
                             }
                         }
                     },
-                    "battle": {
-                        "type": "property",
-                        "name": "Battle",
-                        "begin": 2,
-                        "mask": "0x3F",
-                        "offset": "0x40",
-                        "link": "battleGroupEvent[%i]",
-                        "stringTable": "battleGroupEvent",
-                        "invalid": "!this.parent.isBattle.value"
-                    },
                     "item": {
                         "type": "property",
                         "name": "Item",
                         "begin": 3,
                         "stringTable": "itemNames",
-                        "invalid": "(this.parent.isBattle.value && this.parent.treasureTypeBattle.value !== 0) || (!this.parent.isBattle.value && this.parent.treasureType.value < 2)"
+                        "invalid": "(this.parent.isBattle.value && this.parent.contentsBattle.value !== 0) || (!this.parent.isBattle.value && this.parent.contents.value < 2)"
                     },
                     "spell": {
                         "type": "property",
                         "name": "Spell",
                         "begin": 3,
                         "stringTable": "spellName",
-                        "invalid": "(this.parent.isBattle.value && this.parent.treasureTypeBattle.value !== 1) || (!this.parent.isBattle.value && this.parent.treasureType.value !== 1)"
+                        "invalid": "(this.parent.isBattle.value && this.parent.contentsBattle.value !== 1) || (!this.parent.isBattle.value && this.parent.contents.value !== 1)"
                     },
                     "multiplier": {
                         "type": "property",
@@ -2824,45 +2922,94 @@
                                 "4": "10000"
                             }
                         },
-                        "invalid": "this.parent.isBattle.value || this.parent.treasureType.value !== 0"
+                        "invalid": "this.parent.isBattle.value || this.parent.contents.value !== 0"
                     },
                     "gp1": {
                         "type": "property",
                         "name": "GP",
                         "begin": 3,
                         "multiplier": 1,
-                        "invalid": "this.parent.isBattle.value || this.parent.treasureType.value !== 0 || this.parent.multiplier.value !== 0"
+                        "invalid": "this.parent.isBattle.value || this.parent.contents.value !== 0 || this.parent.multiplier.value !== 0"
                     },
                     "gp10": {
                         "type": "property",
                         "name": "GP",
                         "begin": 3,
                         "multiplier": 10,
-                        "invalid": "this.parent.isBattle.value || this.parent.treasureType.value !== 0 || this.parent.multiplier.value !== 1"
+                        "invalid": "this.parent.isBattle.value || this.parent.contents.value !== 0 || this.parent.multiplier.value !== 1"
                     },
                     "gp100": {
                         "type": "property",
                         "name": "GP",
                         "begin": 3,
                         "multiplier": 100,
-                        "invalid": "this.parent.isBattle.value || this.parent.treasureType.value !== 0 || this.parent.multiplier.value !== 2"
+                        "invalid": "this.parent.isBattle.value || this.parent.contents.value !== 0 || this.parent.multiplier.value !== 2"
                     },
                     "gp1000": {
                         "type": "property",
                         "name": "GP",
                         "begin": 3,
                         "multiplier": 1000,
-                        "invalid": "this.parent.isBattle.value || this.parent.treasureType.value !== 0 || this.parent.multiplier.value !== 3"
+                        "invalid": "this.parent.isBattle.value || this.parent.contents.value !== 0 || this.parent.multiplier.value !== 3"
                     },
                     "gp10000": {
                         "type": "property",
                         "name": "GP",
                         "begin": 3,
                         "multiplier": 10000,
-                        "invalid": "this.parent.isBattle.value || this.parent.treasureType.value !== 0 || this.parent.multiplier.value !== 4"
+                        "invalid": "this.parent.isBattle.value || this.parent.contents.value !== 0 || this.parent.multiplier.value !== 4"
+                    },
+                    "isBattle": {
+                        "type": "property",
+                        "name": "Battle",
+                        "begin": 2,
+                        "mask": "0x80",
+                        "bool": true
+                    },
+                    "battle": {
+                        "type": "property",
+                        "name": "Battle",
+                        "begin": 2,
+                        "mask": "0x3F",
+                        "offset": "0x40",
+                        "link": "battleGroupEvent[%i]",
+                        "stringTable": "battleGroupEvent",
+                        "disabled": "!this.parent.isBattle.value"
                     }
                 }
-            }
+            },
+            "reference": [
+                {
+                    "begin": "0xC00DB9",
+                    "mask": "0xFFFFFF"
+                }, {
+                    "begin": "0xC00DC1",
+                    "mask": "0xFFFFFF",
+                    "offset": -1
+                }, {
+                    "begin": "0xC00DF2",
+                    "mask": "0xFFFFFF",
+                    "offset": -1
+                }, {
+                    "begin": "0xC00E00",
+                    "mask": "0xFFFFFF"
+                }, {
+                    "begin": "0xC00E35",
+                    "mask": "0xFFFFFF",
+                    "offset": -2
+                }, {
+                    "begin": "0xC00E3B",
+                    "mask": "0xFFFFFF",
+                    "offset": -3
+                }, {
+                    "begin": "0xC05CFB",
+                    "mask": "0xFFFFFF",
+                    "offset": -1
+                }, {
+                    "begin": "0xC05D09",
+                    "mask": "0xFFFFFF"
+                }
+            ]
         },
         "triggerScript": {
             "type": "array",
@@ -3012,6 +3159,8 @@
             "name": "World Layouts",
             "range": "0xC70000-0xC82220",
             "autoBank": true,
+            "canRelocate": true,
+            "pointerAlign": "0x010000",
             "array": {
                 "length": "0x0500"
             },
@@ -3020,8 +3169,25 @@
             },
             "pointerTable": {
                 "range": "0xCFE000-0xCFEA00",
-                "offset": "0xC70000"
-            }
+                "offset": "0xC70000",
+                "canRelocate": true,
+                "reference": [
+                    {
+                        "begin": "0xC069CF",
+                        "mask": "0xFFFFFF"
+                    }, {
+                        "begin": "0xC069DA",
+                        "mask": "0xFFFFFF"
+                    }
+                ]
+            },
+            "reference": [
+                {
+                    "begin": "0xC069A2",
+                    "mask": "0xFF",
+                    "bankByte": true
+                }
+            ]
         },
         "worldPalettes": {
             "type": "array",
@@ -3750,10 +3916,10 @@
                         }
                     }
                 },
-                "objectPosition": {
-                    "name": "Change Object Position",
-                    "opcode": ["0xD3", "0xD8"],
-                    "length": 3,
+                "objectPositionAbs": {
+                    "name": "Change Object Position (Absolute)",
+                    "opcode": "0xD3",
+                    "length": 4,
                     "assembly": {
                         "object": {
                             "type": "property",
@@ -3762,52 +3928,22 @@
                             "mask": "0x3F",
                             "stringTable": "object"
                         },
-                        "position": {
-                            "type": "property",
-                            "name": "Position",
-                            "begin": 0,
-                            "stringTable": {
-                                "hideIndex": true,
-                                "string": {
-                                    "0xD3": "Absolute",
-                                    "0xD8": "Relative to Party"
-                                }
-                            }
-                        },
-                        "xAbs": {
+                        "x": {
                             "type": "property",
                             "name": "X Position",
                             "begin": 2,
-                            "mask": "0xF0",
-                            "invalid": "this.parent.position.value !== 0xD3"
+                            "mask": "0x3F"
                         },
-                        "yAbs": {
+                        "y": {
                             "type": "property",
                             "name": "Y Position",
-                            "begin": 2,
-                            "mask": "0x0F",
-                            "invalid": "this.parent.position.value !== 0xD3"
-                        },
-                        "xRel": {
-                            "type": "property",
-                            "name": "X Position",
-                            "begin": 2,
-                            "mask": "0xF0",
-                            "signed": true,
-                            "invalid": "this.parent.position.value !== 0xD8"
-                        },
-                        "yRel": {
-                            "type": "property",
-                            "name": "Y Position",
-                            "begin": 2,
-                            "mask": "0x0F",
-                            "signed": true,
-                            "invalid": "this.parent.position.value !== 0xD8"
+                            "begin": 3,
+                            "mask": "0xFF"
                         },
                         "direction": {
                             "type": "property",
                             "name": "Direction",
-                            "begin": 1,
+                            "begin": 2,
                             "mask": "0xC0",
                             "stringTable": {
                                 "string": {
@@ -3817,6 +3953,34 @@
                                     "3": "Left"
                                 }
                             }
+                        }
+                    }
+                },
+                "objectPositionRel": {
+                    "name": "Change Object Position (Relative)",
+                    "opcode": "0xD8",
+                    "length": 3,
+                    "assembly": {
+                        "object": {
+                            "type": "property",
+                            "name": "Object",
+                            "begin": 1,
+                            "mask": "0x3F",
+                            "stringTable": "object"
+                        },
+                        "x": {
+                            "type": "property",
+                            "name": "X Position",
+                            "begin": 2,
+                            "mask": "0xF0",
+                            "signed": true
+                        },
+                        "y": {
+                            "type": "property",
+                            "name": "Y Position",
+                            "begin": 2,
+                            "mask": "0x0F",
+                            "signed": true
                         }
                     }
                 },
@@ -4771,6 +4935,11 @@
         }
     },
     "stringTable": {
+        "battleSwitch": {
+            "name": "Battle Switch",
+            "length": 256,
+            "default": "Battle Switch %i"
+        },
         "eventCharacter": {
             "name": "Event Character",
             "length": 4,
@@ -4778,11 +4947,6 @@
             "string": {
                 "2": "<characterNames[2]>/<characterNames[4]>"
             }
-        },
-        "battleSwitch": {
-            "name": "Battle Switch",
-            "length": 256,
-            "default": "Battle Switch %i"
         },
         "eventSwitch": {
             "name": "Event Switch",
@@ -5209,6 +5373,9 @@
         }
     },
     "freeSpace": [
-        "0xCDF9FF-0xCDFA40"
+        "0xCDF9FF-0xCDFA40",
+        "0xD13600-0xD13840",
+        "0xE36B3D-0xE70000",
+        "0xE75900-0xE7F800"
     ]
 }

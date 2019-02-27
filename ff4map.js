@@ -92,16 +92,21 @@ function FF4Map(rom) {
     buttonTriggers.parentElement.style.display = "inline-block";
     this.showTriggers = buttonTriggers.checked;
 
-//    document.getElementById("showLayer1").onchange = function() { map.changeLayer("showLayer1"); twoState(this); };
-//    document.getElementById("showLayer2").onchange = function() { map.changeLayer("showLayer2"); twoState(this); };
-//    document.getElementById("showLayer3").onchange = null;
-//    document.getElementById("showTriggers").onchange = function() { map.changeLayer("showTriggers"); twoState(this); };
-//    this.showLayer1 = document.getElementById("showLayer1").checked;
-//    this.showLayer2 = document.getElementById("showLayer2").checked;
-//    this.showTriggers = document.getElementById("showTriggers").checked;
     document.getElementById("zoom").onchange = function() { map.changeZoom(); };
     
     this.initBattleGroups();
+}
+
+FF4Map.prototype.beginAction = function(callback) {
+    this.rom.beginAction();
+    this.rom.doAction(new ROMAction(this.observer, this.observer.wake, this.observer.sleep));
+    if (callback) this.rom.doAction(new ROMAction(this, callback, null));
+}
+
+FF4Map.prototype.endAction = function(callback) {
+    if (callback) this.rom.doAction(new ROMAction(this, null, callback));
+    this.rom.doAction(new ROMAction(this.observer, this.observer.sleep, this.observer.wake));
+    this.rom.endAction();
 }
 
 FF4Map.prototype.initBattleGroups = function() {
@@ -218,8 +223,8 @@ FF4Map.prototype.mouseDown = function(e) {
         this.selectTiles();
         this.isDragging = true;
     } else {
-        this.rom.beginAction();
-        this.rom.pushAction(new ROMAction(this, this.drawMap, null, "Redraw Map"));
+        this.beginAction(this.drawMap);
+//        this.rom.pushAction(new ROMAction(this, this.drawMap, null, "Redraw Map"));
         this.rom.doAction(new ROMAction(this.selectedLayer, this.selectedLayer.decodeLayout, null, "Decode Layout"));
         this.setTiles();
         this.isDragging = true;
@@ -241,17 +246,15 @@ FF4Map.prototype.mouseUp = function(e) {
             this.selectedTrigger.y.value = this.clickedRow;
 
             // set the new trigger position (and trigger undo)
-            this.observer.stopObserving(this.selectedTrigger);
-            this.rom.beginAction();
+            this.beginAction(this.reloadTriggers);
             this.selectedTrigger.x.setValue(col);
             this.selectedTrigger.y.setValue(row);
-            this.rom.endAction();
-            this.observer.startObserving(this.selectedTrigger, this.drawMap);
+            this.endAction(this.reloadTriggers);
         }
     } else if (this.rom.action && this.isDragging) {
         this.rom.doAction(new ROMAction(this.selectedLayer, null, this.selectedLayer.decodeLayout, "Decode Layout"));
         this.rom.pushAction(new ROMAction(this, null, this.drawMap, "Redraw Map"));
-        this.rom.endAction();
+        this.endAction();
     }
     
     this.isDragging = false;
@@ -930,7 +933,7 @@ FF4Map.prototype.insertTrigger = function(type) {
 
     var trigger = triggers.blankAssembly();
 
-    this.rom.beginAction();
+    this.beginAction(this.reloadTriggers);
     trigger.x.setValue(this.clickedCol);
     trigger.y.setValue(this.clickedRow);
     if (type === "treasureProperties") {
@@ -950,9 +953,8 @@ FF4Map.prototype.insertTrigger = function(type) {
     } else {
         triggers.insertAssembly(trigger);
     }
-    this.rom.endAction();
+    this.endAction(this.reloadTriggers);
     
-    this.observer.startObserving(trigger, this.reloadTriggers);
     this.selectedTrigger = trigger;
     this.rom.select(trigger);
 }
@@ -994,13 +996,13 @@ FF4Map.prototype.insertNPC = function() {
 
     var npc = npcProperties.blankAssembly();
 
-    this.rom.beginAction();
+    this.beginAction(this.reloadTriggers);
     npc.x.setValue(this.clickedCol);
     npc.y.setValue(this.clickedRow);
+    npc.switch.setValue(1);
     npcProperties.insertAssembly(npc);
-    this.rom.endAction();
+    this.endAction(this.reloadTriggers);
     
-    this.observer.startObserving(npc, this.reloadTriggers);
     this.selectedTrigger = npc;
     this.rom.select(npc);
 }
@@ -1014,9 +1016,9 @@ FF4Map.prototype.deleteTrigger = function() {
     var index = triggers.array.indexOf(trigger);
     if (index === -1) return;
     
-    this.rom.beginAction();
+    this.beginAction(this.reloadTriggers);
     triggers.removeAssembly(index);
-    this.rom.endAction();
+    this.endAction(this.reloadTriggers);
     
     this.selectedTrigger = null;
     this.rom.select(null);

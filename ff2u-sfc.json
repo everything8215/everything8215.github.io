@@ -525,7 +525,7 @@
                         "begin": 0,
                         "mask": "0x07"
                     },
-                    "hidden": {
+                    "hiddenMonsters": {
                         "type": "property",
                         "name": "Hidden Monsters",
                         "begin": 4,
@@ -1126,6 +1126,7 @@
             "align": "0x8000",
             "autoBank": true,
             "endPointer": true,
+            "canRelocate": true,
             "array": {
                 "length": 383
             },
@@ -1135,6 +1136,7 @@
             "pointerTable": {
                 "range": "0x178000-0x178300",
                 "offset": "0x178000",
+                "canRelocate": true,
                 "reference": [
                     {
                         "begin": "0x00FC4F",
@@ -1820,6 +1822,7 @@
             "name": "Map Triggers",
             "range": "0x158300-0x15961F",
             "isSequential": true,
+            "canRelocate": true,
             "array": {
                 "length": 384
             },
@@ -1945,6 +1948,7 @@
             "pointerTable": {
                 "range": "0x158000-0x158300",
                 "offset": "0x158300",
+                "canRelocate": true,
                 "reference": [
                     {
                         "begin": "0x009954",
@@ -3943,6 +3947,7 @@
             "type": "array",
             "name": "NPC Properties",
             "range": "0x138300-0x1396E8",
+            "canRelocate": true,
             "array": {
                 "length": 384
             },
@@ -4041,6 +4046,7 @@
             "pointerTable": {
                 "range": "0x138000-0x138300",
                 "offset": "0x138300",
+                "canRelocate": true,
                 "reference": [
                     {
                         "begin": "0x00BEAA",
@@ -4563,6 +4569,7 @@
             "type": "array",
             "name": "World Layout",
             "range": "0x168480-0x16C355",
+            "canRelocate": true,
             "array": {
                 "length": "0x0100"
             },
@@ -4572,6 +4579,7 @@
             "pointerTable": {
                 "range": "0x168000-0x168200",
                 "offset": "0x168480",
+                "canRelocate": true,
                 "reference": [
                     {
                         "begin": "0x00FAED",
@@ -4598,6 +4606,7 @@
             "type": "array",
             "name": "Underground Layout",
             "range": "0x16C480-0x16E042",
+            "canRelocate": true,
             "array": {
                 "length": "0x0100"
             },
@@ -4607,6 +4616,7 @@
             "pointerTable": {
                 "range": "0x168200-0x168400",
                 "offset": "0x16C480",
+                "canRelocate": true,
                 "reference": [
                     {
                         "begin": "0x00FB7B",
@@ -4633,6 +4643,7 @@
             "type": "array",
             "name": "Moon Layout",
             "range": "0x16E180-0x16EB54",
+            "canRelocate": true,
             "array": {
                 "length": "0x40"
             },
@@ -4642,6 +4653,7 @@
             "pointerTable": {
                 "range": "0x168400-0x168480",
                 "offset": "0x16E180",
+                "canRelocate": true,
                 "reference": [
                     {
                         "begin": "0x00FBC8",
@@ -4772,6 +4784,7 @@
             "type": "array",
             "name": "World Triggers",
             "range": "0x19FE66-0x1A8000",
+            "canRelocate": true,
             "array": {
                 "length": 3
             },
@@ -4842,6 +4855,7 @@
             "pointerTable": {
                 "range": "0x19FE60-0x19FE66",
                 "offset": "0x19FE66",
+                "canRelocate": true,
                 "reference": [
                     {
                         "begin": "0x009B7F",
@@ -5288,7 +5302,15 @@
                         "x": {
                             "type": "property",
                             "name": "X Position",
-                            "begin": 2
+                            "begin": 2,
+                            "mask": "0x3F",
+                            "invalid": "this.parent.direction.invalid"
+                        },
+                        "xWorld": {
+                            "type": "property",
+                            "name": "X Position",
+                            "begin": 2,
+                            "invalid": "!this.parent.direction.invalid"
                         },
                         "y": {
                             "type": "property",
@@ -5308,7 +5330,7 @@
                             "name": "Vehicle",
                             "begin": 4,
                             "mask": "0x1F",
-                            "invalid": "((this.parent.mapMSB.value === 0) && (this.parent.map1.value !== 0xFB) && (this.parent.map1.value !== 0xFC) && (this.parent.map1.value !== 0xFD)) || ((this.parent.mapMSB.value === 1) && (this.parent.map2.value !== 0x1FB) && (this.parent.map2.value !== 0x1FC) && (this.parent.map2.value !== 0x1FD))",
+                            "invalid": "!this.parent.direction.invalid",
                             "stringTable": "vehicles"
                         }
                     }

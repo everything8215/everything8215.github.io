@@ -96,10 +96,10 @@ FF6Script.label = function(script, offset) {
 FF6Script.initScript = function(script) {
     
     if (script.key !== "eventScript") return;
-    
+
     // add references for each map's events
     var triggers, m, t, offset, label;
-        
+    
     // event triggers
     for (m = 0; m < script.rom.eventTriggers.array.length; m++) {
         triggers = script.rom.eventTriggers.item(m);
@@ -182,18 +182,19 @@ FF6Script.didDisassemble = function(command, data) {
                 
                 // get the previous dialog text
                 var d = previous.dialog.value;
-                var dialog
+                var dialog;
 //                var dialog = command.rom.stringTable.dialog.string[d];
 //                if (!dialog) continue;
                 if (command.rom.dialog) {
                     dialog = command.rom.dialog.item(d);
                     if (!dialog || !dialog.text) continue;
                 } else if (command.rom.stringTable.dialog) {
-                    var language = command.rom.stringTable.dialog.language;
+                    var dialogString = command.rom.stringTable.dialog.string[d];
+                    var language = dialogString.language;
                     if (!language) break;
                     var firstLanguage = Object.keys(language)[0];
                     var link = language[firstLanguage].link;
-                    var dialog = command.rom.parseLink(link.replace(/%i/g, d.toString()));
+                    dialog = command.rom.parseLink(link.replace(/%i/g, d.toString()));
                 } else {
                     break;
                 }

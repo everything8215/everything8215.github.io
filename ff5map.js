@@ -33,6 +33,7 @@ function FF5Map(rom) {
     this.mapCanvas.height = 256;
     this.mapSectors = [false];
     this.npcCanvas = document.createElement('canvas');
+    this.menu = document.getElementById("menu");
 
     this.mapProperties = null;
     this.m = null; // map index
@@ -62,7 +63,7 @@ function FF5Map(rom) {
     this.scrollDiv.onmousemove = function(e) { map.mouseMove(e) };
     this.scrollDiv.onmouseenter = function(e) { map.mouseEnter(e) };
     this.scrollDiv.onmouseleave = function(e) { map.mouseLeave(e) };
-    this.scrollDiv.oncontextmenu = function() { return false; };
+    this.scrollDiv.oncontextmenu = function(e) { map.openMenu(e); return false; };
 
     var buttonLayer1 = document.getElementById("showLayer1");
     buttonLayer1.onchange = function() { map.changeLayer("showLayer1"); twoState(this); };
@@ -88,22 +89,22 @@ function FF5Map(rom) {
     buttonTriggers.parentElement.style.display = "inline-block";
     this.showTriggers = buttonTriggers.checked;
 
-//    document.getElementById("showLayer1").onchange = function() { map.changeLayer("showLayer1"); twoState(this); };
-//    document.getElementById("showLayer2").onchange = function() { map.changeLayer("showLayer2"); twoState(this); };
-//    document.getElementById("showLayer3").onchange = function() { map.changeLayer("showLayer3"); twoState(this); };
-//    document.getElementById("showTriggers").onchange = function() { map.changeLayer("showTriggers"); twoState(this); };
-//    document.getElementById("showLayer1").addEventListener("change",  function() { map.changeLayer("showLayer1"); });
-//    document.getElementById("showLayer2").addEventListener("change", function() { map.changeLayer("showLayer2"); });
-//    document.getElementById("showLayer3").addEventListener("change", function() { map.changeLayer("showLayer3"); });
-//    document.getElementById("showTriggers").addEventListener("change", function() { map.changeLayer("showTriggers"); });
-//    this.showLayer1 = document.getElementById("showLayer1").checked;
-//    this.showLayer2 = document.getElementById("showLayer2").checked;
-//    this.showLayer3 = document.getElementById("showLayer3").checked;
-//    this.showTriggers = document.getElementById("showTriggers").checked;
     document.getElementById("zoom").onchange = function() { map.changeZoom(); };
 
     this.showCursor = false;
     this.observer = new ROMObserver(rom, this, {sub: true, link: true, array: true});
+}
+
+FF5Map.prototype.beginAction = function(callback) {
+    this.rom.beginAction();
+    this.rom.doAction(new ROMAction(this.observer, this.observer.wake, this.observer.sleep));
+    if (callback) this.rom.doAction(new ROMAction(this, callback, null));
+}
+
+FF5Map.prototype.endAction = function(callback) {
+    if (callback) this.rom.doAction(new ROMAction(this, null, callback));
+    this.rom.doAction(new ROMAction(this.observer, this.observer.sleep, this.observer.wake));
+    this.rom.endAction()
 }
 
 FF5Map.prototype.changeZoom = function() {
@@ -132,6 +133,8 @@ FF5Map.prototype.changeZoom = function() {
 
 FF5Map.prototype.scroll = function() {
     
+    this.closeMenu();
+    
     // get the visible dimensions
     var x = this.div.scrollLeft;
     var y = this.div.scrollTop;
@@ -153,6 +156,8 @@ FF5Map.prototype.scroll = function() {
 }
 
 FF5Map.prototype.mouseDown = function(e) {
+    
+    this.closeMenu();
     this.clickedCol = ((e.offsetX / this.zoom + this.ppu.layers[this.l].x) % this.ppu.width) >> 4;
     this.clickedRow = ((e.offsetY / this.zoom + this.ppu.layers[this.l].y) % this.ppu.height) >> 4;
     this.clickButton = e.button;
@@ -190,7 +195,7 @@ FF5Map.prototype.mouseDown = function(e) {
     } else if (this.clickButton === 2) {
         this.selectTiles();
     } else {
-        this.rom.beginAction();
+        this.beginAction();
         this.rom.pushAction(new ROMAction(this, this.drawMap, null, "Redraw Map"));
         this.rom.doAction(new ROMAction(this.selectedLayer, this.selectedLayer.decodeLayout, null, "Decode Layout"));
         this.setTiles();
@@ -212,17 +217,14 @@ FF5Map.prototype.mouseUp = function(e) {
             this.selectedTrigger.y.value = this.clickedRow;
 
             // set the new trigger position (and trigger undo)
-            this.observer.stopObserving(this.selectedTrigger);
-            this.rom.beginAction();
+            this.beginAction(this.reloadTriggers);
             this.selectedTrigger.x.setValue(col);
             this.selectedTrigger.y.setValue(row);
-            this.rom.endAction();
-            this.observer.startObserving(this.selectedTrigger, this.drawMap);
+            this.endAction(this.reloadTriggers);
         }
     } else if (this.rom.action) {
         this.rom.doAction(new ROMAction(this.selectedLayer, null, this.selectedLayer.decodeLayout, "Decode Layout"));
-        this.rom.pushAction(new ROMAction(this, null, this.drawMap, "Redraw Map"));
-        this.rom.endAction();
+        this.endAction(this.drawMap);
     }
     
     this.clickedCol = null;
@@ -280,6 +282,49 @@ FF5Map.prototype.mouseLeave = function(e) {
     this.drawCursor();
     
     this.mouseUp(e);
+}
+
+
+FF5Map.prototype.updateMenu = function() {
+    this.menu.innerHTML = "";
+    
+    var self = this;
+    function appendMenuItem(label, onclick) {
+        var li = document.createElement('li');
+        li.classList.add("menu-item");
+        li.innerHTML = label;
+        if (onclick) {
+            li.onclick = onclick;
+        } else {
+            li.classList.add("menu-item-disabled");
+        }
+        self.menu.appendChild(li);
+    }
+    
+    appendMenuItem("Insert Entrance Trigger", function() {self.insertTrigger('entranceTriggers')});
+    appendMenuItem("Insert Event Trigger", function() {self.insertTrigger('eventTriggers')});
+    appendMenuItem("Insert Treasure", this.m < 5 ? null : function() {self.insertTrigger('treasureProperties')});
+    appendMenuItem("Insert NPC", this.m < 5 ? null : function() {self.insertTrigger('npcProperties')});
+    appendMenuItem("Delete Trigger", !this.selectedTrigger ? null : function() {self.deleteTrigger()});
+}
+
+FF5Map.prototype.openMenu = function(e) {
+    if (this.l !== 3) return; // no menu unless editing triggers
+    this.updateMenu();
+    
+    this.clickPoint = {
+        x: ((e.offsetX / this.zoom + this.ppu.layers[this.l].x) % this.ppu.width) >> 4,
+        y: ((e.offsetY / this.zoom + this.ppu.layers[this.l].y) % this.ppu.height) >> 4,
+        button: e.button
+    };
+
+    this.menu.classList.add("menu-active");
+    this.menu.style.left = e.x + "px";
+    this.menu.style.top = e.y + "px";
+}
+
+FF5Map.prototype.closeMenu = function() {
+    this.menu.classList.remove("menu-active");
 }
 
 FF5Map.prototype.setTiles = function() {
@@ -759,6 +804,11 @@ FF5Map.prototype.drawMap = function() {
     this.drawCursor();
 }
 
+FF5Map.prototype.reloadTriggers = function() {
+    this.loadTriggers();
+    this.drawMap();
+}
+
 FF5Map.prototype.loadTriggers = function() {
 
     var i;
@@ -766,27 +816,97 @@ FF5Map.prototype.loadTriggers = function() {
     this.selectedTrigger = null;
     
     var triggers = this.rom.eventTriggers.item(this.m);
+    this.observer.startObserving(triggers, this.reloadTriggers);
     for (i = 0; i < triggers.array.length; i++) {
         this.triggers.push(triggers.item(i));
-        this.observer.startObserving(triggers.item(i), this.drawMap);
     }
     triggers = this.rom.entranceTriggers.item(this.m);
+    this.observer.startObserving(triggers, this.reloadTriggers);
     for (i = 0; i < triggers.array.length; i++) {
         this.triggers.push(triggers.item(i));
-        this.observer.startObserving(triggers.item(i), this.drawMap);
     }
     triggers = this.rom.npcProperties.item(this.m);
+    this.observer.startObserving(triggers, this.reloadTriggers);
     for (i = 0; i < triggers.array.length; i++) {
         this.triggers.push(triggers.item(i));
-        this.observer.startObserving(triggers.item(i), this.drawMap);
     }
-    var start = this.rom.mapTreasures.item(this.m).treasure.value;
-    var end = this.rom.mapTreasures.item(this.m + 1).treasure.value;
+    var treasureStart = this.rom.mapTreasures.item(this.m).treasure;
+    var treasureEnd = this.rom.mapTreasures.item(this.m + 1).treasure;
+//    this.observer.startObserving(treasureStart, this.reloadTriggers);
+    this.observer.startObserving(treasureEnd, this.reloadTriggers);
     triggers = this.rom.treasureProperties;
-    for (i = start; i < end; i++) {
+    for (i = treasureStart.value; i < treasureEnd.value; i++) {
         this.triggers.push(triggers.item(i));
-        this.observer.startObserving(triggers.item(i), this.drawMap);
+        this.observer.startObserving(triggers.item(i), this.reloadTriggers);
     }
+}
+
+FF5Map.prototype.insertTrigger = function(type) {
+    
+    this.closeMenu();
+    
+    var triggers;
+    if (type === "treasureProperties") {
+        triggers = this.rom.treasureProperties;
+    } else {
+        triggers = this.rom[type].item(this.m);
+    }
+    var trigger = triggers.blankAssembly();
+
+    this.beginAction(this.reloadTriggers);
+    if (type === "treasureProperties") {
+        var mapTreasures = this.rom.mapTreasures;
+        var treasureIndex = mapTreasures.item(this.m + 1).treasure;
+        
+        // insert the new trigger
+        triggers.insertAssembly(trigger, treasureIndex.value);
+        
+        // increment all succeeding maps' treasure indices by 1
+        for (var m = this.m + 1; m < mapTreasures.array.length; m++) {
+            treasureIndex = mapTreasures.item(m).treasure;
+            treasureIndex.setValue(treasureIndex.value + 1);
+        }
+    } else {
+        triggers.insertAssembly(trigger);
+    }
+    trigger.x.setValue(this.clickPoint.x);
+    trigger.y.setValue(this.clickPoint.y);
+    this.endAction(this.reloadTriggers);
+    
+    this.selectedTrigger = trigger;
+    this.rom.select(trigger);
+}
+
+FF5Map.prototype.deleteTrigger = function() {
+    
+    this.closeMenu();
+    var trigger = this.selectedTrigger;
+    if (!trigger) return;
+    var triggers = trigger.parent;
+    var index = triggers.array.indexOf(trigger);
+    if (index === -1) return;
+    
+    this.beginAction(this.reloadTriggers);
+    if (triggers.key === "treasureProperties") {
+        var mapTreasures = this.rom.mapTreasures;
+        var treasureIndex = mapTreasures.item(this.m + 1).treasure;
+        
+        // decrement all succeeding maps' treasure indices by 1
+        for (var m = this.m + 1; m < mapTreasures.array.length; m++) {
+            treasureIndex = mapTreasures.item(m).treasure;
+            treasureIndex.setValue(treasureIndex.value - 1);
+        }
+        
+        // remove the trigger
+        triggers.removeAssembly(index);
+
+    } else {
+        triggers.removeAssembly(index);
+    }
+    this.endAction(this.reloadTriggers);
+    
+    this.selectedTrigger = null;
+    this.rom.select(null);
 }
 
 FF5Map.prototype.drawTriggers = function() {

@@ -64,7 +64,7 @@
                 closeButton.onclick = closeModal;
 
                 Split(["#nav", "#edit", "#toolbox"], {
-                    sizes: [20, 60, 20],
+                    sizes: [5, 80, 5],
                     minSize: [256, 0, 256],
                     gutterSize: 5,
                     snapOffset: 0,
@@ -162,7 +162,7 @@
                     content.appendChild(p);
                     
                     var ul = document.createElement('ul');
-                    ul.classList.add('def-list');
+                    ul.classList.add('modal-list');
                     var keys = Object.keys(definitions);
                     for (var i = 0; i < keys.length; i++) {
                         var key = keys[i];
@@ -276,39 +276,19 @@
 //                console.log(bigString);
             }
 
-            function saveROM(canRelocate) {
+            function saveROM(forceSave) {
                 
                 if (!rom) return;
                 
-                rom.canRelocate = canRelocate;
+//                rom.treasureProperties.markAsDirty();
+//                rom.mapLayoutsPointerTable.markAsDirty();
                 
-//                rom.esperAttackDescriptions.markAsDirty();
-//                rom.esperAttackDescriptionsPointerTable.markAsDirty();
-                
-                // assemble the rom and attach the data to a blob
-                if (!rom.assemble() && canRelocate) {
-                    
-                    var content = openModal("Expand ROM");
-                    
-                    var p = document.createElement('p');
-                    p.innerHTML = "Some data has increased in size and no longer fits in its alotted space. Saving may result in a loss of data. Would you like to save anyway?";
-                    content.appendChild(p);
-                    
-                    var yesButton = document.createElement('button');
-                    yesButton.innerHTML = "Yes";
-                    yesButton.onclick = function() { closeModal(); saveROM(false); };
-                    content.appendChild(yesButton);
-                    
-                    var noButton = document.createElement('button');
-                    noButton.innerHTML = "No";
-                    noButton.onclick = function() { closeModal(); };
-                    content.appendChild(noButton);
-                    
-                    var expandButton = document.createElement('button');
-                    expandButton.innerHTML = "Expand ROM (untested)";
-                    expandButton.onclick = function() { closeModal(); expandROM(); };
-                    content.appendChild(expandButton);
-
+                if (!rom.assemble()) {
+                    if (forceSave) {
+                        showOrphans();
+                    } else {
+                        chooseExpandMode();
+                    }
                     return;
                 }
                 
@@ -328,9 +308,87 @@
                 });
             }
             
-            function expandROM() {
-                rom.expand(rom.data.length + 0x100000);
-                saveROM(true);
+            function chooseExpandMode() {
+                var content = openModal("Save ROM");
+
+                var p = document.createElement('p');
+                p.innerHTML = "Some data has increased in size and no longer fits in its alotted range. What would you like to do?";
+                content.appendChild(p);
+
+                function createExpandRadio(expandMode, description) {
+                    var div = document.createElement('div');
+                    div.classList.add("expand-div");
+                    var button = document.createElement('input');
+                    button.type = "radio";
+                    button.id = "expand-" + expandMode;
+                    button.classList.add("expand-radio");
+                    button.name = "expandMode";
+                    button.value = expandMode;
+                    button.checked = (rom.expandMode === button.value);
+                    div.appendChild(button);
+                    var label = document.createElement('label');
+                    label.htmlFor = button.id;
+                    label.innerHTML = description;
+                    div.appendChild(label);
+                    content.appendChild(div);
+                }
+                
+                createExpandRadio(ROMData.ExpandMode.truncate, "<b>Truncate:</b> Data will be truncated to fit its range (Default behavior, may result in loss of data)");
+                createExpandRadio(ROMData.ExpandMode.overwrite, "<b>Overwrite:</b> Data will overwrite adjacent data (May result in corruption of data, not recommended unless using Steam ROM)");
+                createExpandRadio(ROMData.ExpandMode.relocate, "<b>Relocate:</b> Modified data will be relocated automatically if space is available elsewhere (Recommended, may result in loss of compatibility with patches and other utilities)");
+                createExpandRadio(ROMData.ExpandMode.optimize, "<b>Optimize:</b> All possible data will be relocated to optimize use of free space (Recommended if unable to relocate, may result in loss of compatibility with patches and other utilities)");
+                if (rom.isSFC) createExpandRadio(ROMData.ExpandMode.expand, "<b>Expand:</b> The ROM will be expanded and data will be relocated to the expanded area automatically (SNES/SFC only)");
+
+                var okay = document.createElement('button');
+                okay.innerHTML = "Okay";
+                okay.onclick = function() {
+                    closeModal();
+                    var radioButtons = document.getElementsByClassName('expand-radio');
+                    for (var i = 0; i < radioButtons.length; i++) {
+                        var button = radioButtons[i];
+                        if (!button.checked) continue;
+                        if (button.value === ROMData.ExpandMode.expand) {
+                            rom.expand(rom.data.length + 0x100000);
+                            if (rom.expandMode !== ROMData.ExpandMode.optimize) rom.expandMode = ROMData.ExpandMode.relocate;
+                        } else {
+                            rom.expandMode = button.value;
+                        }
+                        saveROM(true);
+                        break;
+                    }
+                };
+                content.appendChild(okay);
+
+                var cancel = document.createElement('button');
+                cancel.innerHTML = "Cancel";
+                cancel.onclick = function() { closeModal(); };
+                content.appendChild(cancel);
+            }
+            
+            function showOrphans() {
+                var content = openModal("Save ROM");
+                var p = document.createElement('p');
+                content.appendChild(p);
+                if (!rom.orphans || !rom.orphans.length) {
+                    p.innerHTML = "Unable to save ROM. Try optimizing or expanding.";
+                    return;
+                }
+                p.innerHTML = "Failed to save the data listed below. Try optimizing or expanding.";
+                
+                var ul = document.createElement('ul');
+                content.appendChild(ul);
+                ul.classList.add("modal-list");
+                for (var i = 0; i < rom.orphans.length; i++) {
+                    var assembly = rom.orphans[i];
+                    var li = document.createElement('li');
+                    li.innerHTML = assembly.name || assembly.key;
+                    if (!assembly.canRelocate) {
+                        li.innerHTML += " (cannot relocate)";
+                    } else {
+                        li.innerHTML += " (" + assembly.assembledLength + " bytes)";
+                    }
+                    ul.appendChild(li);
+                }
             }
             
             function selectMap(m) {
@@ -499,7 +557,7 @@
                         <span class="tooltiptext">Open ROM</span>
                     </button>
                     <input type="file" style="display:none;" id="rom-file" name="file"/>
-                    <button class="icon-btn float-left tooltip" onclick="saveROM(rom.canRelocate)">
+                    <button class="icon-btn float-left tooltip" onclick="saveROM()">
                         <i class="fas fa-save"></i>
                         <span class="tooltiptext">Save ROM</span>
                     </button>

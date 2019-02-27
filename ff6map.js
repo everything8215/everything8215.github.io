@@ -94,15 +94,91 @@ function FF6Map(rom) {
     buttonTriggers.parentElement.style.display = "inline-block";
     this.showTriggers = buttonTriggers.checked;
 
-//    document.getElementById("showLayer1").onchange = function() { map.changeLayer("showLayer1"); twoState(this); };
-//    document.getElementById("showLayer2").onchange = function() { map.changeLayer("showLayer2"); twoState(this); };
-//    document.getElementById("showLayer3").onchange = function() { map.changeLayer("showLayer3"); twoState(this); };
-//    document.getElementById("showTriggers").onchange = function() { map.changeLayer("showTriggers"); twoState(this); };
-//    this.showLayer1 = document.getElementById("showLayer1").checked;
-//    this.showLayer2 = document.getElementById("showLayer2").checked;
-//    this.showLayer3 = document.getElementById("showLayer3").checked;
-//    this.showTriggers = document.getElementById("showTriggers").checked;
     document.getElementById("zoom").onchange = function() { map.changeZoom(); };
+    
+    // check if GBA triggers have already been fixed
+    if (this.rom.isGBA && (rom.eventTriggersAdvance instanceof ROMArray || rom.npcPropertiesAdvance instanceof ROMArray)) {
+
+        // prompt the user to see if they want to fix the triggers
+        var content = openModal("Fix GBA Triggers");
+
+        var p = document.createElement('p');
+        p.innerHTML = "Some triggers in FF6 Advance are stored separately from the others. It is recommended to consolidate these triggers if you plan to modify any triggers. This will result in some data being relocated. Would you like FF6Tools to move these triggers?";
+        content.appendChild(p);
+
+        var yesButton = document.createElement('button');
+        yesButton.innerHTML = "Yes";
+        yesButton.onclick = function() {
+            closeModal();
+            rom.beginAction();
+            map.fixGBATriggers(rom.eventTriggers, rom.eventTriggersAdvance);
+            map.fixGBATriggers(rom.npcProperties, rom.npcPropertiesAdvance);
+            rom.endAction();
+        };
+        content.appendChild(yesButton);
+
+        var noButton = document.createElement('button');
+        noButton.innerHTML = "No";
+        noButton.onclick = function() { closeModal(); };
+        content.appendChild(noButton);
+    }
+}
+
+FF6Map.prototype.beginAction = function(callback) {
+    this.rom.beginAction();
+    this.rom.doAction(new ROMAction(this.observer, this.observer.wake, this.observer.sleep));
+    if (callback) this.rom.doAction(new ROMAction(this, callback, null));
+}
+
+FF6Map.prototype.endAction = function(callback) {
+    if (callback) this.rom.doAction(new ROMAction(this, null, callback));
+    this.rom.doAction(new ROMAction(this.observer, this.observer.sleep, this.observer.wake));
+    this.rom.endAction();
+}
+
+FF6Map.prototype.fixGBATriggers = function(triggers, triggersGBA) {
+
+    // return if trigger arrays are invalid
+    if (!triggers || !triggersGBA) return;
+    
+    // return if GBA triggers are already fixed
+    if (triggersGBA.type === ROMObject.Type.assembly) return;
+    
+    // create new trigger arrays for the GBA maps
+    var mapCount = this.rom.mapProperties.array.length;
+    while (triggers.array.length < mapCount) {
+        // add a blank trigger array for each map
+        var newArray = triggers.blankAssembly();
+        triggers.insertAssembly(newArray);
+    }
+
+    // copy all GBA triggers to the normal trigger array
+    for (var t = 0; t < triggersGBA.array.length; t++) {
+
+        var oldTrigger = triggersGBA.item(t);
+        var m = oldTrigger.map.value;
+        var mapTriggers = triggers.item(m);
+        var newTrigger = mapTriggers.blankAssembly();
+
+        // copy all trigger properties
+        var keys = Object.keys(newTrigger.assembly);
+        for (var k = 0; k < keys.length; k++) {
+            var key = keys[k];
+            newTrigger[key].setValue(oldTrigger[key].value);
+        }
+        
+        // add the trigger to the map's trigger array
+        mapTriggers.insertAssembly(newTrigger);
+    }
+
+    // replace the GBA triggers with a 2-byte null terminator
+    var definition = triggersGBA.definition;
+    definition.type = "assembly";
+    delete definition.assembly;
+    delete definition.pointerTable;
+    definition.name += " Placeholder";
+    var terminator = this.rom.addAssembly(definition);
+    terminator.disassemble(new Uint8Array(2));
 }
 
 FF6Map.prototype.changeZoom = function() {
@@ -206,8 +282,8 @@ FF6Map.prototype.mouseDown = function(e) {
         this.selectTiles();
         this.isDragging = true;
     } else {
-        this.rom.beginAction();
-        this.rom.pushAction(new ROMAction(this, this.drawMap, null, "Redraw Map"));
+        this.beginAction(this.drawMap);
+//        this.rom.pushAction(new ROMAction(this, this.drawMap, null, "Redraw Map"));
         this.rom.doAction(new ROMAction(this.selectedLayer, this.selectedLayer.decodeLayout, null, "Decode Layout"));
         this.setTiles();
         this.isDragging = true;
@@ -272,17 +348,15 @@ FF6Map.prototype.mouseUp = function(e) {
             this.selectedTrigger.y.value = this.triggerPoint.y;
 
             // set the new trigger position (and trigger undo)
-            this.observer.stopObserving(this.selectedTrigger);
-            this.rom.beginAction();
+            this.beginAction(this.reloadTriggers);
             this.selectedTrigger.x.setValue(col);
             this.selectedTrigger.y.setValue(row);
-            this.rom.endAction();
-            this.observer.startObserving(this.selectedTrigger, this.drawMap);
+            this.endAction(this.reloadTriggers);
         }
     } else if (this.rom.action && this.isDragging) {
         this.rom.doAction(new ROMAction(this.selectedLayer, null, this.selectedLayer.decodeLayout, "Decode Layout"));
         this.rom.pushAction(new ROMAction(this, null, this.drawMap, "Redraw Map"));
-        this.rom.endAction();
+        this.endAction();
     }
     
     this.isDragging = false;
@@ -723,6 +797,11 @@ FF6Map.prototype.loadWorldMap = function(m) {
     var paletteAssignment = (this.rom.isSFC) ? graphicsData.paletteAssignment.data : null;
     var size = (m === 2) ? 128 : 256;
     
+    // fix serpent trench map layout (ff6 advance)
+    if (this.rom.isGBA && m === 2 && layout.data.length !== (size * size)) {
+        layout.data = layout.data.subarray(0, (size * size));
+    }
+    
     this.worldLayer.loadLayout({layout: layout, tileset: tileset, w: size, h: size, paletteAssignment: paletteAssignment});
     
     // set up the ppu
@@ -847,8 +926,8 @@ FF6Map.prototype.loadTriggers = function() {
         }
     }
     
-    if (this.rom.isGBA) {
-        var triggers = this.rom.eventTriggersAdvance;
+    triggers = this.rom.eventTriggersAdvance;
+    if (this.rom.isGBA && triggers instanceof ROMArray) {
         for (i = 0; i < triggers.array.length; i++) {
             var trigger = triggers.item(i);
             if (trigger.map.value !== this.m) continue;
@@ -918,8 +997,8 @@ FF6Map.prototype.loadTriggers = function() {
         }
     }
     
-    if (this.rom.isGBA) {
-        var triggers = this.rom.npcPropertiesAdvance;
+    triggers = this.rom.npcPropertiesAdvance;
+    if (this.rom.isGBA && triggers instanceof ROMArray) {
         for (i = 0; i < triggers.array.length; i++) {
             var trigger = triggers.item(i);
             if (trigger.map.value !== this.m) continue;
@@ -947,14 +1026,13 @@ FF6Map.prototype.insertTrigger = function(type) {
     this.closeMenu();    
     var triggers = this.rom[type].item(this.m);
     var trigger = triggers.blankAssembly();
-        
-    this.rom.beginAction();
+
+    this.beginAction(this.reloadTriggers);
     triggers.insertAssembly(trigger);
     trigger.x.setValue(this.clickPoint.x);
     trigger.y.setValue(this.clickPoint.y);
-    this.rom.endAction();
-    
-    this.observer.startObserving(trigger, this.reloadTriggers);
+    this.endAction(this.reloadTriggers);
+
     this.selectedTrigger = trigger;
     this.rom.select(trigger);
 }
@@ -968,11 +1046,10 @@ FF6Map.prototype.deleteTrigger = function() {
     var index = triggers.array.indexOf(trigger);
     if (index === -1) return;
     
-    this.rom.beginAction();
+    this.beginAction(this.reloadTriggers);
     triggers.removeAssembly(index);
-    this.rom.endAction();
+    this.endAction(this.reloadTriggers);
     
-    this.observer.stopObserving(trigger);
     this.selectedTrigger = null;
     this.rom.select(null);
 }

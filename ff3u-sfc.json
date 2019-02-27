@@ -368,7 +368,6 @@
                         "begin": 2,
                         "max": "0x01FF",
                         "msb": "this.parent.monster1MSB",
-                        "format": "msb(14, 0x01, 2, 0x0100)",
                         "stringTable": "monsterName",
                         "link": "monsterProperties[%i]",
                         "special": {
@@ -1018,8 +1017,9 @@
             "type": "array",
             "name": "Dialog",
             "range": "0xCD0000-0xCEEFBB",
-            "align": "0x10000",
+            "pointerAlign": "0x10000",
             "autoBank": true,
+            "canRelocate": true,
             "array": {
                 "length": 3084
             },
@@ -1031,6 +1031,7 @@
             "pointerTable": {
                 "range": "0xCCE602-0xCD0000",
                 "offset": "0xCD0000",
+                "canRelocate": true,
                 "reference": [
                     {
                         "begin": "0xC07FCA",
@@ -1062,6 +1063,7 @@
             "type": "assembly",
             "name": "Dialog Bank Increment",
             "range": "0xCCE600-0xCCE602",
+            "canRelocate": true,
             "reference": [
                 {
                     "begin": "0xC07FD2",
@@ -1075,6 +1077,7 @@
             "range": "0xEDF882-0xEDFCAA",
             "isSequential": true,
             "endPointer": true,
+            "canRelocate": true,
             "array": {
                 "length": 415
             },
@@ -1167,6 +1170,7 @@
             "pointerTable": {
                 "range": "0xEDF480-0xEDF882",
                 "offset": "0xEDF480",
+                "canRelocate": true,
                 "reference": [
                     {
                         "begin": "0xC018EB",
@@ -1269,6 +1273,8 @@
             "name": "Single-Tile Entrance Triggers",
             "range": "0xDFBF02-0xDFD978",
             "isSequential": true,
+            "endPointer": true,
+            "canRelocate": true,
             "array": {
                 "length": 415
             },
@@ -1347,6 +1353,7 @@
             "pointerTable": {
                 "range": "0xDFBB00-0xDFBF02",
                 "offset": "0xDFBB00",
+                "canRelocate": true,
                 "reference": [
                     {
                         "begin": "0xC01A7E",
@@ -1756,6 +1763,7 @@
             "range": "0xC40342-0xC419FE",
             "isSequential": true,
             "endPointer": true,
+            "canRelocate": true,
             "array": {
                 "length": 415
             },
@@ -1790,6 +1798,7 @@
             "pointerTable": {
                 "range": "0xC40000-0xC40342",
                 "offset": "0xC40000",
+                "canRelocate": true,
                 "reference": [
                     {
                         "begin": "0xC0BCAF",
@@ -2250,6 +2259,7 @@
             "name": "Map Layouts",
             "range": "0xD9D1B0-0xDDFFF2",
             "endPointer": true,
+            "canRelocate": true,
             "array": {
                 "length": 350
             },
@@ -2260,6 +2270,7 @@
                 "range": "0xD9CD90-0xD9D1AD",
                 "pointerLength": 3,
                 "offset": "0xD9D1B0",
+                "canRelocate": true,
                 "reference": [
                     {
                         "begin": "0xC02893",
@@ -3309,6 +3320,7 @@
             "type": "array",
             "name": "Map Tile Properties",
             "range": "0xD9A800-0xD9CC4C",
+            "canRelocate": true,
             "array": {
                 "length": 42,
                 "max": 128
@@ -3358,6 +3370,7 @@
             "pointerTable": {
                 "range": "0xD9CD10-0xD9CD66",
                 "offset": "0xD9A800",
+                "canRelocate": true,
                 "reference": [
                     {
                         "begin": "0xC01CD6",
@@ -3444,6 +3457,7 @@
             "type": "array",
             "name": "Map Title",
             "range": "0xCEF100-0xCEF463",
+            "canRelocate": true,
             "array": {
                 "length": 73,
                 "max": 256
@@ -3456,6 +3470,7 @@
             "pointerTable": {
                 "range": "0xE68400-0xE68492",
                 "offset": "0xCEF100",
+                "canRelocate": true,
                 "reference": [
                     {
                         "begin": "0xC08009",
@@ -3470,16 +3485,16 @@
                     "0": "No Title"
                 }
             },
-                "reference": [
-                    {
-                        "begin": "0xC07FFE",
-                        "mask": "0xFF",
-                        "bankByte": true
-                    }, {
-                        "begin": "0xC0800D",
-                        "mask": "0xFFFF"
-                    }
-                ]
+            "reference": [
+                {
+                    "begin": "0xC07FFE",
+                    "mask": "0xFF",
+                    "bankByte": true
+                }, {
+                    "begin": "0xC0800D",
+                    "mask": "0xFFFF"
+                }
+            ]
         },
         "monsterAttack": {
             "type": "array",
@@ -3672,6 +3687,7 @@
             "type": "data",
             "name": "Monster Graphics Map",
             "range": "0xD2A820-0xD2B224",
+            "isSequential": true,
             "assembly": {
                 "smallPointer": {
                     "type": "property",
@@ -4230,6 +4246,7 @@
             "range": "0xC41D52-0xC46A6B",
             "isSequential": true,
             "endPointer": true,
+            "canRelocate": true,
             "array": {
                 "length": 415
             },
@@ -4508,6 +4525,7 @@
             "pointerTable": {
                 "range": "0xC41A10-0xC41D52",
                 "offset": "0xC41A10",
+                "canRelocate": true,
                 "reference": [
                     {
                         "begin": "0xC052BD",
@@ -4965,6 +4983,7 @@
             "range": "0xED8634-0xED8BCA",
             "isSequential": true,
             "endPointer": true,
+            "canRelocate": true,
             "array": {
                 "length": 415
             },
@@ -5035,6 +5054,7 @@
             "pointerTable": {
                 "range": "0xED82F4-0xED8634",
                 "offset": "0xED8634",
+                "canRelocate": true,
                 "reference": [
                     {
                         "begin": "0xC015DE",
@@ -5196,6 +5216,7 @@
             "name": "World of Balance Layout",
             "range": "0xEED434-0xEF114F",
             "format": "ff6-lzss",
+            "canRelocate": true,
             "reference": [
                 {
                     "begin": "0xEEB20F",
@@ -5208,6 +5229,7 @@
             "name": "World of Ruin Layout",
             "range": "0xEF6A56-0xEF9D17",
             "format": "ff6-lzss",
+            "canRelocate": true,
             "reference": [
                 {
                     "begin": "0xEEB224",
@@ -5220,6 +5242,7 @@
             "name": "Serpent Trench Layout",
             "range": "0xEF9D17-0xEFB631",
             "format": "ff6-lzss",
+            "canRelocate": true,
             "reference": [
                 {
                     "begin": "0xEEB227",
@@ -5232,6 +5255,7 @@
             "name": "World of Balance Graphics Data",
             "range": "0xEF114F-0xEF3250",
             "format": "ff6-lzss",
+            "isSequential": true,
             "assembly": {
                 "tileset": {
                     "type": "assembly",
@@ -5256,6 +5280,7 @@
             "name": "World of Ruin Graphics Data",
             "range": "0xEF4A46-0xEF6A56",
             "format": "ff6-lzss",
+            "isSequential": true,
             "assembly": {
                 "tileset": {
                     "type": "assembly",
@@ -5280,6 +5305,7 @@
             "name": "Serpent Trench Graphics Data",
             "range": "0xEFB631-0xEFC624",
             "format": "ff6-lzss",
+            "isSequential": true,
             "assembly": {
                 "tileset": {
                     "type": "assembly",
@@ -11328,8 +11354,8 @@
                 "60": "Phantom Train: Small Room E",
                 "61": "Mobliz: Mail House Clock",
                 "62": "Nikeah: Clock in Inn",
-                "63": "Serpent's Trench A",
-                "64": "Serpent's Trench B",
+                "63": "Serpent Trench A",
+                "64": "Serpent Trench B",
                 "65": "Kohlingen: Chest in Crazy Man's House",
                 "66": "Jidoor: Pot in Owzer's House",
                 "67": "Phantom Train: Caboose Room",

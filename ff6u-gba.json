@@ -7,6 +7,7 @@
     "system": "gba",
     "mode": "gba",
     "pointerLength": 4,
+    "pad": "0x00",
     "assembly": {
         "attackProperties": {
             "type": "array",
@@ -286,7 +287,6 @@
                         "begin": 2,
                         "max": "0x01FF",
                         "msb": "this.parent.monster1MSB",
-                        "format": "msb(14, 0x01, 2, 0x0100)",
                         "stringTable": "monsterName",
                         "link": "monsterProperties[%i]",
                         "special": {
@@ -922,6 +922,8 @@
             "name": "Multi-Tile Entrance Triggers",
             "range": "0x085FD9D4-0x085FDF68",
             "isSequential": true,
+            "endPointer": true,
+            "canRelocate": true,
             "array": {
                 "length": 432
             },
@@ -1014,94 +1016,226 @@
             "pointerTable": {
                 "range": "0x085FD5D2-0x085FD9D4",
                 "pointerLength": 2,
-                "offset": "0x085FD5D2"
-            }
+                "offset": "0x085FD5D2",
+                "canRelocate": true,
+                "reference": [
+                    {
+                        "begin": "0x08016A5C",
+                        "mask": "0x7FFFFFFF"
+                    }, {
+                        "begin": "0x08016A60",
+                        "mask": "0x7FFFFFFF",
+                        "offset": -2
+                    }
+                ]
+            },
+            "reference": [
+                {
+                    "begin": "0x08016BAC",
+                    "mask": "0x7FFFFFFF",
+                    "pointerOffset": true
+                }, {
+                    "begin": "0x08016BB0",
+                    "mask": "0x7FFFFFFF",
+                    "offset": -1,
+                    "pointerOffset": true
+                }, {
+                    "begin": "0x08016BB4",
+                    "mask": "0x7FFFFFFF",
+                    "offset": -2,
+                    "pointerOffset": true
+                }, {
+                    "begin": "0x08016C5C",
+                    "mask": "0x7FFFFFFF",
+                    "offset": -1,
+                    "pointerOffset": true
+                }, {
+                    "begin": "0x08016D88",
+                    "mask": "0x7FFFFFFF",
+                    "offset": -3,
+                    "pointerOffset": true
+                }, {
+                    "begin": "0x08016D8C",
+                    "mask": "0x7FFFFFFF",
+                    "offset": -5,
+                    "pointerOffset": true
+                }, {
+                    "begin": "0x08016E98",
+                    "mask": "0x7FFFFFFF",
+                    "offset": -4,
+                    "pointerOffset": true
+                }, {
+                    "begin": "0x08016E9C",
+                    "mask": "0x7FFFFFFF",
+                    "offset": -5,
+                    "pointerOffset": true
+                }, {
+                    "begin": "0x08016F6C",
+                    "mask": "0x7FFFFFFF",
+                    "offset": -3,
+                    "pointerOffset": true
+                }, {
+                    "begin": "0x08016FDC",
+                    "mask": "0x7FFFFFFF",
+                    "offset": -4,
+                    "pointerOffset": true
+                }
+            ]
         },
         "entranceTriggersSingle": {
-            "type": "array",
+            "type": "assembly",
+            "external": "_entranceTriggersSingle.entranceTriggersSingle"
+        },
+        "_entranceTriggersSingle": {
+            "type": "data",
             "name": "Single-Tile Entrance Triggers",
-            "range": "0x08735E84-0x087378FA",
+            "range": "0x08735A82-0x087378FA",
             "isSequential": true,
-            "array": {
-                "length": 432
-            },
+            "canRelocate": true,
             "assembly": {
-                "type": "array",
-                "assembly": {
-                    "type": "data",
+                "entranceTriggersSingle": {
+                    "type": "array",
+                    "name": "Single-Tile Entrance Triggers",
+                    "range": "0x0402-0x1E78",
+                    "isSequential": true,
+                    "endPointer": true,
+                    "array": {
+                        "length": 432
+                    },
                     "assembly": {
-                        "x": {
-                            "type": "property",
-                            "name": "X Position",
-                            "begin": 0,
-                            "hidden": true
-                        },
-                        "y": {
-                            "type": "property",
-                            "name": "Y Position",
-                            "begin": 1,
-                            "hidden": true
-                        },
-                        "map": {
-                            "type": "property",
-                            "name": "Map",
-                            "begin": 2,
-                            "mask": "0x01FF",
-                            "stringTable": "mapProperties",
-                            "link": "mapProperties[%i]"
-                        },
-                        "setParent": {
-                            "type": "property",
-                            "name": "Set Parent Map",
-                            "begin": 3,
-                            "mask": "0x02",
-                            "bool": true
-                        },
-                        "z": {
-                            "type": "property",
-                            "name": "Z-Level",
-                            "begin": 3,
-                            "mask": "0x04",
-                            "stringTable": {
-                                "string": {
-                                    "0": "Lower",
-                                    "1": "Upper"
+                        "type": "array",
+                        "assembly": {
+                            "type": "data",
+                            "assembly": {
+                                "x": {
+                                    "type": "property",
+                                    "name": "X Position",
+                                    "begin": 0,
+                                    "hidden": true
+                                },
+                                "y": {
+                                    "type": "property",
+                                    "name": "Y Position",
+                                    "begin": 1,
+                                    "hidden": true
+                                },
+                                "map": {
+                                    "type": "property",
+                                    "name": "Map",
+                                    "begin": 2,
+                                    "mask": "0x01FF",
+                                    "stringTable": "mapProperties",
+                                    "link": "mapProperties[%i]"
+                                },
+                                "setParent": {
+                                    "type": "property",
+                                    "name": "Set Parent Map",
+                                    "begin": 3,
+                                    "mask": "0x02",
+                                    "bool": true
+                                },
+                                "z": {
+                                    "type": "property",
+                                    "name": "Z-Level",
+                                    "begin": 3,
+                                    "mask": "0x04",
+                                    "stringTable": {
+                                        "string": {
+                                            "0": "Lower",
+                                            "1": "Upper"
+                                        }
+                                    }
+                                },
+                                "title": {
+                                    "type": "property",
+                                    "name": "Show Map Title",
+                                    "begin": 3,
+                                    "mask": "0x08",
+                                    "bool": true
+                                },
+                                "direction": {
+                                    "type": "property",
+                                    "name": "Facing Direction",
+                                    "begin": 3,
+                                    "mask": "0x30",
+                                    "stringTable": "directions"
+                                },
+                                "xDest": {
+                                    "type": "property",
+                                    "name": "X Destination",
+                                    "begin": 4
+                                },
+                                "yDest": {
+                                    "type": "property",
+                                    "name": "Y Destination",
+                                    "begin": 5
                                 }
-                            }
-                        },
-                        "title": {
-                            "type": "property",
-                            "name": "Show Map Title",
-                            "begin": 3,
-                            "mask": "0x08",
-                            "bool": true
-                        },
-                        "direction": {
-                            "type": "property",
-                            "name": "Facing Direction",
-                            "begin": 3,
-                            "mask": "0x30",
-                            "stringTable": "directions"
-                        },
-                        "xDest": {
-                            "type": "property",
-                            "name": "X Destination",
-                            "begin": 4
-                        },
-                        "yDest": {
-                            "type": "property",
-                            "name": "Y Destination",
-                            "begin": 5
+                            },
+                            "length": 6
                         }
                     },
-                    "length": 6
+                    "pointerTable": {
+                        "range": "0x0000-0x0402",
+                        "pointerLength": 2
+                    }
                 }
             },
-            "pointerTable": {
-                "range": "0x08735A82-0x08735E84",
-                "pointerLength": 2,
-                "offset": "0x08735A82"
-            }
+            "reference": [
+                {
+                    "begin": "0x08017200",
+                    "mask": "0x7FFFFFFF"
+                }, {
+                    "begin": "0x08017204",
+                    "mask": "0x7FFFFFFF",
+                    "offset": -2
+                }, {
+                    "begin": "0x08017270",
+                    "mask": "0x7FFFFFFF"
+                }, {
+                    "begin": "0x0801739C",
+                    "mask": "0x7FFFFFFF",
+                    "offset": -2
+                }, {
+                    "begin": "0x080173A0",
+                    "mask": "0x7FFFFFFF",
+                    "offset": -4
+                }, {
+                    "begin": "0x080174A8",
+                    "mask": "0x7FFFFFFF",
+                    "offset": -3
+                }, {
+                    "begin": "0x080174AC",
+                    "mask": "0x7FFFFFFF",
+                    "offset": -4
+                }, {
+                    "begin": "0x08017574",
+                    "mask": "0x7FFFFFFF",
+                    "offset": -2
+                }, {
+                    "begin": "0x0801761C",
+                    "mask": "0x7FFFFFFF",
+                    "offset": -3
+                }, {
+                    "begin": "0x08036824",
+                    "mask": "0x7FFFFFFF"
+                }, {
+                    "begin": "0x08036828",
+                    "mask": "0x7FFFFFFF",
+                    "offset": -1
+                }, {
+                    "begin": "0x0803682C",
+                    "mask": "0x7FFFFFFF",
+                    "offset": -2
+                }, {
+                    "begin": "0x08036988",
+                    "mask": "0x7FFFFFFF",
+                    "offset": -2
+                }, {
+                    "begin": "0x0803698C",
+                    "mask": "0x7FFFFFFF",
+                    "offset": -4
+                }
+            ]
         },
         "esperMenuOrder": {
             "type": "array",
@@ -1263,51 +1397,108 @@
             }
         },
         "eventTriggers": {
-            "type": "array",
+            "type": "assembly",
+            "external": "_eventTriggers.eventTriggers"
+        },
+        "_eventTriggers": {
+            "type": "data",
             "name": "Event Triggers",
-            "range": "0x085F6232-0x085F78EE",
+            "range": "0x085F5EF0-0x085F78EE",
             "isSequential": true,
-            "array": {
-                "length": 415
-            },
+            "canRelocate": true,
             "assembly": {
-                "type": "array",
-                "assembly": {
-                    "type": "data",
+                "eventTriggers": {
+                    "type": "array",
+                    "name": "Event Triggers",
+                    "range": "0x0342-0x19FE",
+                    "isSequential": true,
+                    "endPointer": true,
+                    "array": {
+                        "length": 415
+                    },
                     "assembly": {
-                        "x": {
-                            "type": "property",
-                            "name": "X Position",
-                            "begin": 0,
-                            "hidden": true
-                        },
-                        "y": {
-                            "type": "property",
-                            "name": "Y Position",
-                            "begin": 1,
-                            "hidden": true
-                        },
-                        "scriptPointer": {
-                            "type": "property",
-                            "name": "Script Pointer",
-                            "begin": 2,
-                            "mask": "0xFFFFFF",
-                            "script": "eventScript"
+                        "type": "array",
+                        "assembly": {
+                            "type": "data",
+                            "assembly": {
+                                "x": {
+                                    "type": "property",
+                                    "name": "X Position",
+                                    "begin": 0,
+                                    "hidden": true
+                                },
+                                "y": {
+                                    "type": "property",
+                                    "name": "Y Position",
+                                    "begin": 1,
+                                    "hidden": true
+                                },
+                                "scriptPointer": {
+                                    "type": "property",
+                                    "name": "Script Pointer",
+                                    "begin": 2,
+                                    "mask": "0xFFFFFF",
+                                    "script": "eventScript"
+                                }
+                            },
+                            "length": 5
                         }
                     },
-                    "length": 5
+                    "pointerTable": {
+                        "range": "0x0000-0x0342",
+                        "pointerLength": 2
+                    },
+                    "reference": [
+                        {
+                            "begin": "0x08010A78",
+                            "arrayLength": true,
+                            "mask": "0xFFFF"
+                        }
+                    ]
                 }
             },
-            "pointerTable": {
-                "range": "0x085F5EF0-0x085F6232",
-                "pointerLength": 2,
-                "offset": "0x085F5EF0"
-            }
+            "reference": [
+                {
+                    "begin": "0x08010A64",
+                    "mask": "0x7FFFFFFF"
+                }, {
+                    "begin": "0x08010A68",
+                    "mask": "0x7FFFFFFF",
+                    "offset": -2
+                }, {
+                    "begin": "0x08010BA8",
+                    "mask": "0x7FFFFFFF",
+                    "offset": -2
+                }, {
+                    "begin": "0x08010BAC",
+                    "mask": "0x7FFFFFFF",
+                    "offset": -4
+                }, {
+                    "begin": "0x08036B3C",
+                    "mask": "0x7FFFFFFF"
+                }, {
+                    "begin": "0x08036B40",
+                    "mask": "0x7FFFFFFF",
+                    "offset": -1
+                }, {
+                    "begin": "0x08036B44",
+                    "mask": "0x7FFFFFFF",
+                    "offset": -2
+                }, {
+                    "begin": "0x08036B48",
+                    "mask": "0x7FFFFFFF",
+                    "offset": -3
+                }, {
+                    "begin": "0x08036C34",
+                    "mask": "0x7FFFFFFF",
+                    "offset": -4
+                }
+            ]
         },
         "eventTriggersAdvance": {
             "type": "array",
             "name": "Event Triggers (GBA)",
-            "range": "0x080303AC-0x08030DEC",
+            "range": "0x080303AC-0x08030DEE",
             "array": {
                 "length": 328
             },
@@ -1695,6 +1886,7 @@
             "type": "array",
             "name": "Map Layouts",
             "range": "0x08548446-0x0858FF64",
+            "canRelocate": true,
             "array": {
                 "length": 389
             },
@@ -1704,8 +1896,48 @@
             "pointerTable": {
                 "range": "0x087FF3FC-0x087FF88E",
                 "pointerLength": 3,
-                "offset": "0x08548446"
-            }
+                "offset": "0x08548446",
+                "canRelocate": true,
+                "reference": [
+                    {
+                        "begin": "0x0801BA90",
+                        "mask": "0x7FFFFFFF"
+                    }, {
+                        "begin": "0x0801BA94",
+                        "mask": "0x7FFFFFFF",
+                        "offset": -2
+                    }, {
+                        "begin": "0x0801BBF8",
+                        "mask": "0x7FFFFFFF"
+                    }, {
+                        "begin": "0x0801BD08",
+                        "mask": "0x7FFFFFFF",
+                        "offset": -2
+                    }, {
+                        "begin": "0x0801BE54",
+                        "mask": "0x7FFFFFFF"
+                    }, {
+                        "begin": "0x0801BE58",
+                        "mask": "0x7FFFFFFF",
+                        "offset": -2
+                    }
+                ]
+            },
+            "reference": [
+                {
+                    "begin": "0x0801BAB4",
+                    "mask": "0x7FFFFFFF"
+                }, {
+                    "begin": "0x0801BC04",
+                    "mask": "0x7FFFFFFF"
+                }, {
+                    "begin": "0x0801BD24",
+                    "mask": "0x7FFFFFFF"
+                }, {
+                    "begin": "0x0801BE78",
+                    "mask": "0x7FFFFFFF"
+                }
+            ]
         },
         "mapPalettes": {
             "type": "array",
@@ -2364,7 +2596,7 @@
 					"0x00C4": "Maranda: Lola's House",
 					"0x00C5": "Kohlingen: Rachel's House",
 					"0x00C6": "Jidoor: Exterior",
-					"0x00C7": "Empty (Holy Dragon)",
+					"0x00C7": "Empty (Soul Shrine)",
 					"0x00C8": "Jidoor: Auction House",
 					"0x00C9": "Jidoor: Item Shop",
 					"0x00CA": "Jidoor: Relic Shop",
@@ -2813,7 +3045,8 @@
             },
             "pointerTable": {
                 "range": "0x085F589A-0x085F58F0",
-                "offset": "0x0875BDFC"
+                "offset": "0x0875BDFC",
+                "pointerLength": 2
             },
             "stringTable": {
                 "name": "Map Tile Properties",
@@ -3491,6 +3724,8 @@
             "name": "NPC Properties",
             "range": "0x0871D68E-0x087223A7",
             "isSequential": true,
+            "endPointer": true,
+            "canRelocate": true,
             "array": {
                 "length": 415
             },
@@ -3769,13 +4004,85 @@
             "pointerTable": {
                 "range": "0x0871D34C-0x0871D68E",
                 "pointerLength": 2,
-                "offset": "0x0871D34C"
-            }
+                "offset": "0x0871D34C",
+                "canRelocate": true,
+                "reference": [
+                    {
+                        "begin": "0x08023E44",
+                        "mask": "0x7FFFFFFF"
+                    }, {
+                        "begin": "0x08023E48",
+                        "mask": "0x7FFFFFFF",
+                        "offset": -2
+                    }
+                ]
+            },
+            "reference": [
+                {
+                    "begin": "0x08023E50",
+                    "arrayLength": true,
+                    "mask": "0xFFFF"
+                }, {
+                    "begin": "0x08023F78",
+                    "mask": "0x7FFFFFFF",
+                    "pointerOffset": true
+                }, {
+                    "begin": "0x08023F7C",
+                    "mask": "0x7FFFFFFF",
+                    "offset": -1,
+                    "pointerOffset": true
+                }, {
+                    "begin": "0x08023F80",
+                    "mask": "0x7FFFFFFF",
+                    "offset": -2,
+                    "pointerOffset": true
+                }, {
+                    "begin": "0x080240CC",
+                    "mask": "0x7FFFFFFF",
+                    "offset": -4,
+                    "pointerOffset": true
+                }, {
+                    "begin": "0x080240D0",
+                    "mask": "0x7FFFFFFF",
+                    "offset": -5,
+                    "pointerOffset": true
+                }, {
+                    "begin": "0x08024290",
+                    "mask": "0x7FFFFFFF",
+                    "offset": -5,
+                    "pointerOffset": true
+                }, {
+                    "begin": "0x08024294",
+                    "mask": "0x7FFFFFFF",
+                    "offset": -6,
+                    "pointerOffset": true
+                }, {
+                    "begin": "0x08024298",
+                    "mask": "0x7FFFFFFF",
+                    "offset": -7,
+                    "pointerOffset": true
+                }, {
+                    "begin": "0x0802429C",
+                    "mask": "0x7FFFFFFF",
+                    "offset": -8,
+                    "pointerOffset": true
+                }, {
+                    "begin": "0x08024310",
+                    "mask": "0x7FFFFFFF",
+                    "offset": -8,
+                    "pointerOffset": true
+                }, {
+                    "begin": "0x08024460",
+                    "mask": "0x7FFFFFFF",
+                    "offset": -8,
+                    "pointerOffset": true
+                }
+            ]
         },
         "npcPropertiesAdvance": {
             "type": "array",
             "name": "NPC Properties (GBA)",
-            "range": "0x08030DEC-0x08031238",
+            "range": "0x08030DEE-0x0803123A",
             "array": {
                 "length": 100
             },
@@ -3786,45 +4093,45 @@
                     "map": {
                         "type": "property",
                         "name": "Map",
-                        "begin": 0,
+                        "begin": 9,
                         "mask": "0xFFFF"
                     },
                     "scriptPointer": {
                         "type": "property",
                         "name": "Script Pointer",
-                        "begin": 2,
+                        "begin": 0,
                         "mask": "0x03FFFF",
                         "script": "eventScript"
                     },
                     "vramAddress": {
                         "type": "property",
                         "name": "VRAM Address",
-                        "begin": 2,
+                        "begin": 0,
                         "mask": "0x7F"
                     },
                     "hFlip": {
                         "type": "property",
                         "name": "Horizontal Flip",
-                        "begin": 2,
+                        "begin": 0,
                         "mask": "0x80",
                         "bool": true
                     },
                     "offset": {
                         "type": "property",
                         "name": "Offset",
-                        "begin": 3,
+                        "begin": 1,
                         "mask": "0xE0"
                     },
                     "master": {
                         "type": "property",
                         "name": "Master NPC Index",
-                        "begin": 3,
+                        "begin": 1,
                         "mask": "0x1F"
                     },
                     "offsetDirection": {
                         "type": "property",
                         "name": "Offset Direction",
-                        "begin": 4,
+                        "begin": 2,
                         "mask": "0x01",
                         "stringTable": {
                             "string": {
@@ -3836,21 +4143,21 @@
                     "slave": {
                         "type": "property",
                         "name": "Slave NPC",
-                        "begin": 4,
+                        "begin": 2,
                         "mask": "0x02",
                         "bool": true
                     },
                     "palette": {
                         "type": "property",
                         "name": "Palette",
-                        "begin": 4,
+                        "begin": 2,
                         "mask": "0x1C",
                         "stringTable": "mapSpritePalettes"
                     },
                     "layer2": {
                         "type": "property",
                         "name": "Scrolling Layer",
-                        "begin": 4,
+                        "begin": 2,
                         "mask": "0x20",
                         "stringTable": {
                             "string": {
@@ -3862,21 +4169,21 @@
                     "switch": {
                         "type": "property",
                         "name": "Switch",
-                        "begin": 4,
+                        "begin": 2,
                         "mask": "0xFFC0",
                         "stringTable": "npcSwitches"
                     },
                     "x": {
                         "type": "property",
                         "name": "X Position",
-                        "begin": 6,
+                        "begin": 4,
                         "mask": "0x7F",
                         "hidden": true
                     },
                     "vehicle": {
                         "type": "property",
                         "name": "Vehicle",
-                        "begin": 9,
+                        "begin": 7,
                         "mask": "0xC0",
                         "stringTable": {
                             "string": {
@@ -3891,7 +4198,7 @@
                     "showRider": {
                         "type": "property",
                         "name": "Show Rider",
-                        "begin": 6,
+                        "begin": 4,
                         "mask": "0x80",
                         "bool": true,
                         "hidden": "this.parent.vehicle.value === 0"
@@ -3899,21 +4206,21 @@
                     "special": {
                         "type": "property",
                         "name": "Special Graphics",
-                        "begin": 6,
+                        "begin": 4,
                         "mask": "0x80",
                         "bool": true
                     },
                     "y": {
                         "type": "property",
                         "name": "Y Position",
-                        "begin": 7,
+                        "begin": 5,
                         "mask": "0x3F",
                         "hidden": true
                     },
                     "speed": {
                         "type": "property",
                         "name": "Speed",
-                        "begin": 7,
+                        "begin": 5,
                         "mask": "0xC0",
                         "stringTable": {
                             "string": {
@@ -3927,13 +4234,13 @@
                     "graphics": {
                         "type": "property",
                         "name": "Graphics",
-                        "begin": 8,
+                        "begin": 6,
                         "stringTable": "mapSprites"
                     },
                     "movement": {
                         "type": "property",
                         "name": "Movement",
-                        "begin": 9,
+                        "begin": 7,
                         "mask": "0x0F",
                         "stringTable": {
                             "string": {
@@ -3947,7 +4254,7 @@
                     "spritePriority": {
                         "type": "property",
                         "name": "Sprite Priority",
-                        "begin": 9,
+                        "begin": 7,
                         "mask": "0x30",
                         "stringTable": {
                             "string": {
@@ -3961,7 +4268,7 @@
                     "direction": {
                         "type": "property",
                         "name": "Facing Direction",
-                        "begin": 10,
+                        "begin": 8,
                         "mask": "0x03",
                         "stringTable": "directions",
                         "disabled": "this.parent.animation.value !== 0"
@@ -3969,7 +4276,7 @@
                     "reaction": {
                         "type": "property",
                         "name": "Reaction",
-                        "begin": 10,
+                        "begin": 8,
                         "mask": "0x04",
                         "stringTable": {
                             "string": {
@@ -3981,7 +4288,7 @@
                     "is32x32": {
                         "type": "property",
                         "name": "Size",
-                        "begin": 10,
+                        "begin": 8,
                         "mask": "0x04",
                         "stringTable": {
                             "string": {
@@ -3993,7 +4300,7 @@
                     "layerPriority": {
                         "type": "property",
                         "name": "Layer Priority",
-                        "begin": 10,
+                        "begin": 8,
                         "mask": "0x18",
                         "stringTable": {
                             "string": {
@@ -4007,7 +4314,7 @@
                     "animation": {
                         "type": "property",
                         "name": "Animation",
-                        "begin": 10,
+                        "begin": 8,
                         "mask": "0xE0",
                         "stringTable": {
                             "string": {
@@ -4025,7 +4332,7 @@
                     "animationType": {
                         "type": "property",
                         "name": "Animation Type",
-                        "begin": 10,
+                        "begin": 8,
                         "mask": "0x03",
                         "stringTable": {
                             "string": {
@@ -4040,7 +4347,7 @@
                     "animationSpeed": {
                         "type": "property",
                         "name": "Animation Speed",
-                        "begin": 9,
+                        "begin": 7,
                         "mask": "0xC0",
                         "stringTable": {
                             "string": {
@@ -4294,6 +4601,8 @@
             "name": "Treasure Properties",
             "range": "0x0862B61C-0x0862BC34",
             "isSequential": true,
+            "endPointer": true,
+            "canRelocate": true,
             "array": {
                 "length": 432
             },
@@ -4364,8 +4673,55 @@
             "pointerTable": {
                 "range": "0x0862B2BC-0x0862B61C",
                 "pointerLength": 2,
-                "offset": "0x0862B61C"
-            }
+                "offset": "0x0862B61C",
+                "canRelocate": true,
+                "reference": [
+                    {
+                        "begin": "0x08015BC8",
+                        "mask": "0x7FFFFFFF"
+                    }, {
+                        "begin": "0x08015BD4",
+                        "mask": "0x7FFFFFFF",
+                        "offset": -2
+                    }, {
+                        "begin": "0x080219A4",
+                        "mask": "0x7FFFFFFF"
+                    }, {
+                        "begin": "0x080219B0",
+                        "mask": "0x7FFFFFFF",
+                        "offset": -2
+                    }
+                ]
+            },
+            "reference": [
+                {
+                    "begin": "0x08015BCC",
+                    "mask": "0x7FFFFFFF"
+                }, {
+                    "begin": "0x08015BD0",
+                    "mask": "0x7FFFFFFF",
+                    "offset": -1
+                }, {
+                    "begin": "0x08015D04",
+                    "mask": "0x7FFFFFFF",
+                    "offset": -2
+                }, {
+                    "begin": "0x080219A8",
+                    "mask": "0x7FFFFFFF"
+                }, {
+                    "begin": "0x080219AC",
+                    "mask": "0x7FFFFFFF",
+                    "offset": -1
+                }, {
+                    "begin": "0x08021AE8",
+                    "mask": "0x7FFFFFFF",
+                    "offset": -2
+                }, {
+                    "begin": "0x08021AEC",
+                    "mask": "0x7FFFFFFF",
+                    "offset": -4
+                }
+            ]
         },
         "vehicleGraphics": {
             "type": "assembly",
@@ -4476,25 +4832,50 @@
             "type": "assembly",
             "name": "World of Balance Layout",
             "range": "0x08605014-0x08608D2F",
-            "format": "ff6-lzss"
+            "format": "ff6-lzss",
+            "canRelocate": true,
+            "reference": [
+                {
+                    "begin": "0x0873AE79",
+                    "mask": "0xFFFFFF",
+                    "offset": "0x07717E4E"
+                }
+            ]
         },
         "worldLayout2": {
             "type": "assembly",
             "name": "World of Ruin Layout",
             "range": "0x0860FF44-0x08613205",
-            "format": "ff6-lzss"
+            "format": "ff6-lzss",
+            "canRelocate": true,
+            "reference": [
+                {
+                    "begin": "0x0873AE8E",
+                    "mask": "0xFFFFFF",
+                    "offset": "0x07717E4E"
+                }
+            ]
         },
         "worldLayout3": {
             "type": "assembly",
             "name": "Serpent Trench Layout",
-            "range": "0x08613205-0x08618992",
-            "format": "ff6-lzss"
+            "range": "0x08613205-0x08617205",
+            "format": "ff6-lzss",
+            "canRelocate": true,
+            "reference": [
+                {
+                    "begin": "0x0873AE91",
+                    "mask": "0xFFFFFF",
+                    "offset": "0x07717E4E"
+                }
+            ]
         },
         "worldGraphics1": {
             "type": "data",
             "name": "World of Balance Graphics Data",
             "range": "0x08608D2F-0x0860B539",
             "format": "ff6-lzss",
+            "isSequential": true,
             "assembly": {
                 "tileset": {
                     "type": "assembly",
@@ -4513,6 +4894,7 @@
             "name": "World of Ruin Graphics Data",
             "range": "0x0860D7CC-0x0860FF44",
             "format": "ff6-lzss",
+            "isSequential": true,
             "assembly": {
                 "tileset": {
                     "type": "assembly",
@@ -4531,6 +4913,7 @@
             "name": "Serpent Trench Graphics Data",
             "range": "0x08617205-0x086188F5",
             "format": "ff6-lzss",
+            "isSequential": true,
             "assembly": {
                 "tileset": {
                     "type": "assembly",
@@ -9366,6 +9749,27 @@
                 "12": "Cursed Shield Counter"
             }
         },
+        "bushidoName": {
+            "name": "Bushido Name",
+            "length": 8,
+            "default": {
+                "value": "<text1[%i+0x0A76]>",
+                "language": {
+                    "text1": {
+                        "name": "Small Text",
+                        "link": "text1[%i+0x0A76]"
+                    },
+                    "text2": {
+                        "name": "Large Text",
+                        "link": "text2[%i+0x13E5]"
+                    },
+                    "description": {
+                        "name": "Description",
+                        "link": "text1[%i+0x073E]"
+                    }
+                }
+            }
+        },
         "characterNames": {
             "name": "Character Names",
             "length": 64,
@@ -10840,27 +11244,6 @@
                 "24-32": "<stringTable.statusNames[55-%i]>"
             }
         },
-        "bushidoName": {
-            "name": "Bushido Name",
-            "length": 8,
-            "default": {
-                "value": "<text1[%i+0x0A76]>",
-                "language": {
-                    "text1": {
-                        "name": "Small Text",
-                        "link": "text1[%i+0x0A76]"
-                    },
-                    "text2": {
-                        "name": "Large Text",
-                        "link": "text2[%i+0x13E5]"
-                    },
-                    "description": {
-                        "name": "Description",
-                        "link": "text1[%i+0x073E]"
-                    }
-                }
-            }
-        },
         "treasureSwitches": {
             "name": "Treasure Switches",
             "length": 512,
@@ -10928,8 +11311,8 @@
                 "60": "Phantom Train: Small Room E",
                 "61": "Mobliz: Mail House Clock",
                 "62": "Nikeah: Clock in Inn",
-                "63": "Serpent's Trench A",
-                "64": "Serpent's Trench B",
+                "63": "Serpent Trench A",
+                "64": "Serpent Trench B",
                 "65": "Kohlingen: Chest in Crazy Man's House",
                 "66": "Jidoor: Pot in Owzer's House",
                 "67": "Phantom Train: Caboose Room",
@@ -11122,7 +11505,33 @@
                 "255": "South Figaro: Basement Treasure Room D",
                 "256": "South Figaro: Basement Treasure Room E",
                 "257": "Imperial Base Hidden Chest",
-                "258": "Jidoor: Owzer's Basement B"
+                "258": "Jidoor: Owzer's Basement B",
+                "259": "Earth Labyrinth: X-Potion",
+                "260": "Earth Labyrinth: Remedy",
+                "261": "Burning Labyrinth: Rename Card",
+                "262": "Burning Labyrinth: Hi-Ether",
+                "263": "Burning Labyrinth: Elixir",
+                "264": "Flame Labyrinth: Megalixir",
+                "265": "Flame Labyrinth: Magicite Shard",
+                "266": "Flame Labyrinth: Teleport Stone",
+                "267": "Inner Eye Labyrinth: Force Armor",
+                "268": "Inner Eye Labyrinth: X-Potion",
+                "269": "Dragon Temple: Phoenix Down",
+                "270": "Dragon Temple: Elixir",
+                "271": "Dragon Temple: Ribbon",
+                "273": "Dragon Temple: Crystal Orb",
+                "275": "Dragon Temple: Flan Princess ×5",
+                "276": "Dragon Temple: Genji Glove",
+                "277": "Dragon Temple: Plague",
+                "278": "Dragon Temple: Ribbon",
+                "280": "Dragon Temple: Flametongue",
+                "281": "Dragon Temple: Neslug",
+                "282": "Dragon Temple: Swordbreaker",
+                "283": "Dragon Temple: Great Sword",
+                "284": "Grand Cavern: X-Ether",
+                "285": "Grand Cavern: Elixir",
+                "286": "Grand Cavern: Celestriad",
+                "287": "Holy Palace: Magus Robe"
             }
         },
         "vehicles": {
@@ -11142,5 +11551,18 @@
                 "2": "Chocobo"
             }
         }
-    }
+    },
+    "freeSpace": [
+        "0x084F5B60-0x08520000",
+        "0x0853B6D0-0x08540000",
+        "0x0861E907-0x08620000",
+        "0x0862A5D5-0x0862A5D8",
+        "0x0862ED9C-0x08630000",
+        "0x08676B00-0x08679800",
+        "0x0867EF6C-0x08680000",
+        "0x086E5680-0x086E6000",
+        "0x086ED2B0-0x086F0000",
+        "0x087E90FC-0x087F0000",
+        "0x087FFBF2-0x08800000"
+    ]
 }

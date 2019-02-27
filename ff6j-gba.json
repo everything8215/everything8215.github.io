@@ -7,35 +7,8 @@
     "system": "gba",
     "mode": "gba",
     "pointerLength": 4,
+    "pad": "0x00",
     "assembly": {
-        "attackName": {
-            "type": "array",
-            "name": "Attack Names",
-            "range": "0x081E269B-0x081E30EF",
-            "array": {
-                "length": 350
-            },
-            "assembly": {
-                "type": "text",
-                "name": "Name",
-                "encoding": "dialog"
-            },
-            "pointerTable": {
-                "range": "0x8188718-0x08188C90",
-                "offset": "0x0817E518"
-            },
-            "stringTable": {
-                "name": "Attack Name",
-                "length": 256,
-                "default": "<attackName[%i-0x51]>",
-                "string": {
-                    "0x00-0x36": "<spellNames[%i]>",
-                    "0x36-0x51": "<esperNames[%i-0x36]> (<esperAttackName[%i-0x36]>)",
-                    "0x55-0x5D": "<swdTechNames[%i-0x55]>",
-                    "0xFF": "Nothing"
-                }
-            }
-        },
         "attackProperties": {
             "type": "array",
             "name": "Attack Properties",
@@ -59,7 +32,7 @@
                 "default": "Attack %i",
                 "length": 291,
                 "string": {
-                    "0-54": "<spellNames[%i]"
+                    "0-54": "<stringTable.spellName[%i]"
                 }
             }
         },
@@ -357,7 +330,6 @@
                         "begin": 2,
                         "max": "0x01FF",
                         "msb": "this.parent.monster1MSB",
-                        "format": "msb(14, 0x01, 2, 0x0100)",
                         "stringTable": "monsterName",
                         "link": "monsterProperties[%i]",
                         "special": {
@@ -993,6 +965,8 @@
             "name": "Multi-Tile Entrance Triggers",
             "range": "0x085FD9D4-0x085FDF68",
             "isSequential": true,
+            "endPointer": true,
+            "canRelocate": true,
             "array": {
                 "length": 432
             },
@@ -1085,111 +1059,227 @@
             "pointerTable": {
                 "range": "0x085FD5D2-0x085FD9D4",
                 "pointerLength": 2,
-                "offset": "0x085FD5D2"
-            }
+                "offset": "0x085FD5D2",
+                "canRelocate": true,
+                "reference": [
+                    {
+                        "begin": "0x08016A70",
+                        "mask": "0x7FFFFFFF"
+                    }, {
+                        "begin": "0x08016A74",
+                        "mask": "0x7FFFFFFF",
+                        "offset": -2
+                    }
+                ]
+            },
+            "reference": [
+                {
+                    "begin": "0x08016BC0",
+                    "mask": "0x7FFFFFFF",
+                    "pointerOffset": true
+                }, {
+                    "begin": "0x08016BC4",
+                    "mask": "0x7FFFFFFF",
+                    "offset": -1,
+                    "pointerOffset": true
+                }, {
+                    "begin": "0x08016BC8",
+                    "mask": "0x7FFFFFFF",
+                    "offset": -2,
+                    "pointerOffset": true
+                }, {
+                    "begin": "0x08016C70",
+                    "mask": "0x7FFFFFFF",
+                    "offset": -1,
+                    "pointerOffset": true
+                }, {
+                    "begin": "0x08016D9C",
+                    "mask": "0x7FFFFFFF",
+                    "offset": -3,
+                    "pointerOffset": true
+                }, {
+                    "begin": "0x08016DA0",
+                    "mask": "0x7FFFFFFF",
+                    "offset": -5,
+                    "pointerOffset": true
+                }, {
+                    "begin": "0x08016EAC",
+                    "mask": "0x7FFFFFFF",
+                    "offset": -4,
+                    "pointerOffset": true
+                }, {
+                    "begin": "0x08016EB0",
+                    "mask": "0x7FFFFFFF",
+                    "offset": -5,
+                    "pointerOffset": true
+                }, {
+                    "begin": "0x08016F80",
+                    "mask": "0x7FFFFFFF",
+                    "offset": -3,
+                    "pointerOffset": true
+                }, {
+                    "begin": "0x08016FF0",
+                    "mask": "0x7FFFFFFF",
+                    "offset": -4,
+                    "pointerOffset": true
+                }
+            ]
         },
         "entranceTriggersSingle": {
-            "type": "array",
+            "type": "assembly",
+            "external": "_entranceTriggersSingle.entranceTriggersSingle"
+        },
+        "_entranceTriggersSingle": {
+            "type": "data",
             "name": "Single-Tile Entrance Triggers",
-            "range": "0x08735EA0-0x08737916",
+            "range": "0x08735A9E-0x08737916",
             "isSequential": true,
-            "array": {
-                "length": 432
-            },
+            "canRelocate": true,
             "assembly": {
-                "type": "array",
-                "assembly": {
-                    "type": "data",
+                "entranceTriggersSingle": {
+                    "type": "array",
+                    "name": "Single-Tile Entrance Triggers",
+                    "range": "0x0402-0x1E78",
+                    "isSequential": true,
+                    "endPointer": true,
+                    "canRelocate": true,
+                    "array": {
+                        "length": 432
+                    },
                     "assembly": {
-                        "x": {
-                            "type": "property",
-                            "name": "X Position",
-                            "begin": 0,
-                            "hidden": true
-                        },
-                        "y": {
-                            "type": "property",
-                            "name": "Y Position",
-                            "begin": 1,
-                            "hidden": true
-                        },
-                        "map": {
-                            "type": "property",
-                            "name": "Map",
-                            "begin": 2,
-                            "mask": "0x01FF",
-                            "stringTable": "mapProperties",
-                            "link": "mapProperties[%i]"
-                        },
-                        "setParent": {
-                            "type": "property",
-                            "name": "Set Parent Map",
-                            "begin": 3,
-                            "mask": "0x02",
-                            "bool": true
-                        },
-                        "z": {
-                            "type": "property",
-                            "name": "Z-Level",
-                            "begin": 3,
-                            "mask": "0x04",
-                            "stringTable": {
-                                "string": {
-                                    "0": "Lower",
-                                    "1": "Upper"
+                        "type": "array",
+                        "assembly": {
+                            "type": "data",
+                            "assembly": {
+                                "x": {
+                                    "type": "property",
+                                    "name": "X Position",
+                                    "begin": 0,
+                                    "hidden": true
+                                },
+                                "y": {
+                                    "type": "property",
+                                    "name": "Y Position",
+                                    "begin": 1,
+                                    "hidden": true
+                                },
+                                "map": {
+                                    "type": "property",
+                                    "name": "Map",
+                                    "begin": 2,
+                                    "mask": "0x01FF",
+                                    "stringTable": "mapProperties",
+                                    "link": "mapProperties[%i]"
+                                },
+                                "setParent": {
+                                    "type": "property",
+                                    "name": "Set Parent Map",
+                                    "begin": 3,
+                                    "mask": "0x02",
+                                    "bool": true
+                                },
+                                "z": {
+                                    "type": "property",
+                                    "name": "Z-Level",
+                                    "begin": 3,
+                                    "mask": "0x04",
+                                    "stringTable": {
+                                        "string": {
+                                            "0": "Lower",
+                                            "1": "Upper"
+                                        }
+                                    }
+                                },
+                                "title": {
+                                    "type": "property",
+                                    "name": "Show Map Title",
+                                    "begin": 3,
+                                    "mask": "0x08",
+                                    "bool": true
+                                },
+                                "direction": {
+                                    "type": "property",
+                                    "name": "Facing Direction",
+                                    "begin": 3,
+                                    "mask": "0x30",
+                                    "stringTable": "directions"
+                                },
+                                "xDest": {
+                                    "type": "property",
+                                    "name": "X Destination",
+                                    "begin": 4
+                                },
+                                "yDest": {
+                                    "type": "property",
+                                    "name": "Y Destination",
+                                    "begin": 5
                                 }
-                            }
-                        },
-                        "title": {
-                            "type": "property",
-                            "name": "Show Map Title",
-                            "begin": 3,
-                            "mask": "0x08",
-                            "bool": true
-                        },
-                        "direction": {
-                            "type": "property",
-                            "name": "Facing Direction",
-                            "begin": 3,
-                            "mask": "0x30",
-                            "stringTable": "directions"
-                        },
-                        "xDest": {
-                            "type": "property",
-                            "name": "X Destination",
-                            "begin": 4
-                        },
-                        "yDest": {
-                            "type": "property",
-                            "name": "Y Destination",
-                            "begin": 5
+                            },
+                            "length": 6
                         }
                     },
-                    "length": 6
+                    "pointerTable": {
+                        "range": "0x0000-0x0402",
+                        "pointerLength": 2
+                    }
                 }
             },
-            "pointerTable": {
-                "range": "0x08735A9E-0x08735EA0",
-                "pointerLength": 2,
-                "offset": "0x08735A9E"
-            }
-        },
-        "esperAttackDescription": {
-            "type": "array",
-            "name": "Esper Attack Description",
-            "range": "0x08170F1E-0x0817143B",
-            "array": {
-                "length": 32
-            },
-            "assembly": {
-                "type": "text",
-                "name": "Attack Desc.",
-                "encoding": "menu"
-            },
-            "pointerTable": {
-                "range": "0x08167298-0x08167318",
-                "offset": "0x081654F8"
-            }
+            "reference": [
+                {
+                    "begin": "0x08017214",
+                    "mask": "0x7FFFFFFF"
+                }, {
+                    "begin": "0x08017218",
+                    "mask": "0x7FFFFFFF",
+                    "offset": -2
+                }, {
+                    "begin": "0x08017284",
+                    "mask": "0x7FFFFFFF"
+                }, {
+                    "begin": "0x080173B0",
+                    "mask": "0x7FFFFFFF",
+                    "offset": -2
+                }, {
+                    "begin": "0x080173B4",
+                    "mask": "0x7FFFFFFF",
+                    "offset": -4
+                }, {
+                    "begin": "0x080174BC",
+                    "mask": "0x7FFFFFFF",
+                    "offset": -3
+                }, {
+                    "begin": "0x080174C0",
+                    "mask": "0x7FFFFFFF",
+                    "offset": -4
+                }, {
+                    "begin": "0x08017588",
+                    "mask": "0x7FFFFFFF",
+                    "offset": -2
+                }, {
+                    "begin": "0x08017630",
+                    "mask": "0x7FFFFFFF",
+                    "offset": -3
+                }, {
+                    "begin": "0x0803683C",
+                    "mask": "0x7FFFFFFF"
+                }, {
+                    "begin": "0x08036840",
+                    "mask": "0x7FFFFFFF",
+                    "offset": -1
+                }, {
+                    "begin": "0x08036844",
+                    "mask": "0x7FFFFFFF",
+                    "offset": -2
+                }, {
+                    "begin": "0x080369A0",
+                    "mask": "0x7FFFFFFF",
+                    "offset": -2
+                }, {
+                    "begin": "0x080369A4",
+                    "mask": "0x7FFFFFFF",
+                    "offset": -4
+                }
+            ]
         },
         "esperBonusDescriptions": {
             "type": "array",
@@ -1252,46 +1342,11 @@
             "assembly": {
                 "type": "property",
                 "name": "Menu Order",
-                "length": 1
-            }
-        },
-        "esperNames": {
-            "type": "array",
-            "name": "Esper Name (Battle)",
-            "range": "0x0879C570-0x0879C668",
-            "array": {
-                "length": 31
-            },
-            "assembly": {
-                "type": "text",
-                "name": "Name",
-                "encoding": "battle",
-                "length": 8
-            },
-            "stringTable": {
-                "name": "Esper Name",
-                "length": 31,
-                "default": {
-                    "value": "<esperNames[%i]>",
-                    "language": {
-                        "battle": {
-                            "name": "Battle",
-                            "link": "esperNames[%i]"
-                        },
-                        "smallText": {
-                            "name": "Small Text",
-                            "link": "text1[%i+721]"
-                        },
-                        "noKanji": {
-                            "name": "No Kanji",
-                            "link": "text2[%i*2+10314]"
-                        },
-                        "kanji": {
-                            "name": "w/ Kanji",
-                            "link": "text2[%i*2+10315]"
-                        }
-                    }
-                }
+                "length": 1,
+                "offset": -1,
+                "max": 31,
+                "stringTable": "esperAttackDescription",
+                "link": "stringTable.esperAttackDescription[%i]"
             }
         },
         "esperProperties": {
@@ -1306,15 +1361,20 @@
                 "assembly": {
                     "esperName": {
                         "type": "assembly",
-                        "external": "stringTable.esperNames[%i]"
+                        "name": "Name",
+                        "external": "text1[%i+0x02D1]",
+                        "invalid": "this.parent.i >= 27"
+                    },
+                    "esperNameGBA": {
+                        "type": "assembly",
+                        "name": "Name",
+                        "external": "text1[(%i-27)+0x0A5B]",
+                        "invalid": "this.parent.i < 27"
                     },
                     "attackName": {
                         "type": "assembly",
+                        "name": "Attack Name",
                         "external": "stringTable.esperAttackName[%i]"
-                    },
-                    "attackDescription": {
-                        "type": "assembly",
-                        "external": "text1[%i+1892]"
                     },
                     "menuOrder": {
                         "type": "assembly",
@@ -1324,7 +1384,7 @@
                         "type": "property",
                         "name": "Spell 1",
                         "begin": 1,
-                        "stringTable": "spellNames",
+                        "stringTable": "spellName",
                         "link": "attackProperties[%i]"
                     },
                     "rate1": {
@@ -1337,7 +1397,7 @@
                         "type": "property",
                         "name": "Spell 2",
                         "begin": 3,
-                        "stringTable": "spellNames",
+                        "stringTable": "spellName",
                         "link": "attackProperties[%i]"
                     },
                     "rate2": {
@@ -1350,7 +1410,7 @@
                         "type": "property",
                         "name": "Spell 3",
                         "begin": 5,
-                        "stringTable": "spellNames",
+                        "stringTable": "spellName",
                         "link": "attackProperties[%i]"
                     },
                     "rate3": {
@@ -1363,7 +1423,7 @@
                         "type": "property",
                         "name": "Spell 4",
                         "begin": 7,
-                        "stringTable": "spellNames",
+                        "stringTable": "spellName",
                         "link": "attackProperties[%i]"
                     },
                     "rate4": {
@@ -1376,7 +1436,7 @@
                         "type": "property",
                         "name": "Spell 5",
                         "begin": 9,
-                        "stringTable": "spellNames",
+                        "stringTable": "spellName",
                         "link": "attackProperties[%i]"
                     },
                     "rate5": {
@@ -1395,12 +1455,12 @@
                 },
                 "length": 11
             },
-            "stringTable": "esperNames"
+            "stringTable": "esperName"
         },
         "eventScript": {
             "type": "script",
             "name": "Event Script",
-            "range": "0x087A0000-0x087DDA63",
+            "range": "0x087A0000-0x087E90FB",
             "encoding": "event",
             "label": {
                 "No Event": "0x087A0000",
@@ -1414,51 +1474,109 @@
             }
         },
         "eventTriggers": {
-            "type": "array",
+            "type": "assembly",
+            "external": "_eventTriggers.eventTriggers"
+        },
+        "_eventTriggers": {
+            "type": "data",
             "name": "Event Triggers",
-            "range": "0x085F6232-0x085F78EE",
+            "range": "0x085F5EF0-0x085F78EE",
             "isSequential": true,
-            "array": {
-                "length": 415
-            },
+            "canRelocate": true,
             "assembly": {
-                "type": "array",
-                "assembly": {
-                    "type": "data",
+                "eventTriggers": {
+                    "type": "array",
+                    "name": "Event Triggers",
+                    "range": "0x0342-0x19FE",
+                    "isSequential": true,
+                    "endPointer": true,
+                    "canRelocate": true,
+                    "array": {
+                        "length": 415
+                    },
                     "assembly": {
-                        "x": {
-                            "type": "property",
-                            "name": "X Position",
-                            "begin": 0,
-                            "hidden": true
-                        },
-                        "y": {
-                            "type": "property",
-                            "name": "Y Position",
-                            "begin": 1,
-                            "hidden": true
-                        },
-                        "scriptPointer": {
-                            "type": "property",
-                            "name": "Script Pointer",
-                            "begin": 2,
-                            "mask": "0xFFFFFF",
-                            "script": "eventScript"
+                        "type": "array",
+                        "assembly": {
+                            "type": "data",
+                            "assembly": {
+                                "x": {
+                                    "type": "property",
+                                    "name": "X Position",
+                                    "begin": 0,
+                                    "hidden": true
+                                },
+                                "y": {
+                                    "type": "property",
+                                    "name": "Y Position",
+                                    "begin": 1,
+                                    "hidden": true
+                                },
+                                "scriptPointer": {
+                                    "type": "property",
+                                    "name": "Script Pointer",
+                                    "begin": 2,
+                                    "mask": "0xFFFFFF",
+                                    "script": "eventScript"
+                                }
+                            },
+                            "length": 5
                         }
                     },
-                    "length": 5
+                    "pointerTable": {
+                        "range": "0x0000-0x0342",
+                        "pointerLength": 2
+                    },
+                    "reference": [
+                        {
+                            "begin": "0x08010A8C",
+                            "arrayLength": true,
+                            "mask": "0xFFFF"
+                        }
+                    ]
                 }
             },
-            "pointerTable": {
-                "range": "0x085F5EF0-0x085F6232",
-                "pointerLength": 2,
-                "offset": "0x085F5EF0"
-            }
+            "reference": [
+                {
+                    "begin": "0x08010A78",
+                    "mask": "0x7FFFFFFF"
+                }, {
+                    "begin": "0x08010A7C",
+                    "mask": "0x7FFFFFFF",
+                    "offset": -2
+                }, {
+                    "begin": "0x08010BBC",
+                    "mask": "0x7FFFFFFF",
+                    "offset": -2
+                }, {
+                    "begin": "0x08010BC0",
+                    "mask": "0x7FFFFFFF",
+                    "offset": -4
+                }, {
+                    "begin": "0x08036B54",
+                    "mask": "0x7FFFFFFF"
+                }, {
+                    "begin": "0x08036B58",
+                    "mask": "0x7FFFFFFF",
+                    "offset": -1
+                }, {
+                    "begin": "0x08036B5C",
+                    "mask": "0x7FFFFFFF",
+                    "offset": -2
+                }, {
+                    "begin": "0x08036B60",
+                    "mask": "0x7FFFFFFF",
+                    "offset": -3
+                }, {
+                    "begin": "0x08036C4C",
+                    "mask": "0x7FFFFFFF",
+                    "offset": -4
+                }
+            ]
         },
         "eventTriggersAdvance": {
             "type": "array",
             "name": "Event Triggers (GBA)",
-            "range": "0x080303C4-0x08030E04",
+            "range": "0x080303C4-0x08030E06",
             "array": {
                 "length": 328
             },
@@ -1528,31 +1646,6 @@
         },
         "itemNames": {
             "type": "array",
-            "name": "Item Names (Big Text)",
-            "range": "0x081DF6F3-0x081E0865",
-            "array": {
-                "length": 542
-            },
-            "assembly": {
-                "type": "text",
-                "name": "Name (Big)",
-                "encoding": "dialog"
-            },
-            "pointerTable": {
-                "range": "0x08187398-0x08187C10",
-                "offset": "0x0817E518"
-            },
-            "stringTable": {
-                "name": "Item Names",
-                "length": 271,
-                "default": "<rom.itemNames[%i].formattedText>",
-                "string": {
-                    "0xFF": "Empty"
-                }
-            }
-        },
-        "itemNamesBattle": {
-            "type": "array",
             "name": "Item Names (Battle)",
             "range": "0x0879A00E-0x0879A995",
             "array": {
@@ -1560,26 +1653,37 @@
             },
             "assembly": {
                 "type": "text",
-                "name": "Name (Battle)",
+                "name": "Name",
                 "encoding": "battle",
                 "length": 9
-            }
-        },
-        "itemNamesSmall": {
-            "type": "array",
-            "name": "Item Names (Small Text)",
-            "range": "0x081761FC-0x08176CE9",
-            "array": {
-                "length": 271
             },
-            "assembly": {
-                "type": "text",
-                "name": "Name (Small)",
-                "encoding": "menu"
-            },
-            "pointerTable": {
-                "range": "0x08172DF4-0x08173230",
-                "offset": "0x081727FC"
+            "stringTable": {
+                "name": "Item Name",
+                "length": 271,
+                "default": {
+                    "value": "<itemNames[%i]>",
+                    "language": {
+                        "battle": {
+                            "name": "Battle",
+                            "link": "itemNames[%i]"
+                        },
+                        "small": {
+                            "name": "Small Text",
+                            "link": "text1[%i+0x017A]"
+                        },
+                        "noKanji": {
+                            "name": "No Kanji",
+                            "link": "text2[%i*2+0x239C]"
+                        },
+                        "kanji": {
+                            "name": "w/ Kanji",
+                            "link": "text2[%i*2+0x239D]"
+                        }
+                    }
+                },
+                "string": {
+                    "0xFF": "Empty"
+                }
             }
         },
         "itemProperties": {
@@ -1596,15 +1700,7 @@
                 "assembly": {
                     "itemName": {
                         "type": "assembly",
-                        "external": "itemNames[%i]"
-                    },
-                    "itemNameSmall": {
-                        "type": "assembly",
-                        "external": "itemNamesSmall[%i]"
-                    },
-                    "itemNameBattle": {
-                        "type": "assembly",
-                        "external": "itemNamesBattle[%i]"
+                        "external": "stringTable.itemNames[%i]"
                     }
                 }
             }
@@ -1945,6 +2041,7 @@
             "type": "array",
             "name": "Map Layouts",
             "range": "0x08548446-0x0858FF64",
+            "canRelocate": true,
             "array": {
                 "length": 389
             },
@@ -1954,7 +2051,32 @@
             "pointerTable": {
                 "range": "0x087FF3FC-0x087FF88E",
                 "pointerLength": 3,
-                "offset": "0x08548446"
+                "offset": "0x08548446",
+                "canRelocate": true,
+                "reference": [
+                    {
+                        "begin": "0x0801BAA4",
+                        "mask": "0x7FFFFFFF"
+                    }, {
+                        "begin": "0x0801BAA8",
+                        "mask": "0x7FFFFFFF",
+                        "offset": -2
+                    }, {
+                        "begin": "0x0801BC0C",
+                        "mask": "0x7FFFFFFF"
+                    }, {
+                        "begin": "0x0801BD1C",
+                        "mask": "0x7FFFFFFF",
+                        "offset": -2
+                    }, {
+                        "begin": "0x0801BE68",
+                        "mask": "0x7FFFFFFF"
+                    }, {
+                        "begin": "0x0801BE6C",
+                        "mask": "0x7FFFFFFF",
+                        "offset": -2
+                    }
+                ]
             },
             "reference": [
                 {
@@ -2629,7 +2751,7 @@
 					"0x00C4": "Maranda: Lola's House",
 					"0x00C5": "Kohlingen: Rachel's House",
 					"0x00C6": "Jidoor: Exterior",
-					"0x00C7": "Empty (Holy Dragon)",
+					"0x00C7": "Empty (Soul Shrine)",
 					"0x00C8": "Jidoor: Auction House",
 					"0x00C9": "Jidoor: Item Shop",
 					"0x00CA": "Jidoor: Relic Shop",
@@ -3078,7 +3200,8 @@
             },
             "pointerTable": {
                 "range": "0x085F589A-0x085F58F0",
-                "offset": "0x0875BDFC"
+                "offset": "0x0875BDFC",
+                "pointerLength": 2
             },
             "stringTable": {
                 "name": "Map Tile Properties",
@@ -3857,6 +3980,8 @@
             "name": "NPC Properties",
             "range": "0x0871D68E-0x087223A7",
             "isSequential": true,
+            "endPointer": true,
+            "canRelocate": true,
             "array": {
                 "length": 415
             },
@@ -4135,13 +4260,85 @@
             "pointerTable": {
                 "range": "0x0871D34C-0x0871D68E",
                 "pointerLength": 2,
-                "offset": "0x0871D34C"
-            }
+                "offset": "0x0871D34C",
+                "canRelocate": true,
+                "reference": [
+                    {
+                        "begin": "0x08023E5C",
+                        "mask": "0x7FFFFFFF"
+                    }, {
+                        "begin": "0x08023E60",
+                        "mask": "0x7FFFFFFF",
+                        "offset": -2
+                    }
+                ]
+            },
+            "reference": [
+                {
+                    "begin": "0x08023E68",
+                    "arrayLength": true,
+                    "mask": "0xFFFF"
+                }, {
+                    "begin": "0x08023F90",
+                    "mask": "0x7FFFFFFF",
+                    "pointerOffset": true
+                }, {
+                    "begin": "0x08023F94",
+                    "mask": "0x7FFFFFFF",
+                    "offset": -1,
+                    "pointerOffset": true
+                }, {
+                    "begin": "0x08023F98",
+                    "mask": "0x7FFFFFFF",
+                    "offset": -2,
+                    "pointerOffset": true
+                }, {
+                    "begin": "0x080240E4",
+                    "mask": "0x7FFFFFFF",
+                    "offset": -4,
+                    "pointerOffset": true
+                }, {
+                    "begin": "0x080240E8",
+                    "mask": "0x7FFFFFFF",
+                    "offset": -5,
+                    "pointerOffset": true
+                }, {
+                    "begin": "0x080242A8",
+                    "mask": "0x7FFFFFFF",
+                    "offset": -5,
+                    "pointerOffset": true
+                }, {
+                    "begin": "0x080242AC",
+                    "mask": "0x7FFFFFFF",
+                    "offset": -6,
+                    "pointerOffset": true
+                }, {
+                    "begin": "0x080242B0",
+                    "mask": "0x7FFFFFFF",
+                    "offset": -7,
+                    "pointerOffset": true
+                }, {
+                    "begin": "0x080242B4",
+                    "mask": "0x7FFFFFFF",
+                    "offset": -8,
+                    "pointerOffset": true
+                }, {
+                    "begin": "0x08024328",
+                    "mask": "0x7FFFFFFF",
+                    "offset": -8,
+                    "pointerOffset": true
+                }, {
+                    "begin": "0x08024478",
+                    "mask": "0x7FFFFFFF",
+                    "offset": -8,
+                    "pointerOffset": true
+                }
+            ]
         },
         "npcPropertiesAdvance": {
             "type": "array",
             "name": "NPC Properties (GBA)",
-            "range": "0x08030E04-0x08031250",
+            "range": "0x08030E06-0x08031252",
             "array": {
                 "length": 100
             },
@@ -4152,45 +4349,45 @@
                     "map": {
                         "type": "property",
                         "name": "Map",
-                        "begin": 0,
+                        "begin": 9,
                         "mask": "0xFFFF"
                     },
                     "scriptPointer": {
                         "type": "property",
                         "name": "Script Pointer",
-                        "begin": 2,
+                        "begin": 0,
                         "mask": "0x03FFFF",
                         "script": "eventScript"
                     },
                     "vramAddress": {
                         "type": "property",
                         "name": "VRAM Address",
-                        "begin": 2,
+                        "begin": 0,
                         "mask": "0x7F"
                     },
                     "hFlip": {
                         "type": "property",
                         "name": "Horizontal Flip",
-                        "begin": 2,
+                        "begin": 0,
                         "mask": "0x80",
                         "bool": true
                     },
                     "offset": {
                         "type": "property",
                         "name": "Offset",
-                        "begin": 3,
+                        "begin": 1,
                         "mask": "0xE0"
                     },
                     "master": {
                         "type": "property",
                         "name": "Master NPC Index",
-                        "begin": 3,
+                        "begin": 1,
                         "mask": "0x1F"
                     },
                     "offsetDirection": {
                         "type": "property",
                         "name": "Offset Direction",
-                        "begin": 4,
+                        "begin": 2,
                         "mask": "0x01",
                         "stringTable": {
                             "string": {
@@ -4202,21 +4399,21 @@
                     "slave": {
                         "type": "property",
                         "name": "Slave NPC",
-                        "begin": 4,
+                        "begin": 2,
                         "mask": "0x02",
                         "bool": true
                     },
                     "palette": {
                         "type": "property",
                         "name": "Palette",
-                        "begin": 4,
+                        "begin": 2,
                         "mask": "0x1C",
                         "stringTable": "mapSpritePalettes"
                     },
                     "layer2": {
                         "type": "property",
                         "name": "Scrolling Layer",
-                        "begin": 4,
+                        "begin": 2,
                         "mask": "0x20",
                         "stringTable": {
                             "string": {
@@ -4228,21 +4425,21 @@
                     "switch": {
                         "type": "property",
                         "name": "Switch",
-                        "begin": 4,
+                        "begin": 2,
                         "mask": "0xFFC0",
                         "stringTable": "npcSwitches"
                     },
                     "x": {
                         "type": "property",
                         "name": "X Position",
-                        "begin": 6,
+                        "begin": 4,
                         "mask": "0x7F",
                         "hidden": true
                     },
                     "vehicle": {
                         "type": "property",
                         "name": "Vehicle",
-                        "begin": 9,
+                        "begin": 7,
                         "mask": "0xC0",
                         "stringTable": {
                             "string": {
@@ -4257,7 +4454,7 @@
                     "showRider": {
                         "type": "property",
                         "name": "Show Rider",
-                        "begin": 6,
+                        "begin": 4,
                         "mask": "0x80",
                         "bool": true,
                         "hidden": "this.parent.vehicle.value === 0"
@@ -4265,21 +4462,21 @@
                     "special": {
                         "type": "property",
                         "name": "Special Graphics",
-                        "begin": 6,
+                        "begin": 4,
                         "mask": "0x80",
                         "bool": true
                     },
                     "y": {
                         "type": "property",
                         "name": "Y Position",
-                        "begin": 7,
+                        "begin": 5,
                         "mask": "0x3F",
                         "hidden": true
                     },
                     "speed": {
                         "type": "property",
                         "name": "Speed",
-                        "begin": 7,
+                        "begin": 5,
                         "mask": "0xC0",
                         "stringTable": {
                             "string": {
@@ -4293,13 +4490,13 @@
                     "graphics": {
                         "type": "property",
                         "name": "Graphics",
-                        "begin": 8,
+                        "begin": 6,
                         "stringTable": "mapSprites"
                     },
                     "movement": {
                         "type": "property",
                         "name": "Movement",
-                        "begin": 9,
+                        "begin": 7,
                         "mask": "0x0F",
                         "stringTable": {
                             "string": {
@@ -4313,7 +4510,7 @@
                     "spritePriority": {
                         "type": "property",
                         "name": "Sprite Priority",
-                        "begin": 9,
+                        "begin": 7,
                         "mask": "0x30",
                         "stringTable": {
                             "string": {
@@ -4327,7 +4524,7 @@
                     "direction": {
                         "type": "property",
                         "name": "Facing Direction",
-                        "begin": 10,
+                        "begin": 8,
                         "mask": "0x03",
                         "stringTable": "directions",
                         "disabled": "this.parent.animation.value !== 0"
@@ -4335,7 +4532,7 @@
                     "reaction": {
                         "type": "property",
                         "name": "Reaction",
-                        "begin": 10,
+                        "begin": 8,
                         "mask": "0x04",
                         "stringTable": {
                             "string": {
@@ -4347,7 +4544,7 @@
                     "is32x32": {
                         "type": "property",
                         "name": "Size",
-                        "begin": 10,
+                        "begin": 8,
                         "mask": "0x04",
                         "stringTable": {
                             "string": {
@@ -4359,7 +4556,7 @@
                     "layerPriority": {
                         "type": "property",
                         "name": "Layer Priority",
-                        "begin": 10,
+                        "begin": 8,
                         "mask": "0x18",
                         "stringTable": {
                             "string": {
@@ -4373,7 +4570,7 @@
                     "animation": {
                         "type": "property",
                         "name": "Animation",
-                        "begin": 10,
+                        "begin": 8,
                         "mask": "0xE0",
                         "stringTable": {
                             "string": {
@@ -4391,7 +4588,7 @@
                     "animationType": {
                         "type": "property",
                         "name": "Animation Type",
-                        "begin": 10,
+                        "begin": 8,
                         "mask": "0x03",
                         "stringTable": {
                             "string": {
@@ -4406,7 +4603,7 @@
                     "animationSpeed": {
                         "type": "property",
                         "name": "Animation Speed",
-                        "begin": 9,
+                        "begin": 7,
                         "mask": "0xC0",
                         "stringTable": {
                             "string": {
@@ -4654,30 +4851,6 @@
                 }
             }
         },
-        "spellNames": {
-            "type": "array",
-            "name": "Spell Names",
-            "range": "0x081E22D3-0x081E2517",
-            "array": {
-                "length": 108
-            },
-            "assembly": {
-                "type": "text",
-                "encoding": "dialog"
-            },
-            "pointerTable": {
-                "range": "0x08188490-0x08188640",
-                "offset": "0x0817E518"
-            },
-            "stringTable": {
-                "name": "Spell Names",
-                "length": 54,
-                "default": "<spellNames[%i]>",
-                "string": {
-                    "255": "None"
-                }
-            }
-        },
         "statusNames": {
             "type": "array",
             "name": "Status Names",
@@ -4791,6 +4964,7 @@
             "name": "Treasure Properties",
             "range": "0x0862B61C-0x0862BC34",
             "isSequential": true,
+            "endPointer": true,
             "array": {
                 "length": 432
             },
@@ -4862,8 +5036,54 @@
             "pointerTable": {
                 "range": "0x0862B2BC-0x0862B61C",
                 "pointerLength": 2,
-                "offset": "0x0862B61C"
-            }
+                "offset": "0x0862B61C",
+                "reference": [
+                    {
+                        "begin": "0x08015BDC",
+                        "mask": "0x7FFFFFFF"
+                    }, {
+                        "begin": "0x08015BE8",
+                        "mask": "0x7FFFFFFF",
+                        "offset": -2
+                    }, {
+                        "begin": "0x080219BC",
+                        "mask": "0x7FFFFFFF"
+                    }, {
+                        "begin": "0x080219C8",
+                        "mask": "0x7FFFFFFF",
+                        "offset": -2
+                    }
+                ]
+            },
+            "reference": [
+                {
+                    "begin": "0x08015BE0",
+                    "mask": "0x7FFFFFFF"
+                }, {
+                    "begin": "0x08015BE4",
+                    "mask": "0x7FFFFFFF",
+                    "offset": -1
+                }, {
+                    "begin": "0x08015D18",
+                    "mask": "0x7FFFFFFF",
+                    "offset": -2
+                }, {
+                    "begin": "0x080219C0",
+                    "mask": "0x7FFFFFFF"
+                }, {
+                    "begin": "0x080219C4",
+                    "mask": "0x7FFFFFFF",
+                    "offset": -1
+                }, {
+                    "begin": "0x08021B00",
+                    "mask": "0x7FFFFFFF",
+                    "offset": -2
+                }, {
+                    "begin": "0x08021B04",
+                    "mask": "0x7FFFFFFF",
+                    "offset": -4
+                }
+            ]
         },
         "vehicleGraphics": {
             "type": "assembly",
@@ -4974,25 +5194,50 @@
             "type": "assembly",
             "name": "World of Balance Layout",
             "range": "0x08605014-0x08608D2F",
-            "format": "ff6-lzss"
+            "format": "ff6-lzss",
+            "canRelocate": true,
+            "reference": [
+                {
+                    "begin": "0x0873AE95",
+                    "mask": "0xFFFFFF",
+                    "offset": "0x07717E4E"
+                }
+            ]
         },
         "worldLayout2": {
             "type": "assembly",
             "name": "World of Ruin Layout",
             "range": "0x0860FF44-0x08613205",
-            "format": "ff6-lzss"
+            "format": "ff6-lzss",
+            "canRelocate": true,
+            "reference": [
+                {
+                    "begin": "0x0873AEAA",
+                    "mask": "0xFFFFFF",
+                    "offset": "0x07717E4E"
+                }
+            ]
         },
         "worldLayout3": {
             "type": "assembly",
             "name": "Serpent Trench Layout",
-            "range": "0x08613205-0x08618992",
-            "format": "ff6-lzss"
+            "range": "0x08613205-0x08617205",
+            "format": "ff6-lzss",
+            "canRelocate": true,
+            "reference": [
+                {
+                    "begin": "0x0873AEAD",
+                    "mask": "0xFFFFFF",
+                    "offset": "0x07717E4E"
+                }
+            ]
         },
         "worldGraphics1": {
             "type": "data",
             "name": "World of Balance Graphics Data",
             "range": "0x08608D2F-0x0860B539",
             "format": "ff6-lzss",
+            "isSequential": true,
             "assembly": {
                 "tileset": {
                     "type": "assembly",
@@ -5011,6 +5256,7 @@
             "name": "World of Ruin Graphics Data",
             "range": "0x0860D7CC-0x0860FF44",
             "format": "ff6-lzss",
+            "isSequential": true,
             "assembly": {
                 "tileset": {
                     "type": "assembly",
@@ -5029,6 +5275,7 @@
             "name": "Serpent Trench Graphics Data",
             "range": "0x08617205-0x086188F5",
             "format": "ff6-lzss",
+            "isSequential": true,
             "assembly": {
                 "tileset": {
                     "type": "assembly",
@@ -5632,7 +5879,7 @@
                             "name": "Esper",
                             "begin": 1,
                             "offset": -54,
-                            "stringTable": "esperNames",
+                            "stringTable": "esperName",
                             "link": "esperProperties[%i]"
                         }
                     }
@@ -11389,6 +11636,17 @@
         }
     },
     "stringTable": {
+        "attackName": {
+            "name": "Attack Name",
+            "string": {
+                "0x00-0x39": "<stringTable.spellName[%i]>",
+                "0x51-0x55": "<text2[%i*2+0x27DA]>",
+                "0x55-0x5D": "<stringTable.bushidoName[%i-0x55]>",
+                "0x5D-0xFF": "<text2[%i*2+0x27DA]>",
+                "0xFF": "Nothing",
+                "0x100-0x123": "<stringTable.esperAttackName[%i-0x100]>"
+            }
+        },
         "battleBackground": {
             "name": "Battle Backgrounds",
             "default": "Backrgound %i",
@@ -11562,10 +11820,31 @@
                 "12": "Cursed Shield Counter"
             }
         },
+        "bushidoName": {
+            "name": "Bushido Name",
+            "length": 8,
+            "default": {
+                "value": "<text2[%i*2+0x27CB]>",
+                "language": {
+                    "noKanji": {
+                        "name": "No Kanji",
+                        "link": "text2[%i*2+0x27CA]"
+                    },
+                    "kanji": {
+                        "name": "w/ Kanji",
+                        "link": "text2[%i*2+0x27CB]"
+                    },
+                    "description": {
+                        "name": "Description",
+                        "link": "text1[%i+0x073E]"
+                    }
+                }
+            }
+        },
         "characterNames": {
             "name": "Character Names",
             "length": 64,
-            "default": "<text1[%i+282]>"
+            "default": "<text1[%i+0x011A]>"
         },
         "dialog": {
             "name": "Dialog",
@@ -11608,23 +11887,74 @@
         },
         "esperAttackName": {
             "name": "Esper Attack Name",
-            "length": 27,
+            "length": 35,
             "default": {
-                "value": "<text2[%i*2+10713]>",
+                "value": "<text1[%i+0x039B]>",
                 "language": {
-                    "smallText": {
+                    "small": {
                         "name": "Small Text",
-                        "link": "text1[%i+923]"
+                        "link": "text1[%i+0x039B]"
                     },
                     "noKanji": {
                         "name": "No Kanji",
-                        "link": "text2[%i*2+10712]"
+                        "link": "text2[%i*2+0x29DA]"
                     },
                     "kanji": {
                         "name": "w/ Kanji",
-                        "link": "text2[%i*2+10713]"
+                        "link": "text2[%i*2+0x29DB]"
                     }
                 }
+            },
+            "string": {
+                "27-35": {
+                    "value": "<text1[(%i-27)+0x03BE]>",
+                    "language": {
+                        "small": {
+                            "name": "Small Text",
+                            "link": "text1[(%i-27)+0x03BE]"
+                        },
+                        "noKanji": {
+                            "name": "No Kanji",
+                            "link": "text2[(%i-27)*2+0x2A20]"
+                        },
+                        "kanji": {
+                            "name": "w/ Kanji",
+                            "link": "text2[(%i-27)*2+0x2A21]"
+                        }
+                    }
+                }
+            }
+        },
+        "esperAttackDescription": {
+            "name": "Esper Attack Description",
+            "length": 31,
+            "default": {
+                "value": "<text1[%i+0x0764]>",
+                "language": {
+                    "text1": {
+                        "name": "Text",
+                        "link": "text1[%i+0x0764]"
+                    }
+                }
+            },
+            "string": {
+                "27-31": {
+                    "value": "<text1[(%i-27)+0x0A62]>",
+                    "language": {
+                        "text1": {
+                            "name": "Text",
+                            "link": "text1[(%i-27)+0x0A62]"
+                        }
+                    }
+                }
+            }
+        },
+        "esperName": {
+            "name": "Esper Name",
+            "length": 31,
+            "default": "<text1[%i+0x02D1]>",
+            "string": {
+                "27-31": "<text1[(%i-27)+0x0A5B]>"
             }
         },
         "eventCharacters": {
@@ -11632,7 +11962,7 @@
             "length": 16,
             "default": "Character %i",
             "string": {
-                "0-14": "<characterNames[%i]>"
+                "0-14": "<stringTable.characterNames[%i]>"
             }
         },
         "eventObjects": {
@@ -11651,11 +11981,32 @@
         },
         "eventSwitches": {
             "name": "Event Switches",
-            "length": "0x0700",
-            "default": "Switch %i",
             "string": {
                 "0x0000-0x0300": "<stringTable.mapSwitches[%i]>",
-                "0x0300-0x0700": "<stringTable.npcSwitches[%i-0x0300]>"
+                "0x0300-0x0700": "<stringTable.npcSwitches[%i-0x0300]>",
+                "0x4000-0x4300": "<stringTable.eventSwitchGBA[%i-0x4000]>"
+            }
+        },
+        "eventSwitchGBA": {
+            "name": "Event Switch (GBA)",
+            "length": "0x0300",
+            "default": "Switch %i (GBA)",
+            "string": {
+                "0": "Ice Dragon Defeated",
+                "1": "Earth Dragon Defeated",
+                "2": "Red Dragon Defeated",
+                "3": "Storm Dragon Defeated",
+                "4": "Blue Dragon Defeated",
+                "5": "Holy Dragon Defeated",
+                "6": "Skull Dragon Defeated",
+                "7": "Gold Dragon Defeated",
+                "8": "Kaiser Dragon Defeated",
+                "93": "Obtained Diabolos Magicite",
+                "97": "Gigantaur Defeated",
+                "100": "Leviathan Defeated",
+                "107": "Soul Shrine is Accessible",
+                "115": "Gilgamesh Defeated",
+                "116": "Obtained Gilgemesh Magicite"
             }
         },
         "eventVariables": {
@@ -12830,6 +13181,46 @@
                 "0xFF": "Continue Previous Song"
             }
         },
+        "spellName": {
+            "name": "Spell Name",
+            "length": 57,
+            "default": {
+                "value": "<text1[%i+0x029B]>",
+                "language": {
+                    "small": {
+                        "name": "Small Text",
+                        "link": "text1[%i+0x029B]"
+                    },
+                    "noKanji": {
+                        "name": "No Kanji",
+                        "link": "text2[%i*2+0x27DA]"
+                    },
+                    "kanji": {
+                        "name": "w/ Kanji",
+                        "link": "text2[%i*2+0x27DB]"
+                    }
+                }
+            },
+            "string": {
+                "54-57": {
+                    "value": "<text1[(%i-54)+0x0A58]>",
+                    "language": {
+                        "small": {
+                            "name": "Small Text",
+                            "link": "text1[(%i-54)+0x0A58]"
+                        },
+                        "noKanji": {
+                            "name": "No Kanji",
+                            "link": "text2[(%i-54)*2+0x2846]"
+                        },
+                        "kanji": {
+                            "name": "w/ Kanji",
+                            "link": "text1[(%i-54)*2+0x2847]"
+                        }
+                    }
+                }
+            }
+        },
         "statusNamesReversed": {
             "name": "Status Names (Reverse Order)",
             "string": {
@@ -12906,8 +13297,8 @@
                 "60": "Phantom Train: Small Room E",
                 "61": "Mobliz: Mail House Clock",
                 "62": "Nikeah: Clock in Inn",
-                "63": "Serpent's Trench A",
-                "64": "Serpent's Trench B",
+                "63": "Serpent Trench A",
+                "64": "Serpent Trench B",
                 "65": "Kohlingen: Chest in Crazy Man's House",
                 "66": "Jidoor: Pot in Owzer's House",
                 "67": "Phantom Train: Caboose Room",
@@ -13100,7 +13491,33 @@
                 "255": "South Figaro: Basement Treasure Room D",
                 "256": "South Figaro: Basement Treasure Room E",
                 "257": "Imperial Base Hidden Chest",
-                "258": "Jidoor: Owzer's Basement B"
+                "258": "Jidoor: Owzer's Basement B",
+                "259": "Earth Labyrinth: X-Potion",
+                "260": "Earth Labyrinth: Remedy",
+                "261": "Burning Labyrinth: Rename Card",
+                "262": "Burning Labyrinth: Hi-Ether",
+                "263": "Burning Labyrinth: Elixir",
+                "264": "Flame Labyrinth: Megalixir",
+                "265": "Flame Labyrinth: Magicite Shard",
+                "266": "Flame Labyrinth: Teleport Stone",
+                "267": "Inner Eye Labyrinth: Force Armor",
+                "268": "Inner Eye Labyrinth: X-Potion",
+                "269": "Dragon Temple: Phoenix Down",
+                "270": "Dragon Temple: Elixir",
+                "271": "Dragon Temple: Ribbon",
+                "273": "Dragon Temple: Crystal Orb",
+                "275": "Dragon Temple: Flan Princess ×5",
+                "276": "Dragon Temple: Genji Glove",
+                "277": "Dragon Temple: Plague",
+                "278": "Dragon Temple: Ribbon",
+                "280": "Dragon Temple: Flametongue",
+                "281": "Dragon Temple: Neslug",
+                "282": "Dragon Temple: Swordbreaker",
+                "283": "Dragon Temple: Great Sword",
+                "284": "Grand Cavern: X-Ether",
+                "285": "Grand Cavern: Elixir",
+                "286": "Grand Cavern: Celestriad",
+                "287": "Holy Palace: Magus Robe"
             }
         },
         "vehicles": {
@@ -13120,5 +13537,12 @@
                 "2": "Chocobo"
             }
         }
-    }
+    },
+    "freeSpace": [
+        "0x08519A94-0x08520000",
+        "0x0853B6CC-0x08540000",
+        "0x08676AF0-0x08679800",
+        "0x0867EF6C-0x08680000",
+        "0x087E90FB-0x087F0000"
+    ]
 }

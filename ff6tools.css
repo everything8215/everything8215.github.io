@@ -771,13 +771,13 @@ body {
     cursor: pointer;
 }
 
-.def-list {
+.modal-list {
     background-color: white;
     border: 1px solid #ccc;
     padding: 0;
 }
 
-.def-list li {
+.modal-list li {
     color: black;
     font-size: small;
     list-style: none;
@@ -785,12 +785,22 @@ body {
     padding: 1px 0px 1px 4px;
 }
 
-.def-list li:hover {
+.modal-list li:hover {
     background-color: hsl(210, 100%, 90%);
 }
 
-.def-list li:active {
+.modal-list li:active {
     background-color: hsl(210, 100%, 40%);
     color: hsl(0, 0%, 95%);
     transition: 0.1s;
+}
+
+.expand-div {
+    margin-bottom: 1em;
+    margin-left: 1em;
+    margin-right: 1em;
+}
+
+.expand-div label {
+    font-size: small;
 }

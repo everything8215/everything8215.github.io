@@ -525,7 +525,7 @@
                         "begin": 0,
                         "mask": "0x07"
                     },
-                    "hidden": {
+                    "hiddenMonsters": {
                         "type": "property",
                         "name": "Hidden Monsters",
                         "begin": 4,
@@ -4763,7 +4763,15 @@
                         "x": {
                             "type": "property",
                             "name": "X Position",
-                            "begin": 2
+                            "begin": 2,
+                            "mask": "0x3F",
+                            "invalid": "this.parent.direction.invalid"
+                        },
+                        "xWorld": {
+                            "type": "property",
+                            "name": "X Position",
+                            "begin": 2,
+                            "invalid": "!this.parent.direction.invalid"
                         },
                         "y": {
                             "type": "property",
@@ -4783,7 +4791,7 @@
                             "name": "Vehicle",
                             "begin": 4,
                             "mask": "0x1F",
-                            "invalid": "((this.parent.mapMSB.value === 0) && (this.parent.map1.value !== 0xFB) && (this.parent.map1.value !== 0xFC) && (this.parent.map1.value !== 0xFD)) || ((this.parent.mapMSB.value === 1) && (this.parent.map2.value !== 0x1FB) && (this.parent.map2.value !== 0x1FC) && (this.parent.map2.value !== 0x1FD))",
+                            "invalid": "!this.parent.direction.invalid",
                             "stringTable": "vehicles"
                         }
                     }
