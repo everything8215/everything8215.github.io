@@ -1,0 +1,122 @@
+<!DOCTYPE HTML>
+<html lang="en-US">
+    <head>
+        <meta charset="UTF-8">
+        <title>decomp</title>
+        <style type="text/css">
+        </style>
+
+        <script type="text/javascript">
+                        
+            function readSource() {
+                var sourceFile = document.getElementById("source-file");
+                if (!sourceFile || !sourceFile.files[0]) return;
+                var file = sourceFile.files[0];
+                var filereader = new FileReader();
+                filereader.readAsArrayBuffer(file);
+                filereader.onload = function() {
+                    
+                    // get the file as a byte array
+                    var arrayBuffer = filereader.result;
+                    data = new Uint8Array(arrayBuffer);
+                    
+                    var output = decompress(data);
+                    var blob = new Blob([output.buffer]);
+
+                    // Create a hidden link element
+                    var a = document.createElement("a");
+                    a.style = "display: none";
+                    document.body.appendChild(a);
+
+                    // Create a DOMString representing the blob and point the link element towards it
+                    var url = window.URL.createObjectURL(blob);
+                    a.href = url;
+                    a.download = 'decomp.bin';
+
+                    // programatically click the link to trigger the download
+                    a.click();
+
+                    // release the reference to the file by revoking the Object URL
+                    window.URL.revokeObjectURL(url);
+
+                };
+            }
+            
+            function decompress(data) {
+                
+                var src = data;
+                var s = 0; // source pointer
+                var dest = new Uint8Array(0x10000);
+                var d = 0; // destination pointer
+                var buffer = new Uint8Array(0x0800);
+                var b = 0x07DE;
+                var line = new Uint8Array(34);
+                var header, pass, r, w, c, i, l;
+
+                var length = src[s++] | (src[s++] << 8);
+                while (d < length) { // ff5
+//                while (s < length) { // ff6
+
+                    // read header
+                    header = src[s++];
+
+                    for (pass = 0; pass < 8; pass++, header >>= 1) {
+                        l = 0;
+                        if (header & 1) {
+                            // single byte (uncompressed)
+                            c = src[s++];
+                            line[l++] = c;
+                            buffer[b++] = c;
+                            b &= 0x07FF;
+                        } else {
+                            // 2-bytes (compressed)
+                            
+                            // ff5
+                            w = src[s++];
+                            r = src[s++];
+                            w |= (r & 0xE0) << 3;
+                            r = (r & 0x1F) + 3;
+                            
+                            // ff6
+//                            w = src[s++];
+//                            w |= (src[s++] << 8);
+//                            r = (w >> 11) + 3;
+//                            w &= 0x07FF;
+
+                            for (i = 0; i < r; i++) {
+                                c = buffer[(w + i) & 0x07FF];
+                                line[l++] = c;
+                                buffer[b++] = c;
+                                b &= 0x07FF;
+                            }
+                        }
+                        if ((d + l) > dest.length) {
+                            // maximum buffer length exceeded
+                            dest.set(line.subarray(0, dest.length - d), d)
+                            return dest;
+                        } else {
+                            // copy this pass to the destination buffer
+                            dest.set(line.subarray(0, l), d)
+                            d += l;
+                        }
+
+                        // reached end of compressed data
+                        if (d >= length) break; // ff5
+//                        if (s >= length) break; // ff6
+                    }
+                }
+
+                return dest.slice(0, d);
+            }
+            
+        </script>
+    </head>
+    
+    <body>
+        <h1>Decompression Tool</h1>
+        
+        <form action="">
+            <input type="file" id="source-file" onchange="readSource()">
+        </form>
+    </body>
+</html>

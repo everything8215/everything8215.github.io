@@ -1,0 +1,197 @@
+<!DOCTYPE HTML>
+<html lang="en-US">
+    <head>
+        <meta charset="UTF-8">
+        <title>ips</title>
+        <style type="text/css">
+        </style>
+
+        <script type="text/javascript">
+                        
+            var originalBytes;
+            var ipsBytes;
+            
+            function readOriginal() {
+                var originalFile = document.getElementById("original-file");
+                if (!originalFile || !originalFile.files[0]) return;
+                var file = originalFile.files[0];
+                var filereader = new FileReader();
+                filereader.readAsArrayBuffer(file);
+                filereader.onload = function() {
+                    
+                    // get the file as a byte array
+                    var arrayBuffer = filereader.result;
+                    originalBytes = new Uint8Array(arrayBuffer);
+                    
+                };
+            }
+
+            function readPatch() {
+                var ipsFile = document.getElementById("patch-file");
+                if (!ipsFile || !ipsFile.files[0]) return;
+                var file = ipsFile.files[0];
+                var filereader = new FileReader();
+                filereader.readAsArrayBuffer(file);
+                filereader.onload = function() {
+                    
+                    // get the file as a byte array
+                    var arrayBuffer = filereader.result;
+                    ipsBytes = new Uint8Array(arrayBuffer);
+                    
+                };
+            }
+            
+            function writePatched() {
+                if (!originalBytes) {
+                    console.log("No original file loaded.");
+                    return;
+                }
+                
+                if (!ipsBytes) {
+                    console.log("No patch file loaded.");
+                    return;
+                }
+                
+                var output = applyPatch();
+                if (!output) return;
+                
+                var blob = new Blob([output.buffer]);
+
+                // Create a hidden link element
+                var a = document.createElement("a");
+                a.style = "display: none";
+                document.body.appendChild(a);
+
+                // Create a DOMString representing the blob and point the link element towards it
+                var url = window.URL.createObjectURL(blob);
+                a.href = url;
+                a.download = 'output.bin';
+
+                // programatically click the link to trigger the download
+                a.click();
+
+                // release the reference to the file by revoking the Object URL
+                window.URL.revokeObjectURL(url);
+            }
+            
+            function applyPatch() {
+                
+                // start with a copy of the original data
+                var patchedBytes = new Uint8Array(originalBytes.length);
+                patchedBytes.set(originalBytes);
+                
+                // make sure the ips file has a valid header
+                if (!validateHeader(ipsBytes)) {
+                    console.log("Invalid IPS patch header.");
+                    return null;
+                }
+                
+                // data pointer
+                var p = 5;
+                
+                // apply each patch record
+                while (true) {
+                    var length = applyRecord(patchedBytes, ipsBytes.subarray(p));
+                    p += length;
+                    if (length === 0) {
+                        // encountered something invalid
+                        break;
+                    } else if (length === 3) {
+                        // encountered EOF, check for truncation offset
+                        if ((p + 3) > ipsBytes.length) break;
+                        var offset = 0;
+                        offset |= ipsBytes[p++] << 16;
+                        offset |= ipsBytes[p++] << 8;
+                        offset |= ipsBytes[p++];
+                        if (offset < patchedBytes) break;
+                        
+                        // truncate the patched data
+                        patchedBytes = patchedBytes.subarray(0, offset);
+                        break;
+                    }
+                }
+                
+                return patchedBytes;
+            }
+            
+            function validateHeader(bytes) {
+                var ipsHeader = [0x50, 0x41, 0x54, 0x43, 0x48];
+                for (b = 0; b < ipsHeader.length; b++) {
+                    if (bytes[b] !== ipsHeader[b]) return false;
+                }
+                return true;
+            }
+            
+            function isEOF(bytes) {
+                var ipsEOF = [0x45, 0x4F, 0x46];
+                for (b = 0; b < ipsEOF.length; b++) {
+                    if (bytes[b] !== ipsEOF[b]) return false;
+                }
+                return true;
+            }
+            
+            function applyRecord(output, record) {
+                if (isEOF(record)) return 3;
+                
+                if (record.length < 5) {
+                    console.log("Invalid record header.");
+                    return 0;
+                }
+                
+                var r = 0;
+                
+                var offset = 0;
+                offset |= record[r++] << 16;
+                offset |= record[r++] << 8;
+                offset |= record[r++];
+                
+                var length = 0;
+                length |= record[r++] << 8;
+                length |= record[r++];
+                
+                // check for RLE
+                var isRLE = false;
+                if (length === 0) {
+                    isRLE = true;
+                    length |= record[r++] << 8;
+                    length |= record[r++];
+                    var rleByte = record[r++];
+                }
+                
+                var begin = offset;
+                var end = offset + length;
+                
+                if (length + 5 > record.length) {
+                    console.log("Record length exceeds patch file size.");
+                    return 0;
+                }
+                
+                if (end > output.length) {
+                    console.log("Record length exceeds original file size.");
+                    return 0;
+                }
+
+                if (isRLE) {
+                    for (var o = begin; o < end; o++) output[o] = rleByte;
+                } else {
+                    output.set(record.subarray(r, r + length), offset);
+                }
+                
+                return (r + length);
+            }
+            
+        </script>
+    </head>
+    
+    <body>
+        <h1>IPS Patcher</h1>
+        
+        <form action="">
+            <label for="original-file">Original File:</label>
+            <input type="file" id="original-file" onchange="readOriginal()">
+            <label for="patch-file">Patch File:</label>
+            <input type="file" id="patch-file" onchange="readPatch()">
+            <button onclick="writePatched()">Patch</button>
+        </form>
+    </body>
+</html>

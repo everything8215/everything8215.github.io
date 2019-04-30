@@ -1,0 +1,423 @@
+<!DOCTYPE HTML>
+<html lang="en-US">
+    <head>
+        <meta charset="UTF-8">
+        <title>dis</title>
+        <style type="text/css">
+        </style>
+
+        <script type="text/javascript">
+            
+            function readSource() {
+                var sourceFile = document.getElementById("source-file");
+                if (!sourceFile || !sourceFile.files[0]) return;
+                var file = sourceFile.files[0];
+                var filereader = new FileReader();
+                filereader.readAsArrayBuffer(file);
+                filereader.onload = function() {
+                    
+                    // get the file as a byte array
+                    var arrayBuffer = filereader.result;
+                    data = new Uint8Array(arrayBuffer);
+                    
+                    var output = parseData();
+                    console.log(output);
+                };
+            }
+            
+            var offset;
+            var data;
+            var b;
+            var a16 = false;
+            var xy16 = true;
+            var hiROM = true;
+            
+            function parseData() {
+                var output = "";
+                
+                for (offset = 0; offset < data.length; ) {
+                    output += parseCommand();
+                }
+                
+                return output;
+            }
+            
+            function parseCommand() {
+                var output = offsetString();
+                b = [];
+                var command;
+
+                switch (nextByte()) {
+                    case 0x00: command = "BRK " + byteString("$"); break;
+                    case 0x01: command = "ORA " + byteString("($", ",X)"); break;
+                    case 0x02: command = "COP " + byteString("$"); break;
+                    case 0x03: command = "ORA " + byteString("$", ",S"); break;
+                    case 0x04: command = "TSB " + byteString("$"); break;
+                    case 0x05: command = "ORA " + byteString("$"); break;
+                    case 0x06: command = "ASL " + byteString("$"); break;
+                    case 0x07: command = "ORA " + byteString("[$", "]"); break;
+                    case 0x08: command = "PHP "; break;
+                    case 0x09: command = "ORA " + (a16 ? wordString("#$") : byteString("#$")); break;
+                    case 0x0A: command = "ASL "; break;
+                    case 0x0B: command = "PHD "; break;
+                    case 0x0C: command = "TSB " + wordString("$"); break;
+                    case 0x0D: command = "ORA " + wordString("$"); break;
+                    case 0x0E: command = "ASL " + wordString("$"); break;
+                    case 0x0F: command = "ORA " + longString("$"); break;
+                    case 0x10: command = "BPL " + branchString("$"); break;
+                    case 0x11: command = "ORA " + byteString("($", "),Y"); break;
+                    case 0x12: command = "ORA " + byteString("($", ")"); break;
+                    case 0x13: command = "ORA " + byteString("($", ",S),Y"); break;
+                    case 0x14: command = "TRB " + byteString("$"); break;
+                    case 0x15: command = "ORA " + byteString("$", ",X"); break;
+                    case 0x16: command = "ASL " + byteString("$", ",X"); break;
+                    case 0x17: command = "ORA " + byteString("[$", "],Y"); break;
+                    case 0x18: command = "CLC "; break;
+                    case 0x19: command = "ORA " + wordString("$", ",Y"); break;
+                    case 0x1A: command = "INC "; break;
+                    case 0x1B: command = "TCS "; break;
+                    case 0x1C: command = "TRB " + wordString("$"); break;
+                    case 0x1D: command = "ORA " + wordString("$", ",X"); break;
+                    case 0x1E: command = "ASL " + wordString("$", ",X"); break;
+                    case 0x1F: command = "ORA " + longString("$", ",X"); break;
+                    case 0x20: command = "JSR " + wordString("$"); break;
+                    case 0x21: command = "AND " + byteString("($", ",X)"); break;
+                    case 0x22: command = "JSL " + longString("$"); break;
+                    case 0x23: command = "AND " + byteString("$", ",S"); break;
+                    case 0x24: command = "BIT " + byteString("$"); break;
+                    case 0x25: command = "AND " + byteString("$"); break;
+                    case 0x26: command = "ROL " + byteString("$"); break;
+                    case 0x27: command = "AND " + byteString("[$", "]"); break;
+                    case 0x28: command = "PLP ";
+                        a16 = false;
+                        xy16 = true;
+                        break;
+                    case 0x29: command = "AND " + (a16 ? wordString("#$") : byteString("#$")); break;
+                    case 0x2A: command = "ROL "; break;
+                    case 0x2B: command = "PLD "; break;
+                    case 0x2C: command = "BIT " + wordString("$"); break;
+                    case 0x2D: command = "AND " + wordString("$"); break;
+                    case 0x2E: command = "ROL " + wordString("$"); break;
+                    case 0x2F: command = "AND " + longString("$"); break;
+                    case 0x30: command = "BMI " + branchString("$"); break;
+                    case 0x31: command = "AND " + byteString("($", "),Y"); break;
+                    case 0x32: command = "AND " + byteString("($", ")"); break;
+                    case 0x33: command = "AND " + byteString("($", ",S),Y"); break;
+                    case 0x34: command = "BIT " + byteString("$", ",X"); break;
+                    case 0x35: command = "AND " + byteString("$", ",X"); break;
+                    case 0x36: command = "ROL " + byteString("$", ",X"); break;
+                    case 0x37: command = "AND " + byteString("[$", "],Y"); break;
+                    case 0x38: command = "SEC "; break;
+                    case 0x39: command = "AND " + wordString("$", ",Y"); break;
+                    case 0x3A: command = "DEC "; break;
+                    case 0x3B: command = "TSC "; break;
+                    case 0x3C: command = "BIT " + wordString("$", ",X"); break;
+                    case 0x3D: command = "AND " + wordString("$", ",X"); break;
+                    case 0x3E: command = "ROL " + wordString("$", ",X"); break;
+                    case 0x3F: command = "AND " + longString("$", ",X"); break;
+                    case 0x40: command = "RTI "; break;
+                    case 0x41: command = "EOR " + byteString("($", ",X)"); break;
+                    case 0x42: command = "WDM " + byteString("$"); break;
+                    case 0x43: command = "EOR " + byteString("$", ",S"); break;
+                    case 0x44: command = "MVP " + byteString("$") + "," + byteString("$"); break;
+                    case 0x45: command = "EOR " + byteString("$"); break;
+                    case 0x46: command = "LSR " + byteString("$"); break;
+                    case 0x47: command = "EOR " + byteString("[$", "]"); break;
+                    case 0x48: command = "PHA "; break;
+                    case 0x49: command = "EOR " + (a16 ? wordString("#$") : byteString("#$")); break;
+                    case 0x4A: command = "LSR "; break;
+                    case 0x4B: command = "PHK "; break;
+                    case 0x4C: command = "JMP " + wordString("$"); break;
+                    case 0x4D: command = "EOR " + wordString("$"); break;
+                    case 0x4E: command = "LSR " + wordString("$"); break;
+                    case 0x4F: command = "EOR " + longString("$"); break;
+                    case 0x50: command = "BVC " + branchString("$"); break;
+                    case 0x51: command = "EOR " + byteString("($", "),Y"); break;
+                    case 0x52: command = "EOR " + byteString("($", ")"); break;
+                    case 0x53: command = "EOR " + byteString("($", ",S),Y"); break;
+                    case 0x54: command = "MVN " + (byteString("$") + "," + byteString("$")); break;
+                    case 0x55: command = "EOR " + byteString("$", ",X"); break;
+                    case 0x56: command = "LSR " + byteString("$", ",X"); break;
+                    case 0x57: command = "EOR " + byteString("[$", "],Y"); break;
+                    case 0x58: command = "CLI "; break;
+                    case 0x59: command = "EOR " + wordString("$", ",Y"); break;
+                    case 0x5A: command = "PHY "; break;
+                    case 0x5B: command = "TCD "; break;
+                    case 0x5C: command = "JML " + longString("$"); break;
+                    case 0x5D: command = "EOR " + wordString("$", ",X"); break;
+                    case 0x5E: command = "LSR " + wordString("$", ",X"); break;
+                    case 0x5F: command = "EOR " + longString("$", ",X"); break;
+                    case 0x60: command = "RTS "; break;
+                    case 0x61: command = "ADC " + byteString("($", ",X)"); break;
+                    case 0x62: command = "PER " + branchStringLong("$"); break;
+                    case 0x63: command = "ADC " + byteString("$", ",S"); break;
+                    case 0x64: command = "STZ " + byteString("$"); break;
+                    case 0x65: command = "ADC " + byteString("$"); break;
+                    case 0x66: command = "ROR " + byteString("$"); break;
+                    case 0x67: command = "ADC " + byteString("[$", "]"); break;
+                    case 0x68: command = "PLA "; break;
+                    case 0x69: command = "ADC " + (a16 ? wordString("#$") : byteString("#$")); break;
+                    case 0x6A: command = "ROR "; break;
+                    case 0x6B: command = "RTL "; break;
+                    case 0x6C: command = "JMP " + wordString("($", ")"); break;
+                    case 0x6D: command = "ADC " + wordString("$"); break;
+                    case 0x6E: command = "ROR " + wordString("$"); break;
+                    case 0x6F: command = "ADC " + longString("$"); break;
+                    case 0x70: command = "BVS " + branchString("$"); break;
+                    case 0x71: command = "ADC " + byteString("($", "),Y"); break;
+                    case 0x72: command = "ADC " + byteString("($", ")"); break;
+                    case 0x73: command = "ADC " + byteString("($", ",S),Y"); break;
+                    case 0x74: command = "STZ " + byteString("$", ",X"); break;
+                    case 0x75: command = "ADC " + byteString("$", ",X"); break;
+                    case 0x76: command = "ROR " + byteString("$", ",X"); break;
+                    case 0x77: command = "ADC " + byteString("[$", "],Y"); break;
+                    case 0x78: command = "SEI "; break;
+                    case 0x79: command = "ADC " + wordString("$", ",Y"); break;
+                    case 0x7A: command = "PLY "; break;
+                    case 0x7B: command = "TDC "; break;
+                    case 0x7C: command = "JMP " + wordString("($", ",X)"); break;
+                    case 0x7D: command = "ADC " + wordString("$", ",X"); break;
+                    case 0x7E: command = "ROR " + wordString("$", ",X"); break;
+                    case 0x7F: command = "ADC " + longString("$", ",X"); break;
+                    case 0x80: command = "BRA " + branchString("$"); break;
+                    case 0x81: command = "STA " + byteString("($", ",X)"); break;
+                    case 0x82: command = "BRL " + branchStringLong("$"); break;
+                    case 0x83: command = "STA " + byteString("$", ",S"); break;
+                    case 0x84: command = "STY " + byteString("$"); break;
+                    case 0x85: command = "STA " + byteString("$"); break;
+                    case 0x86: command = "STX " + byteString("$"); break;
+                    case 0x87: command = "STA " + byteString("[$", "]"); break;
+                    case 0x88: command = "DEY "; break;
+                    case 0x89: command = "BIT " + (a16 ? wordString("#$") : byteString("#$")); break;
+                    case 0x8A: command = "TXA "; break;
+                    case 0x8B: command = "PHB "; break;
+                    case 0x8C: command = "STY " + wordString("$"); break;
+                    case 0x8D: command = "STA " + wordString("$"); break;
+                    case 0x8E: command = "STX " + wordString("$"); break;
+                    case 0x8F: command = "STA " + longString("$"); break;
+                    case 0x90: command = "BCC " + branchString("$"); break;
+                    case 0x91: command = "STA " + byteString("($", "),Y"); break;
+                    case 0x92: command = "STA " + byteString("($", ")"); break;
+                    case 0x93: command = "STA " + byteString("($", ",S),Y"); break;
+                    case 0x94: command = "STY " + byteString("$", ",X"); break;
+                    case 0x95: command = "STA " + byteString("$", ",X"); break;
+                    case 0x96: command = "STX " + byteString("$", ",Y"); break;
+                    case 0x97: command = "STA " + byteString("[$", "],Y"); break;
+                    case 0x98: command = "TYA "; break;
+                    case 0x99: command = "STA " + wordString("$", ",Y"); break;
+                    case 0x9A: command = "TXS "; break;
+                    case 0x9B: command = "TXY "; break;
+                    case 0x9C: command = "STZ " + wordString("$"); break;
+                    case 0x9D: command = "STA " + wordString("$", ",X"); break;
+                    case 0x9E: command = "STZ " + wordString("$", ",X"); break;
+                    case 0x9F: command = "STA " + longString("$", ",X"); break;
+                    case 0xA0: command = "LDY " + wordString("#$"); break;
+                    case 0xA1: command = "LDA " + byteString("($", ",X)"); break;
+                    case 0xA2: command = "LDX " + (xy16 ? wordString("#$") : byteString("#$")); break;
+                    case 0xA3: command = "LDA " + byteString("$", ",S"); break;
+                    case 0xA4: command = "LDY " + byteString("$"); break;
+                    case 0xA5: command = "LDA " + byteString("$"); break;
+                    case 0xA6: command = "LDX " + byteString("$"); break;
+                    case 0xA7: command = "LDA " + byteString("[$", "]"); break;
+                    case 0xA8: command = "TAY "; break;
+                    case 0xA9: command = "LDA " + (a16 ? wordString("#$") : byteString("#$")); break;
+                    case 0xAA: command = "TAX "; break;
+                    case 0xAB: command = "PLB "; break;
+                    case 0xAC: command = "LDY " + wordString("$"); break;
+                    case 0xAD: command = "LDA " + wordString("$"); break;
+                    case 0xAE: command = "LDX " + wordString("$"); break;
+                    case 0xAF: command = "LDA " + longString("$"); break;
+                    case 0xB0: command = "BCS " + branchString("$"); break;
+                    case 0xB1: command = "LDA " + byteString("($", "),Y"); break;
+                    case 0xB2: command = "LDA " + byteString("($", ")"); break;
+                    case 0xB3: command = "LDA " + byteString("($", ",S),Y"); break;
+                    case 0xB4: command = "LDY " + byteString("$", ",X"); break;
+                    case 0xB5: command = "LDA " + byteString("$", ",X"); break;
+                    case 0xB6: command = "LDX " + byteString("$", ",Y"); break;
+                    case 0xB7: command = "LDA " + byteString("[$", "],Y"); break;
+                    case 0xB8: command = "CLV "; break;
+                    case 0xB9: command = "LDA " + wordString("$", ",Y"); break;
+                    case 0xBA: command = "TSX "; break;
+                    case 0xBB: command = "TYX "; break;
+                    case 0xBC: command = "LDY " + wordString("$", ",X"); break;
+                    case 0xBD: command = "LDA " + wordString("$", ",X"); break;
+                    case 0xBE: command = "LDX " + wordString("$", ",Y"); break;
+                    case 0xBF: command = "LDA " + longString("$", ",X"); break;
+                    case 0xC0: command = "CPY " + wordString("#$"); break;
+                    case 0xC1: command = "CMP " + byteString("($", ",X)"); break;
+                    case 0xC2: command = "REP " + byteString("#$");
+                        if (b[1] & 0x20) a16 = true;
+                        if (b[1] & 0x10) xy16 = true;
+                        break;
+                    case 0xC3: command = "CMP " + byteString("$", ",S"); break;
+                    case 0xC4: command = "CPY " + byteString("$"); break;
+                    case 0xC5: command = "CMP " + byteString("$"); break;
+                    case 0xC6: command = "DEC " + byteString("$"); break;
+                    case 0xC7: command = "CMP " + byteString("[$", "]"); break;
+                    case 0xC8: command = "INY "; break;
+                    case 0xC9: command = "CMP " + (a16 ? wordString("#$") : byteString("#$")); break;
+                    case 0xCA: command = "DEX "; break;
+                    case 0xCB: command = "WAI "; break;
+                    case 0xCC: command = "CPY " + wordString("$"); break;
+                    case 0xCD: command = "CMP " + wordString("$"); break;
+                    case 0xCE: command = "DEC " + wordString("$"); break;
+                    case 0xCF: command = "CMP " + longString("$"); break;
+                    case 0xD0: command = "BNE " + branchString("$"); break;
+                    case 0xD1: command = "CMP " + byteString("($", "),Y"); break;
+                    case 0xD2: command = "CMP " + byteString("($", ")"); break;
+                    case 0xD3: command = "CMP " + byteString("($", ",S),Y"); break;
+                    case 0xD4: command = "PEI " + byteString("($", ")"); break;
+                    case 0xD5: command = "CMP " + byteString("$", ",X"); break;
+                    case 0xD6: command = "DEC " + byteString("$", ",X"); break;
+                    case 0xD7: command = "CMP " + byteString("[$", "],Y"); break;
+                    case 0xD8: command = "CLD "; break;
+                    case 0xD9: command = "CMP " + wordString("$", ",Y"); break;
+                    case 0xDA: command = "PHX "; break;
+                    case 0xDB: command = "STP "; break;
+                    case 0xDC: command = "JML " + wordString("[$", "]"); break;
+                    case 0xDD: command = "CMP " + wordString("$", ",X"); break;
+                    case 0xDE: command = "DEC " + wordString("$", ",X"); break;
+                    case 0xDF: command = "CMP " + longString("$", ",X"); break;
+                    case 0xE0: command = "CPX " + (xy16 ? wordString("#$") : byteString("#$")); break;
+                    case 0xE1: command = "SBC " + byteString("($", ",X)"); break;
+                    case 0xE2: command = "SEP " + byteString("#$");
+                        if (b[1] & 0x20) a16 = false;
+                        if (b[1] & 0x10) xy16 = false;
+                        break;
+                    case 0xE3: command = "SBC " + byteString("$", ",S"); break;
+                    case 0xE4: command = "CPX " + byteString("$"); break;
+                    case 0xE5: command = "SBC " + byteString("$"); break;
+                    case 0xE6: command = "INC " + byteString("$"); break;
+                    case 0xE7: command = "SBC " + byteString("[$", "]"); break;
+                    case 0xE8: command = "INX "; break;
+                    case 0xE9: command = "SBC " + (a16 ? wordString("#$") : byteString("#$")); break;
+                    case 0xEA: command = "NOP "; break;
+                    case 0xEB: command = "XBA "; break;
+                    case 0xEC: command = "CPX " + wordString("$"); break;
+                    case 0xED: command = "SBC " + wordString("$"); break;
+                    case 0xEE: command = "INC " + wordString("$"); break;
+                    case 0xEF: command = "SBC " + longString("$"); break;
+                    case 0xF0: command = "BEQ " + branchString("$"); break;
+                    case 0xF1: command = "SBC " + byteString("($", "),Y"); break;
+                    case 0xF2: command = "SBC " + byteString("($", ")"); break;
+                    case 0xF3: command = "SBC " + byteString("($", ",S),Y"); break;
+                    case 0xF4: command = "PEA " + wordString("$"); break;
+                    case 0xF5: command = "SBC " + byteString("$", ",X"); break;
+                    case 0xF6: command = "INC " + byteString("$", ",X"); break;
+                    case 0xF7: command = "SBC " + byteString("[$", "],Y"); break;
+                    case 0xF8: command = "SED "; break;
+                    case 0xF9: command = "SBC " + wordString("$", ",Y"); break;
+                    case 0xFA: command = "PLX "; break;
+                    case 0xFB: command = "XCE "; break;
+                    case 0xFC: command = "JSR " + wordString("($", ",X)"); break;
+                    case 0xFD: command = "SBC " + wordString("$", ",X"); break;
+                    case 0xFE: command = "INC " + wordString("$", ",X"); break;
+                    case 0xFF: command = "SBC " + longString("$", ",X"); break;
+                    default: command = ""; break;
+                }
+                
+                
+                for (var i = 0; i < 4; i++) {
+                    if (i < b.length) {
+                        output += hexString(b[i], 2) + " ";
+                    } else {
+                        output += "   ";
+                    }
+                }
+                output += " " + command + "\n";
+                return output;
+            }
+            
+            function offsetString() {
+                if (hiROM) {
+                    return hexString((offset >> 16) + 0xC0, 2) + "/" + hexString(offset & 0xFFFF, 4) + ": ";
+                } else {
+                    return hexString(offset >> 15, 2) + "/" + hexString((offset & 0x7FFF) | 0x8000, 4) + ": ";
+                }
+            }
+
+            function branchString(p, s) {
+                p = p || "";
+                s = s || "";
+                var vector = nextByte();
+                if (vector & 0x80) vector |= 0xFF00
+                var dest = vector + offset
+                if (hiROM) {
+                    return p + hexString(dest & 0xFFFF, 4) + s;
+                } else {
+                    return p + hexString((dest & 0x7FFF) | 0x8000, 4) + s;
+                }
+            }
+
+            function branchStringLong(p, s) {
+                p = p || "";
+                s = s || "";
+                var dest = nextWord() + offset
+                if (hiROM) {
+                    return p + hexString(dest & 0xFFFF, 4) + s;
+                } else {
+                    return p + hexString((dest & 0x7FFF) | 0x8000, 4) + s;
+                }
+            }
+
+            function byteString(p, s) {
+                p = p || "";
+                s = s || "";
+                return p + hexString(nextByte(), 2) + s;
+            }
+
+            function wordString(p, s) {
+                p = p || "";
+                s = s || "";
+                return p + hexString(nextWord(), 4) + s;
+            }
+
+            function longString(p, s) {
+                p = p || "";
+                s = s || "";
+                return p + hexString(nextLong(), 6) + s;
+            }
+
+            function nextByte() {
+                if (offset >= data.length) return 0;
+                var byte = data[offset++];
+                b.push(byte);
+                return byte;
+            }
+
+            function nextWord() {
+                var b1 = nextByte();
+                var b2 = nextByte();
+                return b1 | (b2 << 8);
+            }
+
+            function nextLong() {
+                var b1 = nextByte();
+                var b2 = nextByte();
+                var b3 = nextByte();
+                return b1 | (b2 << 8) | (b3 << 16);
+            }
+
+            function hexString(num, pad) {
+                if (typeof num !== 'number' || !isFinite(num)) {
+                    var poo = 0;
+                }
+                if (num < 0) num = 0xFFFFFFFF + num + 1;
+                var hex = num.toString(16).toUpperCase();
+                if (pad) hex = hex.padStart(pad, "0");
+                return hex;
+            }
+            
+        </script>
+    </head>
+    
+    <body>
+        <h1>SFC Disassembler</h1>
+        
+        <form action="">
+            <input type="file" id="source-file" onchange="readSource()">
+        </form>
+        
+        <p id="output"></p>
+    </body>
+</html>

@@ -1,0 +1,638 @@
+<!DOCTYPE HTML>
+<html lang="en-US">
+    <head>
+        <meta charset="UTF-8">
+        <title>gfx</title>
+        <style type="text/css">
+        </style>
+
+        <script type="text/javascript">
+            
+            var GFX = {}
+
+            GFX.makeLong = function(a,b) { return ((a & 0xFFFF) | ((b & 0xFFFF) << 16)); }
+            GFX.makeWord = function(a,b) { return ((a & 0xFF) | ((b & 0xFF) << 8)); }
+            GFX.hiWord = function(a) { return ((a >> 16) & 0xFFFF); }
+            GFX.loWord = function(a) { return (a & 0xFFFF); }
+            GFX.hiByte = function(a) { return ((a >> 8) & 0xFF); }
+            GFX.loByte = function(a) { return (a & 0xFF); }
+            GFX.hiNybble = function(a) { return ((a >> 4) & 0x0F); }
+            GFX.loNybble = function(a) { return (a & 0x0F); }
+
+            GFX.GraphicsFormat = {
+                linear8bpp: "linear8bpp",
+                linear4bpp: "linear4bpp",
+                linear2bpp: "linear2bpp",
+                linear1bpp: "linear1bpp",
+                nes2bpp: "nes2bpp",
+                snesMode7: "snesMode7",
+                snes8bpp: "snes8bpp",
+                snes4bpp: "snes4bpp",
+                snes3bpp: "snes3bpp",
+                snes2bpp: "snes2bpp",
+                genesis4bpp: "genesis4bpp"
+            };
+
+            GFX.PaletteFormat = {
+                argb8888: "argb8888",
+                bgr555: "bgr555"
+            }
+
+            GFX.TileFormat = {
+                default: "default",
+                snes4bppTile: "snes4bppTile",
+                snes2bppTile: "snes2bppTile",
+                snesSpriteTile: "snesSpriteTile",
+            }
+
+            GFX.Z = {
+                bottom: 0, // force to bottom
+                snesBk: 0, // snes back area
+                snew4L: 2, // snes layer 4, low priority
+                snes3L: 3, // snes layer 3, low priority
+                snesS0: 4, // snes sprites, priority 0
+                snes4H: 6, // snes layer 4, high priority
+                snes3H: 7, // snes layer 3, high priority
+                snesS1: 8, // snes sprites, priority 1
+                snes2L: 10, // snes layer 2, low priority
+                snes1L: 11, // snes layer 1, low priority
+                snesS2: 12, // snes sprites, priority 2
+                snes2H: 14, // snes layer 2, high priority
+                snes1H: 15, // snes layer 1, high priority
+                snesS3: 16, // snes sprites, priority 3
+                snes3P: 17, // snes layer 3, highest priority
+                top: 18, // force to top
+            }
+
+            GFX.decode = function(data, format) {
+
+                switch (format) {
+                    case GFX.GraphicsFormat.linear8bpp:
+                        return GFX.decodeLinear8bpp(data);
+
+                    case GFX.GraphicsFormat.linear4bpp:
+                        return GFX.decodeLinear4bpp(data);
+
+                    case GFX.GraphicsFormat.linear2bpp:
+                        return GFX.decodeLinear2bpp(data);
+
+                    case GFX.GraphicsFormat.linear1bpp:
+                        return GFX.decodeLinear1bpp(data);
+
+                    case GFX.GraphicsFormat.nes2bpp:
+                        return GFX.decodeNES2bpp(data);
+
+                    case GFX.GraphicsFormat.snes4bpp:
+                        return GFX.decodeSNES4bpp(data);
+
+                    case GFX.GraphicsFormat.snes3bpp:
+                        return GFX.decodeSNES3bpp(data);
+
+                    case GFX.GraphicsFormat.snes2bpp:
+                        return GFX.decodeSNES2bpp(data);
+
+                    case GFX.PaletteFormat.bgr555:
+                        return GFX.decodeBGR555(data);
+
+                    default:
+                        return data;
+                }
+            }
+
+            GFX.decodeLinear8bpp = function(data) {
+                // 8-bit source, 8-bit destination
+                var src = new Uint8Array(data.buffer, data.byteOffset, data.byteLength);
+                var dest = new Uint8Array(data.byteLength)
+
+                var s = 0;
+                var d = 0;
+                var c;
+
+                while (s < src.length) {
+                    c = src[s++];
+                    dest[d++] = GFX.loNybble(c);
+                }
+                return dest;
+            }
+
+            GFX.decodeLinear4bpp = function(data) {
+
+                // 8-bit source, 8-bit destination
+                var src = new Uint8Array(data.buffer, data.byteOffset, data.byteLength);
+                var dest = new Uint8Array(data.byteLength * 2)
+
+                var s = 0;
+                var d = 0;
+                var c;
+
+                while (s < src.length) {
+                    c = src[s++];
+                    dest[d++] = GFX.loNybble(c);
+                    dest[d++] = GFX.hiNybble(c);
+                }
+                return dest;
+            }
+
+            GFX.decodeLinear2bpp = function(data) {
+
+                // 8-bit source, 8-bit destination
+                var src = new Uint8Array(data.buffer, data.byteOffset, data.byteLength);
+                var dest = new Uint8Array(data.byteLength * 4);
+
+                var s = 0;
+                var d = 0;
+                var c;
+
+                while (s < src.length) {
+                    c = src[s++];
+                    dest[d++] = c & 0x03; c >>= 2;
+                    dest[d++] = c & 0x03; c >>= 2;
+                    dest[d++] = c & 0x03; c >>= 2;
+                    dest[d++] = c & 0x03;
+                }
+                return dest;
+            }
+
+            GFX.decodeLinear1bpp = function(data) {
+
+                // 8-bit source, 8-bit destination
+                var src = new Uint8Array(data.buffer, data.byteOffset, data.byteLength);
+                var dest = new Uint8Array(data.byteLength * 8);
+
+                var s = 0;
+                var d = 0;
+                var c;
+
+                while (s < src.length) {
+                    c = src[s++];
+                    dest[d++] = c & 1; c >>= 1;
+                    dest[d++] = c & 1; c >>= 1;
+                    dest[d++] = c & 1; c >>= 1;
+                    dest[d++] = c & 1; c >>= 1;
+                    dest[d++] = c & 1; c >>= 1;
+                    dest[d++] = c & 1; c >>= 1;
+                    dest[d++] = c & 1; c >>= 1;
+                    dest[d++] = c & 1;
+                }
+                return dest;
+            }
+
+            GFX.decodeNES2bpp = function(data) {
+
+                // 8-bit source, 8-bit destination
+                var src = new Uint8Array(data.buffer, data.byteOffset, data.byteLength);
+                var dest = new Uint8Array(data.byteLength * 4);
+
+                var s = 0;
+                var d = 0;
+                var c, bp1, bp2, bp;
+
+                while (s < src.length) {
+                    for (r = 0; r < 8; r++) {
+                        bp2 = src[s + 8];
+                        bp1 = src[s++];
+                        bp = GFX.makeWord(bp1, bp2);
+                        for (b = 0; b < 8; b++) {
+                            c = bp & 0x8080;
+                            c >>= 7;
+                            c |= (c >> 7);
+                            c &= 0x03;
+                            dest[d++] = c;
+                            bp <<= 1;
+                        }
+                    }
+                    s += 8;
+                }
+                return dest;
+            }
+
+            GFX.decodeSNES4bpp = function(data) {
+
+                // 16-bit source, 8-bit destination
+                var src = new Uint16Array(data.buffer, data.byteOffset, data.byteLength / 2);
+                var dest = new Uint8Array(data.byteLength * 2)
+
+                var s = 0;
+                var d = 0;
+                var bp12, bp34, bp, c, r, b;
+
+                while (s < src.length) {
+                    for (r = 0; r < 8; r++) {
+                        bp34 = src[s + 8];
+                        bp12 = src[s++];
+                        bp = GFX.makeLong(bp12, bp34);
+                        for (b = 0; b < 8; b++) {
+                            c = bp & 0x80808080;
+                            c >>= 7;
+                            c |= (c >> 7);
+                            c |= (c >> 14);
+                            c &= 0x0F;
+                            dest[d++] = c;
+                            bp <<= 1;
+                        }
+                    }
+                    s += 8;
+                }
+                return dest;
+            }
+
+            GFX.decodeSNES3bpp = function(data) {
+
+                // 16-bit/8-bit source, 8-bit destination
+                var src16 = new Uint16Array(data.buffer, data.byteOffset, data.byteLength / 2);
+                var src8 = new Uint8Array(data.buffer, data.byteOffset, data.byteLength);
+                var dest = new Uint8Array(data.byteLength * 3)
+
+                var s16 = 0;
+                var s8 = 16;
+                var d = 0;
+                var bp12, bp3, bp, c, r, b;
+
+                while (s16 < src16.length) {
+                    for (r = 0; r < 8; r++) {
+                        bp12 = src16[s16++];
+                        bp3 = src8[s8++];
+                        bp = GFX.makeLong(bp12, bp3);
+                        for (b = 0; b < 8; b++) {
+                            c = bp & 0x808080;
+                            c >>= 7;
+                            c |= (c >> 7);
+                            c |= (c >> 14);
+                            c &= 0x07;
+                            dest[d++] = c;
+                            bp <<= 1;
+                        }
+                    }
+                    s16 += 4;
+                    s8 += 16;
+                }
+                return dest;
+            }
+
+            GFX.decodeSNES2bpp = function(data) {
+
+                // 16-bit source, 8-bit destination
+                var src = new Uint16Array(data.buffer, data.byteOffset, data.byteLength / 2);
+                var dest = new Uint8Array(data.byteLength * 4)
+
+                var s = 0;
+                var d = 0;
+                var bp, c, r, b;
+
+                while (s < src.length) {
+                    for (r = 0; r < 8; r++) {
+                        bp = src[s++];
+                        for (b = 0; b < 8; b++) {
+                            c = bp & 0x8080;
+                            c >>= 7;
+                            c |= (c >> 7);
+                            c &= 0x03;
+                            dest[d++] = c;
+                            bp <<= 1;
+                        }
+                    }
+                }
+                return dest;
+            };
+
+            GFX.colors31 = [0, 8, 16, 25, 33, 41, 49, 58, 66, 74, 82, 90, 99, 107, 115, 123, 132, 140, 148, 156, 165, 173, 181, 189, 197, 206, 214, 222, 230, 239, 247, 255];
+
+            GFX.colors31 = [0, 8, 16, 25, 33, 41, 49, 58, 66, 74, 82, 90, 99, 107, 115, 123, 132, 140, 148, 156, 165, 173, 181, 189, 197, 206, 214, 222, 230, 239, 247, 255];
+
+            GFX.decodeBGR555 = function(data) {
+
+                // 16-bit source, 8-bit destination
+                var src = new Uint16Array(data.buffer, data.byteOffset, data.byteLength / 2);
+                var dest = new Uint8Array(data.byteLength * 2);
+
+                var s = 0;
+                var d = 0;
+                var bgr555;
+
+                while (s < src.length) {
+                    bgr555 = src[s++];
+                    dest[d++] = GFX.colors31[bgr555 & 0x1F]; bgr555 >>= 5;
+                    dest[d++] = GFX.colors31[bgr555 & 0x1F]; bgr555 >>= 5;
+                    dest[d++] = GFX.colors31[bgr555 & 0x1F];
+                    dest[d++] = 0xFF;
+                }
+                return new Uint32Array(dest.buffer, dest.byteOffset, dest.byteLength / 4);
+            }
+
+            GFX.render = function(dest, gfx, pal, ppl) {
+
+                // 32-bit destination, 32-bit palette
+                dest = new Uint32Array(dest.buffer, dest.byteOffset);
+                pal = new Uint32Array(pal.buffer, pal.byteOffset, pal.byteLength / 4);
+
+                var g = 0;
+                var d = 0;
+                var x = 0;
+                var y, c, p;
+
+                while (g < gfx.length) {
+                    y = d + x;
+                    for (var line = 0; line < 8; line++) {
+                        p = y;
+                        c = gfx[g++]; if (c) dest[p] = pal[c]; p++;
+                        c = gfx[g++]; if (c) dest[p] = pal[c]; p++;
+                        c = gfx[g++]; if (c) dest[p] = pal[c]; p++;
+                        c = gfx[g++]; if (c) dest[p] = pal[c]; p++;
+                        c = gfx[g++]; if (c) dest[p] = pal[c]; p++;
+                        c = gfx[g++]; if (c) dest[p] = pal[c]; p++;
+                        c = gfx[g++]; if (c) dest[p] = pal[c]; p++;
+                        c = gfx[g++]; if (c) dest[p] = pal[c]; p++;
+                        y += ppl;
+                    }
+                    x += 8;
+                    if (x >= ppl) {
+                        x = 0;
+                        d += 8 * ppl;
+                    }
+                }
+            }
+
+            function hexString(num, pad) {
+                if (typeof num !== 'number' || !isFinite(num)) {
+                    var poo = 0;
+                }
+                if (num < 0) num = 0xFFFFFFFF + num + 1;
+                var hex = num.toString(16).toUpperCase();
+                if (pad) hex = hex.padStart(pad, "0");
+                return hex;
+            }
+            
+            var rom;
+            var data;
+            var start = 0;
+            var end = 0;
+            var offset = 0;
+            var zoom = 4.0;
+            var invert = false;
+            var bytesPerTile = 32;
+            var w = 16;
+            var h = 24;
+            var n = 16;
+            var format = GFX.GraphicsFormat.linear4bpp;
+            
+            document.addEventListener('keydown', function(e) {
+                switch (e.key) {
+                    case "ArrowLeft":
+                        offset -= e.shiftKey ? 1 : bytesPerTile;
+                        break;
+                    case "ArrowUp":
+                        offset -= bytesPerTile * w;
+                        break;
+                    case "PageUp":
+                        offset -= bytesPerTile * w * h;
+                        break;
+                    case "ArrowRight":
+                        offset += e.shiftKey ? 1 : bytesPerTile;
+                        break;
+                    case "ArrowDown":
+                        offset += bytesPerTile * w;
+                        break;
+                    case "PageDown":
+                        offset += bytesPerTile * w * h;
+                        break;
+                    case "Home":
+                        offset = 0;
+                        break;
+                    case "End":
+                        offset = data.length - bytesPerTile;
+                        break;
+                    case "+":
+                        findNextGfx();
+                        break;
+                    case "-":
+                        findPreviousGfx();
+                        break;
+                    case "[":
+                        w--;
+                        if (w < 1) w = 1;
+                        break;
+                    case "]":
+                        w++;
+                        break;
+                    case "{":
+                        w >>= 1;
+                        if (w < 1) w = 1;
+                        break;
+                    case "}":
+                        w <<= 1;
+                        break;
+                    case "0":
+                        break;
+                    case "1":
+                        bytesPerTile = 8;
+                        n = 2;
+                        format = GFX.GraphicsFormat.linear1bpp;
+                        break;
+                    case "2":
+                        bytesPerTile = 16;
+                        n = 4;
+                        if (format === GFX.GraphicsFormat.snes2bpp) {
+                            format = GFX.GraphicsFormat.linear2bpp;
+                        } else if (format === GFX.GraphicsFormat.linear2bpp) {
+                            format = GFX.GraphicsFormat.nes2bpp;
+                        } else {
+                            format = GFX.GraphicsFormat.snes2bpp
+                        }
+                        break;
+                    case "3":
+                        bytesPerTile = 24;
+                        n = 8;
+                        format = GFX.GraphicsFormat.snes3bpp;
+                        break;
+                    case "4":
+                        bytesPerTile = 32;
+                        n = 16;
+                        if (format === GFX.GraphicsFormat.snes4bpp) {
+                            format = GFX.GraphicsFormat.linear4bpp;
+                        } else {
+                            format = GFX.GraphicsFormat.snes4bpp;
+                        }
+                        break;
+                    case "5":
+                        bytesPerTile = 32;
+                        n = 16;
+                        format = GFX.GraphicsFormat.genesis4bpp;
+                        break;
+                    case "6":
+                        break;
+                    case "7":
+                        break;
+                    case "8":
+                        bytesPerTile = 64;
+                        n = 16;
+                        format = GFX.GraphicsFormat.linear8bpp;
+                        break;
+                    case "p":
+                        invert = !invert;
+                }
+                if (offset < 0) offset = 0;
+                if (offset >= data.length) offset = data.length - bytesPerTile;
+                document.getElementById('offset').innerHTML = "Offset: 0x" + hexString(offset, 6);
+                draw();
+            });
+            
+            function readSource() {
+                var sourceFile = document.getElementById("source-file");
+                if (!sourceFile || !sourceFile.files[0]) return;
+                var file = sourceFile.files[0];
+                var filereader = new FileReader();
+                filereader.readAsArrayBuffer(file);
+                filereader.onload = function() {
+                    
+                    // get the file as a byte array
+                    var arrayBuffer = filereader.result;
+                    rom = new Uint8Array(arrayBuffer);
+                    
+                    offset = 0;
+                    start = 0x270000;
+                    findNextGfx();
+                    draw();
+                };
+            }
+            
+            function findNextGfx() {
+                while (start < rom.length) {
+                    start += 4;
+                    if (rom[start] !== 0x10) continue;
+                    if ((rom[start + 1] & 0x0F) !== 8) continue;
+                    if (rom[start + 3] > 3) continue;
+                    break;
+                }
+                data = decompress(rom.subarray(start));
+                offset = 8;
+                document.getElementById('range').innerHTML = "Range: 0x08" + hexString(start, 6) + "-0x08" + hexString(end, 6);
+            }
+
+            function findPreviousGfx() {
+                while (start > 0) {
+                    start -= 4;
+                    if (rom[start] !== 0x10) continue;
+                    if ((rom[start + 1] & 0x0F) !== 8) continue;
+                    if (rom[start + 3] > 3) continue;
+                    break;
+                }
+                data = decompress(rom.subarray(start));
+                offset = 8;
+                document.getElementById('range').innerHTML = "Range: 0x08" + hexString(start, 6) + "-0x08" + hexString(end, 6);
+            }
+            
+            function decompress(data) {
+                var src = data;
+                var s = 0; // source pointer
+                var dest = new Uint8Array(0x10000);
+                var d = 0; // destination pointer
+                var buffer = new Uint8Array(0x1000);
+                var b = 0;
+                var line = new Uint8Array(18);
+                var header, pass, r, w, c, i, l;
+
+                if (src[s++] !== 0x10) return new Uint8Array(0);
+
+                var length = src[s++] | (src[s++] << 8) | (src[s++] << 16);
+                while (d < length) {
+
+                    // read header
+                    header = src[s++];
+
+                    for (pass = 0; pass < 8; pass++, header <<= 1) {
+                        l = 0;
+                        if (header & 0x80) {
+                            // 2-bytes (compressed)
+                            w = (src[s++] << 8);
+                            w |= src[s++];
+                            r = (w >> 12) + 3;
+                            w &= 0x0FFF;
+                            w++;
+
+                            for (i = 0; i < r; i++) {
+                                c = buffer[(b - w) & 0x0FFF];
+                                line[l++] = c;
+                                buffer[b++] = c;
+                                b &= 0x0FFF;
+                            }
+                        } else {
+                            // single byte (uncompressed)
+                            c = src[s++];
+                            line[l++] = c;
+                            buffer[b++] = c;
+                            b &= 0x0FFF;
+                        }
+                        if ((d + l) > dest.length) {
+                            // maximum buffer length exceeded
+                            dest.set(line.subarray(0, dest.length - d), d)
+                            return dest;
+                        } else {
+                            // copy this pass to the destination buffer
+                            dest.set(line.subarray(0, l), d)
+                            d += l;
+                        }
+
+                        // reached end of compressed data
+                        if (d >= length) break;
+                    }
+                }
+
+                end = start + s;
+                return dest.slice(0, d);
+            }
+
+            function draw() {
+                
+                var length = h * w * bytesPerTile;                
+                var gfx = GFX.decode(data.subarray(offset), format);
+                pal = makeGrayPalette(n, invert);
+                
+                var imageCanvas = document.createElement('canvas');
+                imageCanvas.width = w * 8;
+                imageCanvas.height = h * 8;
+                var imageContext = imageCanvas.getContext('2d');
+                var imageData = imageContext.createImageData(w * 8, h * 8);
+                GFX.render(imageData.data, gfx, pal, w * 8);
+                imageContext.putImageData(imageData, 0, 0);
+                
+                var canvas = document.getElementById('canvas');
+                canvas.width = w * 8 * zoom;
+                canvas.height = h * 8 * zoom;
+                var context = canvas.getContext('2d');
+                context.imageSmoothingEnabled = false;
+                context.mozImageSmoothingEnabled = false;
+                context.webkitImageSmoothingEnabled = false;
+                context.drawImage(imageCanvas, 0, 0, canvas.width, canvas.height);
+            }
+            
+            function makeGrayPalette(n, invert) {
+                var pal = new Uint32Array(n);
+                pal[0] = 0;
+                for (var i = 0; i < (n - 1); i++) {
+                    var c = Math.round(i / (n - 1) * 255);
+                    c = c | (c << 8) | (c << 16) | 0xFF000000;
+                        
+                    if (invert) {
+                        pal[n - i] = c;
+                    } else {
+                        pal[i + 1] = c;
+                    }
+                }
+                return pal;
+            }
+            
+        </script>
+    </head>
+    
+    <body>
+        <h1>Graphics Viewer</h1>
+        
+        <form action="">
+            <input type="file" id="source-file" onchange="readSource()">
+        </form>
+        
+        <canvas id="canvas" height="128" width="128"></canvas>
+        <p id="offset"></p>
+        <p id="range"></p>
+    </body>
+</html>
